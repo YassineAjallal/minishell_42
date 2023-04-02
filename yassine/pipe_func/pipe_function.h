@@ -1,38 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
+/*   pipe_function.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/03/26 15:53:09 by yajallal          #+#    #+#             */
-/*   Updated: 2023/04/02 02:08:57 by yajallal         ###   ########.fr       */
+/*   Created: 2023/04/02 02:16:39 by yajallal          #+#    #+#             */
+/*   Updated: 2023/04/02 02:18:52 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL_H
-#define MINISHELL_H
+#ifndef PIPE_FUNCTION_H
+#define PIPE_FUNCTION_H
 
-#include "./libft/libft.h"
-// #include "./pipex/ft_pipex.h"
-#include <stdlib.h>
-#include <unistd.h>
-#include <stdio.h>
-#include <fcntl.h>
+void	ft_checkf(char *file, char *msg, int ex);
+void	ft_checkw(char *file, int ex);
+void	ft_checkr(char *file, int ex);
+void	ft_checkx(char *cmd, int ex);
 
-typedef struct s_parsing
-{
-	char **split_using_pipe;
-	char **split_unsing_redirect;
-	int number_of_pipe;
-	int nb_single_redirect;
-	int nb_double_redirect;
-} t_parsing;
+void	exec_cmd(char **av, char **envp);
 
-typedef struct s_pipe
-{
-	int	nb_pipe;
-	int pipes;
-} t_pipe;
-
+char	**ft_envp(char **envp);
+char	*ft_cmd(char **paths, char *cmd);
+char	*ft_cmdpath(char *cmd, char **envp);
+char	**ft_quotes(char *cmd);
 #endif

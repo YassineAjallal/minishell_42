@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 23:12:04 by yajallal          #+#    #+#             */
-/*   Updated: 2023/03/30 23:55:29 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/04/02 02:14:09 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,24 +47,14 @@ void	ft_checkx(char *cmd, int ex)
 		exit(ex);
 	}
 }
-void	ft_redirect(int f1, int f2, int f3)
-{
-	dup2(f1, STDIN_FILENO);
-	dup2(f2, STDOUT_FILENO);
-	close(f1);
-	close(f2);
-	close(f3);
-}
 
-void	ft_child(int pipeinput, int pipeoutput, char **av, char **envp)
+void	ft_child(char **av, char **envp)
 {
 	char	**cmd;
 	char	*fpath;
 
 	ft_checkf(av[1], "pipex: no such file or directory:", 1);
 	ft_checkr(av[1], 1);
-	dup2(pipeinput, STDIN_FILENO);
-	dupe2(pipeoutput, STDOUT_FILENO);
 	cmd = ft_quotes(av[2]);
 	fpath = ft_cmdpath(cmd[0], envp);
 	if (!fpath)
