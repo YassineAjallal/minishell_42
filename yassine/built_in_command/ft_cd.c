@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/02 22:18:08 by yajallal          #+#    #+#             */
-/*   Updated: 2023/04/04 22:39:32 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/04/05 03:15:24 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ char *ft_cd(char *path)
 	char **splitpath;
 	char *current_path;
 	char *new_path;
+	char **home;
 	int i;
 	
 	i = 0;
@@ -52,6 +53,12 @@ char *ft_cd(char *path)
 
 	if (path[0] == '/')
 		new_path = path;
+	else if (path[0] == '~')
+	{
+		home = ft_split(path, '/');
+		home[0] = getenv("HOME");
+		new_path = multiple_join(home, ft_strlen2d(home));
+	}
 	else if (ft_strlen(path) == 1 && path[0] == '.')
 		new_path = current_path;
 	else if (ft_strlen(path) == 2 && path[0] == '.' && path[1] == '.')
@@ -66,5 +73,16 @@ char *ft_cd(char *path)
 
 int main()
 {
-	printf("%s\n", ft_cd("yassine"));
+	char **line = ft_split(ft_pwd(), '/');
+	char *prompt = ft_strjoin(line[ft_strlen2d(line) - 1], " -> ");
+	char *input;
+	// ft_cd("~/Desktop");
+	// printf("%s\n", ft_pwd());
+	while(1)
+	{
+		input = readline(prompt);
+		chdir(ft_cd(input));
+		prompt = ft_strjoin(input, " -> ");
+		printf("%s\n", ft_pwd());
+	}
 }
