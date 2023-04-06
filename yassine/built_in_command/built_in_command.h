@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 21:43:56 by yajallal          #+#    #+#             */
-/*   Updated: 2023/04/04 22:02:23 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/04/06 00:45:33 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,16 @@
 #define BUILT_IN_COMMAND_H
 
 #include "../minishell.h"
+
+typedef struct s_env
+{
+	char *name;
+	char *value;
+} t_env;
+
 char *ft_pwd(void);
+int ft_strlen2d(char **str);
+char *multiple_join(char **path, int length);
+void	ft_free2d(char **str);
 
 #endif

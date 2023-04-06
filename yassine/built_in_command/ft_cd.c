@@ -6,40 +6,13 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/02 22:18:08 by yajallal          #+#    #+#             */
-/*   Updated: 2023/04/05 03:15:24 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/04/06 00:28:46 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "built_in_command.h"
 
-int ft_strlen2d(char **str)
-{
-	int i;
-
-	i = 0;
-	while(str[i])
-		i++;
-	return (i);
-}
-char *multiple_join(char **path, int length)
-{
-	int i;
-	char *tmp;
-	char *new_path = NULL;
-	char *add_slash;
-
-	i = 0;
-	while (i < length)
-	{
-		add_slash = ft_strjoin("/", path[i]);
-		tmp = ft_strjoin(new_path, add_slash);
-		free(new_path);
-		new_path = tmp;
-		i++;
-	}
-	return (new_path);
-}
-char *ft_cd(char *path)
+int ft_cd(char *path)
 {
 	char **splitpath;
 	char *current_path;
@@ -68,21 +41,26 @@ char *ft_cd(char *path)
 		path = ft_strjoin("/", path);
 		new_path = ft_strjoin(current_path, path);
 	}
-	return (new_path);
+	if (chdir(new_path) != 0)
+	{
+		printf("minishell: cd: %s: No such file or directory\n",path);
+		return (0);
+	}
+	return (1);
 }
 
-int main()
-{
-	char **line = ft_split(ft_pwd(), '/');
-	char *prompt = ft_strjoin(line[ft_strlen2d(line) - 1], " -> ");
-	char *input;
-	// ft_cd("~/Desktop");
-	// printf("%s\n", ft_pwd());
-	while(1)
-	{
-		input = readline(prompt);
-		chdir(ft_cd(input));
-		prompt = ft_strjoin(input, " -> ");
-		printf("%s\n", ft_pwd());
-	}
-}
+// int main()
+// {
+// 	char **line = ft_split(ft_pwd(), '/');
+// 	char *prompt = ft_strjoin(line[ft_strlen2d(line) - 1], " -> ");
+// 	char *input;
+// 	// ft_cd("~/Desktop");
+// 	// printf("%s\n", ft_pwd());
+// 	while(1)
+// 	{
+// 		input = readline(prompt);
+// 		if (ft_cd(input))
+// 			prompt = ft_strjoin(input, " -> ");
+// 		printf("%s\n", ft_pwd());
+// 	}
+// }
