@@ -6,53 +6,67 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 04:45:32 by yajallal          #+#    #+#             */
-/*   Updated: 2023/04/06 01:19:59 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/04/06 05:40:47 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "built_in_command.h"
 
-int dup_env(char **env)
+char **dup_env(char **env)
 {
-	t_env *environ;
+	char **environ;
 	int env_length;
-	char **split_env_var;
 	int i;
-	int j;
 
 	env_length = ft_strlen2d(env);
-	environ = malloc(sizeof(t_env) * env_length);
+	environ = malloc(sizeof(char *) * (env_length + 1));
 	i = 0;
 	if (!environ)
-		return (0);
+		return (NULL);
 	while(i < env_length)
 	{
-		split_env_var = ft_split(env[i], '=');
-		environ[i].name = split_env_var[0];
-		environ[i].value = ft_strdup(env[i] + ft_strlen(split_env_var[0]) + 1);
-		j = 1;
-		while (split_env_var[j])
-		{
-			free(split_env_var[j]);
-			j++;
-		}
-		free(split_env_var);
+		environ[i] = ft_strdup(env[i]);
 		i++;
 	}
-	i = 0;
-	while(i < env_length)
-	{
-		printf("%s = %s\n", environ[i].name, environ[i].value);
-		i++;
-	}
-	return (1);
+	environ[i] = NULL;
+	return (environ);
 }
-// int ft_export(char **env, char *name, char *value)
-// {
-	
-// }
+
+char **ft_export(char **old_env, char *env_var)
+{
+	int env_length;
+	char **new_env;
+	int i;
+
+	i = 0;
+	env_length = ft_strlen2d(old_env);
+	if (!old_env)
+		return (NULL);
+	new_env = malloc(sizeof(char *) * (env_length + 2));
+	if (!new_env)
+		return (NULL);
+	while(i < env_length)
+	{
+		new_env[i] = old_env[i];
+		i++;
+	}
+	new_env[i] = ft_strdup(env_var);
+	new_env[++i] = NULL;
+	free(old_env);
+	old_env = new_env;
+	return (old_env);
+}
 int main(int argc, char const *argv[], char **env)
 {
-	dup_env(env);
+	char **old_env;
+	char **new_env;
+	old_env = dup_env(env);
+	new_env = ft_export(old_env, "Yassine=boss");
+	int i;
+	while (new_env[i])
+	{
+		printf("%s\n", new_env[i]);
+		i++;
+	}
 	return 0;
 }
