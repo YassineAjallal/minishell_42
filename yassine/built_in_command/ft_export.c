@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 04:45:32 by yajallal          #+#    #+#             */
-/*   Updated: 2023/04/06 05:40:47 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/04/07 02:03:42 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,18 +55,4 @@ char **ft_export(char **old_env, char *env_var)
 	free(old_env);
 	old_env = new_env;
 	return (old_env);
-}
-int main(int argc, char const *argv[], char **env)
-{
-	char **old_env;
-	char **new_env;
-	old_env = dup_env(env);
-	new_env = ft_export(old_env, "Yassine=boss");
-	int i;
-	while (new_env[i])
-	{
-		printf("%s\n", new_env[i]);
-		i++;
-	}
-	return 0;
 }
