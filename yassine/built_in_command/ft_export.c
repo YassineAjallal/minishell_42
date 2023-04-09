@@ -6,30 +6,24 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 04:45:32 by yajallal          #+#    #+#             */
-/*   Updated: 2023/04/07 02:03:42 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/04/09 00:45:14 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "built_in_command.h"
 
-char **dup_env(char **env)
+int check_env_var(char *env_var)
 {
-	char **environ;
-	int env_length;
-	int i;
+	char **split_var;
 
-	env_length = ft_strlen2d(env);
-	environ = malloc(sizeof(char *) * (env_length + 1));
-	i = 0;
-	if (!environ)
-		return (NULL);
-	while(i < env_length)
+	split_var = ft_split(env_var, '=');
+	if (ft_strlen2d(split_var) == 1)
 	{
-		environ[i] = ft_strdup(env[i]);
-		i++;
+		free(split_var[0]);
+		ft_free2d(split_var);
+		return (0);
 	}
-	environ[i] = NULL;
-	return (environ);
+	return (1);
 }
 
 char **ft_export(char **old_env, char *env_var)
@@ -40,8 +34,15 @@ char **ft_export(char **old_env, char *env_var)
 
 	i = 0;
 	env_length = ft_strlen2d(old_env);
-	if (!old_env)
+	if (!env_var)
 		return (NULL);
+	// if (!check_env_var(env_var))
+	// {
+	// 	free(env_var);
+	// 	return (NULL);
+	// }
+	// if (!old_env)
+	// 	return (NULL);
 	new_env = malloc(sizeof(char *) * (env_length + 2));
 	if (!new_env)
 		return (NULL);
@@ -53,6 +54,7 @@ char **ft_export(char **old_env, char *env_var)
 	new_env[i] = ft_strdup(env_var);
 	new_env[++i] = NULL;
 	free(old_env);
+	// free(env_var);
 	old_env = new_env;
 	return (old_env);
 }

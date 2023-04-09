@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/06 23:04:30 by yajallal          #+#    #+#             */
-/*   Updated: 2023/04/07 02:13:57 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/04/09 00:48:23 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ char **ft_unset(char *unset_var, char **old_env)
 	variable_index = 0;
 	env_length = ft_strlen2d(old_env);	
 	if (!search_env(old_env, unset_var, &variable_index))
-		return (NULL);
+		return (old_env);
 	new_env = (char **)malloc(sizeof(char *) * env_length);
 	while(j < env_length - 1)
 	{
@@ -63,33 +63,33 @@ char **ft_unset(char *unset_var, char **old_env)
 	return (old_env);
 }
 
-// int main(int ac, char **av, char **env)
-// {
-// 	char **environ;
-// 	int i;
+int main(int ac, char **av, char **env)
+{
+	char **environ;
+	int i;
 
-// 	i = 0;
-// 	environ = dup_env(env);
-// 	while (i < ft_strlen2d(environ))
-// 	{
-// 		printf("%s\n",environ[i]);
-// 		i++;
-// 	}
-// 	printf("\n------------------------------------------------------\n\n");
-// 	i = 0;
-// 	environ = ft_export(environ, "YASSINE=chdiid");
-// 	while (i < ft_strlen2d(environ))
-// 	{
-// 		printf("%s\n",environ[i]);
-// 		i++;
-// 	}
-// 	printf("\n------------------------------------------------------\n\n");
-// 	i = 0;
-// 	environ = ft_unset("YASSINE", environ);
-// 	while (i < ft_strlen2d(environ))
-// 	{
-// 		printf("%s\n",environ[i]);
-// 		i++;
-// 	}
+	i = 0;
+	environ = dup_env(env);
+	while (i < ft_strlen2d(environ))
+	{
+		printf("%s\n",environ[i]);
+		i++;
+	}
+	printf("\n------------------------------------------------------\n\n");
+	i = 0;
+	environ = ft_export(environ, "YASSINE=chdiid");
+	while (i < ft_strlen2d(environ))
+	{
+		printf("%s\n",environ[i]);
+		i++;
+	}
+	printf("\n------------------------------------------------------\n\n");
+	i = 0;
+	environ = ft_unset("YASSINE", environ);
+	while (i < ft_strlen2d(environ))
+	{
+		printf("%s\n",environ[i]);
+		i++;
+	}
 	
-// }
+}
