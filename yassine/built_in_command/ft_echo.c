@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/10 15:30:22 by yajallal          #+#    #+#             */
-/*   Updated: 2023/04/10 16:14:43 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/04/10 17:00:46 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ int check_var_in_env(char *env_var, int var_length, char **env)
 	}
 	return (-1);
 }
+
 void ft_echo(char *echo_str, char **env)
 {
 	int i;
@@ -52,14 +53,13 @@ void ft_echo(char *echo_str, char **env)
 			next_space = get_next_space(echo_str, i + 1);
 			var_index_in_env = check_var_in_env(echo_str + i + 1, next_space, env);
 			if (var_index_in_env >= 0)
-			{
-				printf("%s", env[var_index_in_env] + next_space + 1);
-			}
+				ft_putstr_fd(env[var_index_in_env] + next_space + 1, 1);
 			i = i + next_space + 1;
 			while(echo_str[i] == ' ' && echo_str[i])
 				i++;
 		}
-		write(1, &echo_str[i], 1);
+		if (echo_str[i])
+			ft_putchar_fd(echo_str[i], 1);
 		i++;
 	}
 	printf("\n");
@@ -67,6 +67,6 @@ void ft_echo(char *echo_str, char **env)
 
 int main(int argc, char const *argv[], char **env)
 {
-	ft_echo("$HOME", env);
+	ft_echo("yassine $HOME", env);
 	return 0;
 }
