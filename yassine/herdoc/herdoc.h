@@ -1,32 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_family.c                                        :+:      :+:    :+:   */
+/*   herdoc.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/01/13 11:47:18 by yajallal          #+#    #+#             */
-/*   Updated: 2023/04/02 02:15:31 by yajallal         ###   ########.fr       */
+/*   Created: 2023/04/12 17:08:27 by yajallal          #+#    #+#             */
+/*   Updated: 2023/04/12 23:20:04 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_pipex.h"
+#ifndef HERDOC_H
+#define HERDOC_H
 
-void	exec_cmd(char **av, char **envp)
-{
-	char	**cmd;
-	char	*fpath;
+#include <stdio.h>
+#include <readline/readline.h>
+#include <readline/history.h>
 
-	ft_checkf(av[1], "pipex: no such file or directory:", 1);
-	ft_checkr(av[1], 1);
-	cmd = ft_quotes(av[2]);
-	fpath = ft_cmdpath(cmd[0], envp);
-	if (!fpath)
-	{
-		ft_perror(2, "pipex: %s: command not found\n", cmd[0]);
-		free(fpath);
-		exit(127);
-	}
-	ft_checkx(fpath, 126);
-	execve(fpath, cmd, envp);
-}
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 42
+# endif
+
+#include "../libft/libft.h"
+
+char	*get_next_line(int fd);
+char	*ft_read(int fd, char *save);
+char	*ft_copy(char *save);
+char	*ft_getnews(char *save);
+
+#endif
