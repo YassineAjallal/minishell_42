@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 04:45:32 by yajallal          #+#    #+#             */
-/*   Updated: 2023/04/24 15:14:30 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/04/24 16:54:24 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,10 @@ void export_no_param(t_env *export)
 	}
 }
 
+int valid_variable(char *var)
+{
+	
+}
 
 int main(int ac, char **av, char **env)
 {

@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 21:43:56 by yajallal          #+#    #+#             */
-/*   Updated: 2023/04/24 14:28:56 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/04/24 17:33:29 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int ft_strlen2d(char **str);
 char *multiple_join(char **path, int length);
 void	ft_free2d(char **str);
 
-char	**ft_unset(char *unset_var, char **old_env);
+int	ft_unset(char *unset_var, t_env *old_env);
 t_env 	*dup_env(char **inherit_env);
 void	ft_env(t_env *env);
 #endif

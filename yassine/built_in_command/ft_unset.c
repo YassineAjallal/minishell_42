@@ -6,90 +6,73 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/06 23:04:30 by yajallal          #+#    #+#             */
-/*   Updated: 2023/04/09 00:48:23 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/04/24 17:49:26 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "built_in_command.h"
 
-int search_env(char **env, char *to_search, int *variable_index)
+int search_env(t_env *env, char *to_search, int *var_pos)
 {
 	int i;
-	int env_length;	
 
 	i = 0;
-	env_length = ft_strlen2d(env);	
-	while(i < env_length)
+	while(i < env->nb_variables)
 	{
-		if (ft_strncmp(env[i], to_search, ft_strlen(to_search)) == 0)
-		{
-			*variable_index = i;
-			return (1);
+		if (ft_strlen(to_search) == ft_strlen(env->variables[i].name))
+		{	
+			if (ft_strncmp(env->variables[i].name, to_search, ft_strlen(to_search)) == 0)
+			{
+				*var_pos = i;
+				return (1);
+			}
 		}
 		i++;
 	}
 	return (0);
 }
 
-char **ft_unset(char *unset_var, char **old_env)
+int	ft_unset(char *unset_var, t_env *old_env)
 {
 	int i;
-	int variable_index;
-	int env_length;
-	char **new_env;
-	int j;
-	
+	int var_pos;
+
 	i = 0;
-	j = 0;
-	variable_index = 0;
-	env_length = ft_strlen2d(old_env);	
-	if (!search_env(old_env, unset_var, &variable_index))
-		return (old_env);
-	new_env = (char **)malloc(sizeof(char *) * env_length);
-	while(j < env_length - 1)
+	if (!search_env(old_env, unset_var, &var_pos))
+		return (0);
+	while (i < old_env->nb_variables)
 	{
-		if (i == variable_index)
+		if (i == var_pos)
 		{
-			free(old_env[variable_index]);
-			i++;
+			while (i < old_env->nb_variables - 1)
+			{
+				free(old_env->variables[i].name);
+				free(old_env->variables[i].value);
+				old_env->variables[i].name = ft_strdup(old_env->variables[i + 1].name);
+				old_env->variables[i].value = ft_strdup(old_env->variables[i + 1].value);
+				i++;
+			}
+			free(old_env->variables[i].name);
+			free(old_env->variables[i].value);
+			old_env->nb_variables--;
+			break;
 		}
-		new_env[j] = old_env[i];
-		j++;
 		i++;
 	}
-	new_env[j] = NULL;
-	free(old_env);
-	old_env = new_env;
-	return (old_env);
+	return (1);
 }
 
 int main(int ac, char **av, char **env)
 {
-	char **environ;
+	t_env *environ;
 	int i;
 
 	i = 0;
 	environ = dup_env(env);
-	while (i < ft_strlen2d(environ))
-	{
-		printf("%s\n",environ[i]);
-		i++;
-	}
-	printf("\n------------------------------------------------------\n\n");
-	i = 0;
-	environ = ft_export(environ, "YASSINE=chdiid");
-	while (i < ft_strlen2d(environ))
-	{
-		printf("%s\n",environ[i]);
-		i++;
-	}
-	printf("\n------------------------------------------------------\n\n");
-	i = 0;
-	environ = ft_unset("YASSINE", environ);
-	while (i < ft_strlen2d(environ))
-	{
-		printf("%s\n",environ[i]);
-		i++;
-	}
-	
+	ft_unset("PATH", environ);
+	// ft_env(environ);
+	ft_unset("SHELL", environ);
+	ft_unset("LOGNAME", environ);
+	ft_env(environ);
+	pause();
 }
