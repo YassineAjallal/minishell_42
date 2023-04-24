@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/06 23:04:30 by yajallal          #+#    #+#             */
-/*   Updated: 2023/04/24 17:49:26 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/04/24 18:49:25 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,19 +60,4 @@ int	ft_unset(char *unset_var, t_env *old_env)
 		i++;
 	}
 	return (1);
-}
-
-int main(int ac, char **av, char **env)
-{
-	t_env *environ;
-	int i;
-
-	i = 0;
-	environ = dup_env(env);
-	ft_unset("PATH", environ);
-	// ft_env(environ);
-	ft_unset("SHELL", environ);
-	ft_unset("LOGNAME", environ);
-	ft_env(environ);
-	pause();
 }
