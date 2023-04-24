@@ -6,55 +6,73 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 04:45:32 by yajallal          #+#    #+#             */
-/*   Updated: 2023/04/09 00:45:14 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/04/24 15:14:30 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "built_in_command.h"
 
-int check_env_var(char *env_var)
+void swap_variable(t_variable *var1, t_variable *var2)
 {
-	char **split_var;
+	t_variable *tmp;
+	
+	tmp = malloc(sizeof(t_variable));
+	tmp->name = var1->name;
+	tmp->value = var1->value;
 
-	split_var = ft_split(env_var, '=');
-	if (ft_strlen2d(split_var) == 1)
-	{
-		free(split_var[0]);
-		ft_free2d(split_var);
-		return (0);
-	}
-	return (1);
+	var1->name = var2->name;
+	var1->value = var2->value;
+
+	var2->name = tmp->name;
+	var2->value = tmp->value;
+	free(tmp);
 }
 
-char **ft_export(char **old_env, char *env_var)
+void sort_env_variables(t_env *env)
 {
-	int env_length;
-	char **new_env;
+	int i;
+	int j;
+	char *tmp;
+	size_t length;
+
+	i = 0;
+	while(i < env->nb_variables)
+	{
+		j = i + 1;
+		while (j < env->nb_variables)
+		{
+			if (ft_strlen(env->variables[i].name) > ft_strlen(env->variables[j].name))
+				length = ft_strlen(env->variables[i].name);
+			else
+				length = ft_strlen(env->variables[j].name);
+			if (ft_strncmp(env->variables[i].name, env->variables[j].name, length) > 0)
+				swap_variable(&env->variables[i], &env->variables[j]);
+			j++;
+		}
+		i++;
+	}
+}
+
+void export_no_param(t_env *export)
+{
 	int i;
 
 	i = 0;
-	env_length = ft_strlen2d(old_env);
-	if (!env_var)
-		return (NULL);
-	// if (!check_env_var(env_var))
-	// {
-	// 	free(env_var);
-	// 	return (NULL);
-	// }
-	// if (!old_env)
-	// 	return (NULL);
-	new_env = malloc(sizeof(char *) * (env_length + 2));
-	if (!new_env)
-		return (NULL);
-	while(i < env_length)
+	sort_env_variables(export);
+	while(i < export->nb_variables)
 	{
-		new_env[i] = old_env[i];
+		if (export->variables[i].value)
+			printf("declare -x %s=\"%s\"\n", export->variables[i].name, export->variables[i].value);
+		else
+			printf("declare -x %s\n", export->variables[i].name);
 		i++;
 	}
-	new_env[i] = ft_strdup(env_var);
-	new_env[++i] = NULL;
-	free(old_env);
-	// free(env_var);
-	old_env = new_env;
-	return (old_env);
+}
+
+
+int main(int ac, char **av, char **env)
+{
+	t_env *environ;
+	environ = dup_env(env);
+	export_no_param(environ);
 }
