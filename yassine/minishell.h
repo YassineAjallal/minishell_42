@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/26 15:53:09 by yajallal          #+#    #+#             */
-/*   Updated: 2023/04/26 18:26:59 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/04/26 22:55:18 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 #include <stdbool.h> 
 #include <stdio.h>
 #include <readline/readline.h>
+#include <errno.h>
 #include <fcntl.h>
 
 typedef struct s_variable
