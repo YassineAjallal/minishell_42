@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/26 15:53:09 by yajallal          #+#    #+#             */
-/*   Updated: 2023/04/26 15:25:42 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/04/26 18:26:59 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@
 #include <stdio.h>
 #include <readline/readline.h>
 #include <fcntl.h>
-// #include "built_in_command/built_in_command.h"
 
 typedef struct s_variable
 {

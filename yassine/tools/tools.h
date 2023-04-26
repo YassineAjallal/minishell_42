@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/25 17:42:02 by yajallal          #+#    #+#             */
-/*   Updated: 2023/04/25 17:48:23 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/04/26 18:27:08 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,4 +14,6 @@
 #define TOOLS_H
 
 #include "../minishell.h"
+#include "../built_in_command/built_in_command.h"
+
 #endif
