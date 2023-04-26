@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 14:14:36 by yajallal          #+#    #+#             */
-/*   Updated: 2023/04/26 15:31:34 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/04/26 16:35:19 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,10 +56,15 @@ int ft_export(char *user_input, t_global_info *g_info)
 		}
 		else if (ft_strlen2d(equal_split) > 1)
 		{
-			equal_pos = get_until_equal(vars[i]);
-			new_var.name = ft_substr(vars[i], 0, equal_pos);
-			new_var.value = ft_substr(vars[i], equal_pos + 1, ft_strlen(vars[i]));
-			export_normal_var(new_var, g_info->environ, g_info->export_env);
+			if (valid_name(equal_split[0]))
+			{		
+				equal_pos = get_until_equal(vars[i]);
+				new_var.name = ft_substr(vars[i], 0, equal_pos);
+				new_var.value = ft_substr(vars[i], equal_pos + 1, ft_strlen(vars[i]));
+				export_normal_var(new_var, g_info->environ, g_info->export_env);
+			}
+			else
+				error_count++;
 		}
 		else
 			error_count++;
