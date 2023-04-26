@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 17:08:23 by yajallal          #+#    #+#             */
-/*   Updated: 2023/04/15 17:29:49 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/04/25 17:41:13 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,6 @@ void read_line_heredoc(char *delimiter, char **env)
 {
 	char *heredoc_input;
 	int heredoc_pipe[2];
-	// char *line_from_heredoc;
-	char read_heredoc[100];
 	char **cmd = ft_split("grep hello", ' ');
 	pipe(heredoc_pipe);
 
