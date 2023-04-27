@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/06 00:28:19 by yajallal          #+#    #+#             */
-/*   Updated: 2023/04/06 00:38:43 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/04/27 22:10:48 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,10 @@ char *multiple_join(char **path, int length)
 	char *new_path = NULL;
 	char *add_slash;
 
-	i = 0;
+	i = 1;
+	tmp = ft_strjoin(new_path, path[0]);
+	free(new_path);
+	new_path = tmp;
 	while (i < length)
 	{
 		add_slash = ft_strjoin("/", path[i]);

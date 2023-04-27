@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 21:13:03 by yajallal          #+#    #+#             */
-/*   Updated: 2023/04/27 22:05:28 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/04/27 22:06:35 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,7 +148,7 @@ int main(int ac, char **av, char **env)
 	cmd->g_info = g_info;
 	cmd->cmd = ft_strdup("cd");
 	cmd->command_path = cmd_path(cmd->cmd, cmd->g_info->env_array);
-	cmd->cmd_parameter = ft_split("cd ~/Desktop", ' ');
+	cmd->cmd_parameter = ft_split("cd ~/Desktop/hhhh", ' ');
 	/* redirect */
 	cmd->built_in = true;
 	cmd->redirect_in = false;
