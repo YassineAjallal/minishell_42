@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 21:15:08 by yajallal          #+#    #+#             */
-/*   Updated: 2023/04/26 22:48:00 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/04/27 15:22:03 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,8 +66,4 @@ void	ft_checkx(char *file, int ex)
 		ft_perror(2, "minishell: %s: permission denied\n", file);
 		exit(ex);
 	}
-}
-int main()
-{
-	ft_checkx("tools.h", 126);
 }

@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 04:45:32 by yajallal          #+#    #+#             */
-/*   Updated: 2023/04/26 15:35:57 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/04/27 17:41:12 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,11 +109,14 @@ int fill_var_list(t_variable new_var, t_env *env)
 }
 
 /* add a new valid variable */
-int export_normal_var(t_variable new_var, t_env *env, t_env *export)
+int export_normal_var(t_variable new_var, t_global_info *g_info)
 {
-	if (!fill_var_list(new_var, env))
+	if (!fill_var_list(new_var, g_info->environ))
 		return (0);
-	if (!fill_var_list(new_var, export))
+	if (g_info->env_array)
+		ft_free2d(g_info->env_array);
+	g_info->env_array = convert_env_array(g_info->environ);
+	if (!fill_var_list(new_var, g_info->export_env))
 		return (0);
 	return (1);
 }

@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/26 15:53:09 by yajallal          #+#    #+#             */
-/*   Updated: 2023/04/26 22:55:18 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/04/27 17:36:52 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ typedef struct s_global_info
 {
 	t_env	*environ;
 	t_env	*export_env;
+	char 	**env_array;
 	int		exit_code;
 }	t_global_info;
 
@@ -54,6 +55,7 @@ typedef struct s_command
 	char *infile;
 	char *outfile;
 	char *delemiter;
+	t_global_info *g_info;
 } t_command;
 
 #endif

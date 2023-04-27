@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 00:28:08 by yajallal          #+#    #+#             */
-/*   Updated: 2023/04/24 15:09:31 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/04/27 17:37:30 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,27 @@ t_env *dup_env(char **inherit_env)
 		i++;
 	}
 	return (env);
+}
+/* convert environ to 2d array */
+char **convert_env_array(t_env *env)
+{
+	char **env_array;
+	char *add_equal;
+	int i;
+
+	i = 0;
+	env_array = malloc(sizeof(char *) * (env->nb_variables + 1));
+	if (!env_array)
+		return (NULL);
+	while (i < env->nb_variables)
+	{
+		add_equal = ft_strjoin(env->variables[i].name, "=");
+		env_array[i] = ft_strjoin(add_equal, env->variables[i].value);
+		free(add_equal);
+		i++;
+	}
+	env_array[i] = NULL;
+	return (env_array);
 }
 
 /* print environment variables */
