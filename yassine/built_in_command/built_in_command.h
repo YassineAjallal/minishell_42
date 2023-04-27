@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 21:43:56 by yajallal          #+#    #+#             */
-/*   Updated: 2023/04/27 18:50:01 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/04/27 22:03:45 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@
 // 	t_variable *variables;
 // }	t_env;
 
+int ft_cd(char *path);
 char *ft_pwd(void);
 int ft_strlen2d(char **str);
 char *multiple_join(char **path, int length);

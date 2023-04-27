@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 21:13:03 by yajallal          #+#    #+#             */
-/*   Updated: 2023/04/27 18:58:14 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/04/27 22:05:28 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void stdin_redirect(t_command *cmd)
 void stdout_redirect(t_command *cmd)
 {
 	int stdout_fd;
-	if (cmd->redirect_in == true)
+	if (cmd->redirect_out == true)
 	{
 		stdout_fd = open(cmd->outfile, O_CREAT | O_WRONLY | O_TRUNC, 0644);
 		if (stdout_fd < 0)
@@ -62,7 +62,7 @@ void stdout_redirect(t_command *cmd)
 void append_redirect(t_command *cmd)
 {
 	int append_fd;
-	if (cmd->redirect_in == true)
+	if (cmd->redirect_append == true)
 	{
 		append_fd = open(cmd->outfile, O_CREAT | O_WRONLY | O_APPEND, 0644);
 		if (append_fd < 0)
@@ -109,6 +109,15 @@ void append_redirect(t_command *cmd)
 // 	}
 // }
 
+void exec_built_in(t_command *cmd)
+{
+	if(ft_strcmp(cmd->cmd, "pwd") == 0)
+		printf("%s\n", ft_pwd());
+	else if (ft_strcmp(cmd->cmd, "env") == 0)
+		ft_env(cmd->g_info->environ);
+	else if (ft_strcmp(cmd->cmd, "cd") == 0)
+		ft_cd(cmd->cmd_parameter[1]);
+}
 void cmd_exec(t_command *cmd)
 {
 	stdin_redirect(cmd);
@@ -120,7 +129,12 @@ void cmd_exec(t_command *cmd)
 		if(cmd_validation(cmd))
 			execve(cmd->command_path, cmd->cmd_parameter, cmd->g_info->env_array);
 	}
+	else
+	{
+		exec_built_in(cmd);
+	}
 }
+
 int main(int ac, char **av, char **env)
 {
 	t_global_info *g_info;
@@ -132,14 +146,15 @@ int main(int ac, char **av, char **env)
 	g_info->export_env = dup_env(env);
 	g_info->env_array = convert_env_array(g_info->environ);
 	cmd->g_info = g_info;
-	cmd->cmd = ft_strdup("ls");
+	cmd->cmd = ft_strdup("cd");
 	cmd->command_path = cmd_path(cmd->cmd, cmd->g_info->env_array);
-	cmd->cmd_parameter = ft_split("ls", ' ');
+	cmd->cmd_parameter = ft_split("cd ~/Desktop", ' ');
 	/* redirect */
-	cmd->built_in = false;
+	cmd->built_in = true;
 	cmd->redirect_in = false;
 	cmd->redirect_append = false;
 	cmd->redirect_out = false;
+	cmd->infile = ft_strdup("out.txt");
 	cmd->herdoc = false;
 	cmd_exec(cmd);
 }

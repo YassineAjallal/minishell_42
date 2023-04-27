@@ -1,0 +1,12 @@
+a.out
+cmd_exec.c
+cmd_tools.c
+file_checker.c
+out.txt
+tools.h
+a.out
+cmd_exec.c
+cmd_tools.c
+file_checker.c
+out.txt
+tools.h
