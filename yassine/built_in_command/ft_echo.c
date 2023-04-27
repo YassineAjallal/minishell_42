@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/10 15:30:22 by yajallal          #+#    #+#             */
-/*   Updated: 2023/04/10 17:00:46 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/04/27 18:57:55 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,8 +65,3 @@ void ft_echo(char *echo_str, char **env)
 	printf("\n");
 }
 
-int main(int argc, char const *argv[], char **env)
-{
-	ft_echo("yassine $HOME", env);
-	return 0;
-}

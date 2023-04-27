@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/12 17:08:23 by yajallal          #+#    #+#             */
-/*   Updated: 2023/04/25 17:41:13 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/04/27 18:57:27 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,3 @@ void read_line_heredoc(char *delimiter, char **env)
 	execve("/usr/bin/grep", cmd, env);
 }
 
-int main(int ac, char *av[], char **env)
-{
-	read_line_heredoc("yassine", env);
-	return 0;
-}

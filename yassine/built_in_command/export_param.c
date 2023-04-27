@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 14:14:36 by yajallal          #+#    #+#             */
-/*   Updated: 2023/04/26 16:35:19 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/04/27 18:57:13 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ int ft_export(char *user_input, t_global_info *g_info)
 				equal_pos = get_until_equal(vars[i]);
 				new_var.name = ft_substr(vars[i], 0, equal_pos);
 				new_var.value = ft_substr(vars[i], equal_pos + 1, ft_strlen(vars[i]));
-				export_normal_var(new_var, g_info->environ, g_info->export_env);
+				export_normal_var(new_var, g_info);
 			}
 			else
 				error_count++;
@@ -72,16 +72,4 @@ int ft_export(char *user_input, t_global_info *g_info)
 	}
 	return (error_count);
 }
-int main(int ac, char **av, char **environ)
-{
-	t_global_info *g_info;
-	
-	g_info = malloc(sizeof(t_global_info));
-	g_info->environ = dup_env(environ);
-	g_info->export_env = dup_env(environ);
-	ft_export(av[1], g_info);
-	ft_env(g_info->environ);
-	printf("\n-----------------------------------------------------\n\n");
-	export_no_param(g_info->export_env);
-	return 0;
-}
+

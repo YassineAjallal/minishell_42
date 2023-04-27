@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/26 15:53:09 by yajallal          #+#    #+#             */
-/*   Updated: 2023/04/27 17:36:52 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/04/27 18:44:39 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ typedef struct s_global_info
 
 typedef struct s_command
 {
+	char *cmd;
 	char *command_path;
 	char option;
 	char **cmd_parameter;
