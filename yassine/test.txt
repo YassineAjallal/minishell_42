@@ -1,0 +1,13 @@
+Makefile
+a.out
+built_in_command
+herdoc
+libft
+minishell.c
+minishell.h
+pipes.c
+piping.c
+readline
+structs.h
+test.txt
+tools
