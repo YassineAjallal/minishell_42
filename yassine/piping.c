@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/26 22:26:04 by yajallal          #+#    #+#             */
-/*   Updated: 2023/04/02 02:12:03 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/04/30 14:24:59 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,68 +38,62 @@ int close_pipes(int **pipes, int nb_pipe)
 	}
 }
 
-int exec_cmd(int stdin, int stdout, char *cmd, int pipes, int nb_pipe)
-{
-	if (stdin != 0)
-		dup2(stdin, STDIN_FILENO);
-	if (stdout != 1)
-		dup2(stdout, STDOUT_FILENO);
-	close_pipes(pipes, nb_pipe);
+// int exec_cmd(int stdin, int stdout, char *cmd, int pipes, int nb_pipe)
+// {
+// 	if (stdin != 0)
+// 		dup2(stdin, STDIN_FILENO);
+// 	if (stdout != 1)
+// 		dup2(stdout, STDOUT_FILENO);
+// 	close_pipes(pipes, nb_pipe);
 	
 	
-}
+// }
 
-int piping(int infile, int outfile, int nb_pipe, char **cmds, char **envp)
-{
+// int piping(t_command **cmds)
+// {
 
-	pid_t pid;
-	int pipes[nb_pipe][2];
-	int i;
-	int j;
+// 	pid_t pid;
+// 	int pipes[nb_pipe][2];
+// 	int i;
+// 	int j;
 
-	i = 0;
-	if (!init_pipe(pipes, nb_pipe))
-		return (0);
-	pid = fork();
-	if (pid == 0)
-	{
-		dup2(pipes[0][1], STDOUT_FILENO);
-		execve("/bin/ls", string, envp);
-	}
-	i++;
-	while (i < nb_pipe + 1)
-	{
-		if (i = 0)
-		{
+// 	i = 0;
+// 	if (!init_pipe(pipes, nb_pipe))
+// 		return (0);
+// 	pid = fork();
+// 	if (pid == 0)
+// 	{
+// 		dup2(pipes[0][1], STDOUT_FILENO);
+// 		cmd_exec()
+// 	}
+// 	i++;
+// 	while (i < nb_pipe + 1)
+// 	{
+// 		if (i = 0)
+// 		{
 			
-		}
-		pid = fork();
-		if (pid == 0)
-		{
-			dup2(pipes[i - 1][0], STDIN_FILENO);
-			dup2(pipes[i][1], STDOUT_FILENO);
-			execve("/usr/bin/grep", string, envp);
-		}
-		i++;
-	}
-	pid = fork();
-	if (pid == 0)
-	{
-		dup2(pipes[i - 1][0], STDIN_FILENO);
-		execve("/usr/bin/grep", string, envp);
-	}
+// 		}
+// 		pid = fork();
+// 		if (pid == 0)
+// 		{
+// 			dup2(pipes[i - 1][0], STDIN_FILENO);
+// 			dup2(pipes[i][1], STDOUT_FILENO);
+// 			execve("/usr/bin/grep", string, envp);
+// 		}
+// 		i++;
+// 	}
+// 	pid = fork();
+// 	if (pid == 0)
+// 	{
+// 		dup2(pipes[i - 1][0], STDIN_FILENO);
+// 		execve("/usr/bin/grep", string, envp);
+// 	}
 
-	i = 0;
-	while (i < 5)
-	{
-		wait(NULL);
-		i++;
-	}
-	return (0);
-}
-
-int main(int ac, char **av, char **env)
-{
-	t_pipe pipes;
-	piping(1, 1, 4, NULL, env);
-}
+// 	i = 0;
+// 	while (i < 5)
+// 	{
+// 		wait(NULL);
+// 		i++;
+// 	}
+// 	return (0);
+// }

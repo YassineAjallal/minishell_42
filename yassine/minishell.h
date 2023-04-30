@@ -6,57 +6,15 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/26 15:53:09 by yajallal          #+#    #+#             */
-/*   Updated: 2023/04/27 21:27:40 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/04/30 14:34:17 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 #define MINISHELL_H
 
-#include "./libft/libft.h"
-#include <stdlib.h>
-#include <unistd.h>
-#include <stdbool.h> 
-#include <stdio.h>
-#include <readline/readline.h>
-#include <errno.h>
-#include <fcntl.h>
-
-typedef struct s_variable
-{
-	char *name;
-	char *value;
-} t_variable;
-
-typedef struct s_env
-{
-	int nb_variables;
-	t_variable *variables;
-}	t_env;
-
-typedef struct s_global_info
-{
-	t_env	*environ;
-	t_env	*export_env;
-	char 	**env_array;
-	int		exit_code;
-}	t_global_info;
-
-typedef struct s_command
-{
-	char *cmd;
-	char *command_path;
-	char option;
-	char **cmd_parameter;
-	bool built_in;
-	bool redirect_in;
-	bool redirect_out;
-	bool redirect_append;
-	bool herdoc;
-	char *infile;
-	char *outfile;
-	char *delemiter;
-	t_global_info *g_info;
-} t_command;
+#include "./tools/tools.h"
+#include "./built_in_command/built_in_command.h"
+#include "structs.h"
 
 #endif

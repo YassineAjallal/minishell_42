@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 21:13:03 by yajallal          #+#    #+#             */
-/*   Updated: 2023/04/27 22:06:35 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/04/30 15:16:24 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,26 +135,26 @@ void cmd_exec(t_command *cmd)
 	}
 }
 
-int main(int ac, char **av, char **env)
-{
-	t_global_info *g_info;
-	t_command *cmd;
-	cmd = malloc(sizeof(t_command));
-	g_info = malloc(sizeof(t_global_info));
+// int main(int ac, char **av, char **env)
+// {
+// 	t_global_info *g_info;
+// 	t_command *cmd;
+// 	cmd = malloc(sizeof(t_command));
+// 	g_info = malloc(sizeof(t_global_info));
 	
-	g_info->environ = dup_env(env);
-	g_info->export_env = dup_env(env);
-	g_info->env_array = convert_env_array(g_info->environ);
-	cmd->g_info = g_info;
-	cmd->cmd = ft_strdup("cd");
-	cmd->command_path = cmd_path(cmd->cmd, cmd->g_info->env_array);
-	cmd->cmd_parameter = ft_split("cd ~/Desktop/hhhh", ' ');
-	/* redirect */
-	cmd->built_in = true;
-	cmd->redirect_in = false;
-	cmd->redirect_append = false;
-	cmd->redirect_out = false;
-	cmd->infile = ft_strdup("out.txt");
-	cmd->herdoc = false;
-	cmd_exec(cmd);
-}
+// 	g_info->environ = dup_env(env);
+// 	g_info->export_env = dup_env(env);
+// 	g_info->env_array = convert_env_array(g_info->environ);
+// 	cmd->g_info = g_info;
+// 	cmd->cmd = ft_strdup("ls");
+// 	cmd->command_path = cmd_path(cmd->cmd, cmd->g_info->env_array);
+// 	cmd->cmd_parameter = ft_split("ls -l", ' ');
+// 	/* redirect */
+// 	cmd->built_in = false;
+// 	cmd->redirect_in = false;
+// 	cmd->redirect_append = false;
+// 	cmd->redirect_out = true;
+// 	cmd->outfile = ft_strdup("out.txt");
+// 	cmd->herdoc = false;
+// 	cmd_exec(cmd);
+// }

@@ -1,37 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_cd.c                                            :+:      :+:    :+:   */
+/*   history.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/02 22:18:08 by yajallal          #+#    #+#             */
-/*   Updated: 2023/04/28 18:37:56 by yajallal         ###   ########.fr       */
+/*   Created: 2023/04/28 16:35:52 by yajallal          #+#    #+#             */
+/*   Updated: 2023/04/28 16:45:04 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "built_in_command.h"
+#include "../minishell.h"
 
-int ft_cd(char *path)
+void history(char *previous_cmd)
 {
-	char *new_path;
-	char **home;
-	int i;
 	
-	i = 0;
-	if (path[0] == '~')
-	{
-		home = ft_split(path, '/');
-		free(home[0]);
-		home[0] = getenv("HOME");
-		new_path = multiple_join(home, ft_strlen2d(home));
-		free(path);
-		path = new_path;
-	}
-	if (chdir(path) != 0)
-	{
-		printf("minishell: cd: %s: No such file or directory\n",path);
-		return (0);
-	}
-	return (1);
 }
