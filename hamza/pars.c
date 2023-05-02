@@ -25,49 +25,12 @@ typedef struct s_prompt
 {
 	t_mini	*cmds;
 	char	**envp;
-	pid_t	pid;
 }		t_prompt;
-
-
-static int	counting(char const *s, char c)
-{
-	int	i;
-	enum s_cases s_c;
-	int	cnt;
-
-	i = 0;
-	cnt = 0;
-	while (s[i] == c)
-		i++;
-	while (s[i])
-	{
-		printf("%c",s[i]);
-		if (s[i] == '"') {
-			i++;
-			while (s[i] != '"') {
-				i++;
-			}
-			// if (s[i] != 0)
-				cnt++;
-		}
-		if (s[i] == c)
-		{
-			while (s[i] == c)
-				i++;
-			if (s[i] != 0)
-				cnt++;
-		}
-		else
-			i++;
-	}
-	return (cnt + 1);
-}
 
 int is_skiped(char s)
 {
 	if ((s != ' ' || s == '"' || s == '\'') && s != '\0')
 	{
-		// printf("|%c|",s);
 		return 1;
 	}
 	return 0;
@@ -83,8 +46,10 @@ char **lexer(char *str,char **env)
 	char **splt;
 	while (str[i]) {
 		if(str[i] == ' ')
-			{line[j++] = '\n';
-			i++;}
+		{
+			line[j++] = '\n';
+			i++;
+		}
 		else if(str[i] == '|')
 		{
 			line[j++] = '\n';
@@ -189,8 +154,14 @@ char **lexer(char *str,char **env)
 		}
 	}
 	line[j] = 0;
-	// splt = ft_split(line, '\n');
-	printf("%s\n",line);
+	splt = ft_split(line, '\n');
+	// i = 0;
+	// while (splt[i]) {
+	// 	printf("%s\n",splt[i]);
+	// 	i++;
+	// }
+	// printf("\n");
+	// printf("%s\n",line);
 	return splt;
 }
 
@@ -258,6 +229,100 @@ void parser(char **splt,char **env)
 		printf("\n");
 	}
 }
+#include <stdbool.h> 
+typedef struct s_command
+{
+	char *cmd;
+	char *command_path;
+	char option;
+	char **cmd_parameter;
+	bool built_in;
+	bool redirect_in;
+	bool redirect_out;
+	bool redirect_append;
+	bool herdoc;
+	char *infile;
+	char *outfile;
+	char *delemiter;
+} t_command;
+
+t_command *rmplir_strct(char **splt)
+{
+	t_command *cmd;
+	char *str;
+	int stop = 0;
+	char **full_cmd;
+	int i = 0;
+	int j = 0;
+	int k = 0;
+	int cnt = 0;
+	int whr = 0;
+	// bax nhseb xhal mn '|' kayna
+	while (splt[i] != NULL) {
+		if(splt[i][j] == '|')
+			cnt++;
+		i++;
+	}
+	cmd = malloc(cnt * sizeof(t_command));
+
+
+	// hene 3amert cmd.cmd bo axmen command kayna fkola pipe
+	i = 0;
+	k = 0;
+	j = 0;
+	int strt = 0;
+	while (splt[i] != NULL) {
+		if(strt == 0)
+		{
+			cmd[whr].cmd = splt[i];
+			// printf("%s\t",cmd[whr].cmd);
+			strt = 1;
+			whr++;
+		}
+		if (splt[i][0] == '|') {
+			strt = 0;
+		}
+		i++;
+	}
+	// printf("\n");
+	i = 0;
+	j = 0;
+	whr = 0;
+	// hene bdit kan3amr fi cmd.cmd_parameter bi kolxi liha
+	while (splt[i] != NULL) {
+		k = i;
+		cnt = 0;
+		// if(i == 0)
+		// 	k++;
+		while (splt[k][0] != '|') 
+		{
+			printf("%s\n",splt[k]);
+			cnt++;
+			k++;
+			if(splt[k] == NULL)
+			{
+				break;
+			}
+		}
+		printf("cnt ->%d\n ",cnt);
+		cmd[whr].cmd_parameter = malloc(sizeof(char *) * cnt);
+		while (splt[i][0] != '|') 
+		{
+			// printf("%s\t ",splt[i]);
+			i++;
+			if(splt[i] == NULL)
+			{
+				stop = 1;
+				break;
+			}
+		}
+		i++;
+		if(stop == 1)
+			break;
+		whr++;
+	}
+	return  cmd;
+}
 
 int main(int ac,char **av,char *env[])
 {
@@ -271,6 +336,7 @@ int main(int ac,char **av,char *env[])
 		add_history(str);
         splt = lexer(str,env);
 		// parser(splt,env);
+		rmplir_strct(splt);
 		str = NULL;
 	}
 }
