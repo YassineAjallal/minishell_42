@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 04:45:32 by yajallal          #+#    #+#             */
-/*   Updated: 2023/04/28 18:38:08 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/02 15:53:01 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ void export_no_param(t_env *export)
 	}
 }
 
-/* fill a variables list */
+/* add new variable */
 int fill_var_list(t_variable new_var, t_env *env)
 {
 	t_variable *new_vars;
@@ -107,15 +107,28 @@ int fill_var_list(t_variable new_var, t_env *env)
 	env->variables = new_vars;
 	return (1);
 }
-
-/* add a new valid variable */
+/* reblace the old var by the new var if it is already exist*/
+void replace_variable(t_variable new_var, t_env *env)
+{
+	int existed;
+	existed = already_exist(new_var.name, env);
+	if (existed > -1)
+	{
+		free(env->variables[existed].value);
+		env->variables[existed].value = ft_strdup(new_var.value);
+	}
+}
+/* add a new vRble to export and env */
 int export_normal_var(t_variable new_var, t_global_info *g_info)
 {
+
+	replace_variable(new_var, g_info->environ);
 	if (!fill_var_list(new_var, g_info->environ))
 		return (0);
 	if (g_info->env_array)
 		ft_free2d(g_info->env_array);
 	g_info->env_array = convert_env_array(g_info->environ);
+	replace_variable(new_var, g_info->export_env);
 	if (!fill_var_list(new_var, g_info->export_env))
 		return (0);
 	return (1);

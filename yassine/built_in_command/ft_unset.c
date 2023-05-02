@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/06 23:04:30 by yajallal          #+#    #+#             */
-/*   Updated: 2023/04/28 18:38:19 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/02 12:50:54 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int search_env(t_env *env, char *to_search, int *var_pos)
 	return (0);
 }
 
-int	ft_unset(char *unset_var, t_env *old_env)
+int	unset_one_var(char *unset_var, t_env *old_env)
 {
 	int i;
 	int var_pos;
@@ -60,4 +60,18 @@ int	ft_unset(char *unset_var, t_env *old_env)
 		i++;
 	}
 	return (1);
+}
+
+int ft_unset(t_command *cmd)
+{
+	int i;
+	i = 1;
+	while (cmd->cmd_parameter[i])
+	{
+		unset_one_var(cmd->cmd_parameter[i], cmd->g_info->environ);
+		i++;
+	}
+	if (cmd->g_info->env_array)
+		ft_free2d(cmd->g_info->env_array);
+	cmd->g_info->env_array = convert_env_array(cmd->g_info->environ);
 }

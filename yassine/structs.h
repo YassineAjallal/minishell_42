@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/30 14:28:30 by yajallal          #+#    #+#             */
-/*   Updated: 2023/04/30 14:34:24 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/04/30 23:51:32 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ typedef struct s_command
 	char *infile;
 	char *outfile;
 	char *delemiter;
+	int herdoc_stdout;
 	t_global_info *g_info;
 } t_command;
 

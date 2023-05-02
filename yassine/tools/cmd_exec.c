@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 21:13:03 by yajallal          #+#    #+#             */
-/*   Updated: 2023/04/30 15:16:24 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/01 15:59:35 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,37 +77,38 @@ void append_redirect(t_command *cmd)
 		}
 	}
 }
-// void herdoc_mode(t_command *cmd)
-// {
+void herdoc_mode(t_command *cmd)
+{
 
-// 	char *heredoc_input;
-// 	char *cmd_path;
-// 	int heredoc_pipe[2];
+	char *heredoc_input;
+	char *cmd_path;
+	int heredoc_pipe[2];
 	
-// 	if (cmd->herdoc == true)
-// 	{		
-// 		if (pipe(heredoc_pipe) < 0)
-// 		{
-// 			ft_perror(2, "pipe error", cmd->outfile);
-// 			exit(EXIT_FAILURE);
-// 		}
-// 		while(1)
-// 		{
-// 			heredoc_input = readline("heredoc> ");
-// 			if (ft_strncmp(cmd->delemiter, heredoc_input, ft_strlen(cmd->delemiter)) == 0
-// 				&& ft_strlen(cmd->delemiter) == ft_strlen(heredoc_input))
-// 				break;
-// 			else
-// 			{
-// 				write(heredoc_pipe[1], heredoc_input, ft_strlen(heredoc_input));
-// 				write(heredoc_pipe[1], "\n", 1);
-// 			}
-// 		}
-// 		dup2(heredoc_pipe[0], STDIN_FILENO);
-// 		close(heredoc_pipe[0]);
-// 		close(heredoc_pipe[1]);
-// 	}
-// }
+	if (cmd->herdoc == true)
+	{		
+		if (pipe(heredoc_pipe) < 0)
+		{
+			ft_perror(2, "pipe error", cmd->outfile);
+			exit(EXIT_FAILURE);
+		}
+		while(1)
+		{
+			heredoc_input = readline("herdoc> ");
+			if (ft_strncmp(cmd->delemiter, heredoc_input, ft_strlen(cmd->delemiter)) == 0
+				&& ft_strlen(cmd->delemiter) == ft_strlen(heredoc_input))
+				break;
+			else
+			{
+				write(heredoc_pipe[1], heredoc_input, ft_strlen(heredoc_input));
+				write(heredoc_pipe[1], "\n", 1);
+			}
+		}
+		dup2(heredoc_pipe[0], STDIN_FILENO);
+		close(heredoc_pipe[0]);
+		dup2(cmd->herdoc_stdout, STDOUT_FILENO);
+		close(heredoc_pipe[1]);
+	}
+}
 
 void exec_built_in(t_command *cmd)
 {
@@ -123,7 +124,7 @@ void cmd_exec(t_command *cmd)
 	stdin_redirect(cmd);
 	stdout_redirect(cmd);
 	append_redirect(cmd);
-	// herdoc_mode(cmd);
+	herdoc_mode(cmd);
 	if (cmd->built_in == false)
 	{		
 		if(cmd_validation(cmd))

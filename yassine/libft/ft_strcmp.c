@@ -6,11 +6,11 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/27 21:46:16 by yajallal          #+#    #+#             */
-/*   Updated: 2023/04/27 21:47:58 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/02 15:39:15 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "tools.h"
+#include "libft.h"
 
 int ft_strcmp(char *s1, char *s2)
 {
