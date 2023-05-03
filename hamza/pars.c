@@ -232,6 +232,7 @@ void parser(char **splt,char **env)
 #include <stdbool.h> 
 typedef struct s_command
 {
+	int ther;
 	char *cmd;
 	char *command_path;
 	char option;
@@ -263,10 +264,9 @@ t_command *rmplir_strct(char **splt)
 			cnt++;
 		i++;
 	}
-	cmd = malloc(cnt * sizeof(t_command));
+	cmd = malloc((cnt + 2) * sizeof(t_command));
 
-
-	// hene 3amert cmd.cmd bo axmen command kayna fkola pipe
+	// hene 3amert cmd.cmd bi axmen command kayna fkola pipe
 	i = 0;
 	k = 0;
 	j = 0;
@@ -274,8 +274,8 @@ t_command *rmplir_strct(char **splt)
 	while (splt[i] != NULL) {
 		if(strt == 0)
 		{
+			cmd[whr].ther = 1;
 			cmd[whr].cmd = splt[i];
-			// printf("%s\t",cmd[whr].cmd);
 			strt = 1;
 			whr++;
 		}
@@ -284,43 +284,137 @@ t_command *rmplir_strct(char **splt)
 		}
 		i++;
 	}
-	// printf("\n");
+	cmd[whr].ther = 0;
+	//hena ghir affichit cmd dyal kola pipe 
+	i = 0;
+	printf("---cmd---\n");
+	while (cmd[i].ther != 0) {
+		cmd[i].redirect_in = 0;
+		cmd[i].redirect_out = 0;
+		cmd[i].redirect_append = 0;
+		cmd[i].herdoc = 0;
+		cmd[i].infile = NULL;
+		cmd[i].outfile = NULL;
+		cmd[i].delemiter = NULL;
+		printf("===%s\n",cmd[i].cmd);
+		i++;
+	}
+
 	i = 0;
 	j = 0;
 	whr = 0;
-	// hene bdit kan3amr fi cmd.cmd_parameter bi kolxi liha
+	stop = 0;
+	// hene fi lowl hsebt xhal kayn mn argument fkola pipe
+	printf("----------------------------\n");
+	printf("============================\n");
 	while (splt[i] != NULL) {
-		k = i;
-		cnt = 0;
-		// if(i == 0)
-		// 	k++;
-		while (splt[k][0] != '|') 
-		{
-			printf("%s\n",splt[k]);
-			cnt++;
-			k++;
-			if(splt[k] == NULL)
-			{
-				break;
-			}
-		}
-		printf("cnt ->%d\n ",cnt);
-		cmd[whr].cmd_parameter = malloc(sizeof(char *) * cnt);
-		while (splt[i][0] != '|') 
-		{
-			// printf("%s\t ",splt[i]);
-			i++;
-			if(splt[i] == NULL)
-			{
-				stop = 1;
-				break;
-			}
-		}
-		i++;
-		if(stop == 1)
-			break;
-		whr++;
-	}
+        k = i;
+        cnt = 0;
+        while (splt[k][0] != '|') 
+        {
+            cnt++;
+            k++;
+            if(splt[k] == NULL)
+                break;
+        }
+        cmd[whr].cmd_parameter = malloc(sizeof(char *) * (cnt + 1));
+        i = k;
+        if (splt[i] == NULL) 
+            break;
+        i++;
+        whr++;
+    }
+	// hene bdit kan3amr fiha
+    i = 0;
+    j = 0;
+    whr = 0;
+    k = 0;
+    while (splt[i]) {
+        if(splt[i][0]  != '|')
+        {
+            cmd[k].cmd_parameter[j++] = splt[i];
+            // j++;
+        }
+        else{
+            cmd[k].cmd_parameter[j] = NULL;
+            j = 0;
+            k++;
+        }
+        i++;
+        if(splt[i]  == NULL)
+            cmd[k].cmd_parameter[j] = NULL;
+    }
+
+	i = 0;
+    j = 0;
+	// hena printit mora ma3amrt struct bi argument dyla kola pipe
+	printf("---------parse command----------\n");
+	while(cmd[i].ther)
+    {
+        j = 0;
+        while(cmd[i].cmd_parameter[j] != NULL)
+        {
+            printf("%s\n",cmd[i].cmd_parameter[j++]) ;
+        }
+        printf("----------\n");
+        printf("==========\n");
+        i++;
+    }
+	// hena ghadi nbda n9alb 3la wax kayn redirect o dakxi fi kola pipe
+
+	i = 0;
+	j = 0;
+	// while(cmd[i].ther)
+    // {
+    //     j = 0;
+    //     while(cmd[i].cmd_parameter[j] != NULL)
+    //     {
+	// 		printf("{{{%s}}}\n",cmd[i].cmd_parameter[j]);
+	// 		if(cmd[i].cmd_parameter[j][0] == '<')
+	// 		{
+	// 			cmd[i].redirect_in = 1;
+	// 			printf("%d ||befor +2 ==  %s\n",i,cmd[i].cmd_parameter[j]);
+	// 			j += 1;
+	// 			if(cmd[i].cmd_parameter[j])
+	// 			{
+	// 				printf("%d ||after +2 ==  %s\n",i,cmd[i].cmd_parameter[j]);
+	// 				cmd[i].infile = cmd[i].cmd_parameter[j];
+	// 				j++;
+	// 			}
+	// 			else {
+	// 				printf("%d   STOP\n",i);
+	// 				break;
+	// 			}
+	// 		}
+    //         else if(cmd[i].cmd_parameter[j][0] == '>')
+	// 		{
+	// 			cmd[i].redirect_out = 1;
+	// 			printf("%d ||befor +2 ==  %s\n",i,cmd[i].cmd_parameter[j]);
+	// 			j += 1;
+	// 			if(cmd[i].cmd_parameter[j])
+	// 			{
+	// 				printf("%d ||after +2 ==  %s\n",i,cmd[i].cmd_parameter[j]);
+	// 				cmd[i].outfile = cmd[i].cmd_parameter[j];
+	// 				j++;
+	// 			}
+	// 			else {
+	// 				printf("%d   STOP\n",i);
+	// 				break;
+	// 			}
+	// 		}
+	// 		j++;
+    //     }
+    //     i++;
+    // }
+	// printf("-------AFFICHE------\n");
+	// i = 0;
+	// j = 0;
+	// while (cmd[i].ther) {
+	// 	printf("out ->>%d \t %d |file::%s\n",i,cmd[i].redirect_out,cmd[i].outfile);
+	// 	printf("in  ->>%d \t %d |file::%s\n",i,cmd[i].redirect_in,cmd[i].infile);
+	// 	printf("--------\n");
+	// 	i++;
+	// }
 	return  cmd;
 }
 
