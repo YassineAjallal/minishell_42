@@ -247,9 +247,9 @@ typedef struct s_command
 	char *delemiter;
 } t_command;
 
-t_command *rmplir_strct(char **splt)
+t_command **rmplir_strct(char **splt)
 {
-	t_command *cmd;
+	t_command **cmd;
 	char *str;
 	int stop = 0;
 	char **full_cmd;
@@ -264,8 +264,14 @@ t_command *rmplir_strct(char **splt)
 			cnt++;
 		i++;
 	}
-	cmd = malloc((cnt + 2) * sizeof(t_command));
+	cmd = malloc((cnt + 2) * sizeof(t_command *));
 
+	i = 0;
+	while (i < cnt + 2)
+	{
+		cmd[i] = malloc(sizeof(t_command));
+		i++;
+	}
 	// hene 3amert cmd.cmd bi axmen command kayna fkola pipe
 	i = 0;
 	k = 0;
@@ -274,8 +280,8 @@ t_command *rmplir_strct(char **splt)
 	while (splt[i] != NULL) {
 		if(strt == 0)
 		{
-			cmd[whr].ther = 1;
-			cmd[whr].cmd = splt[i];
+			cmd[whr]->ther = 1;
+			cmd[whr]->cmd = splt[i];
 			strt = 1;
 			whr++;
 		}
@@ -284,19 +290,19 @@ t_command *rmplir_strct(char **splt)
 		}
 		i++;
 	}
-	cmd[whr].ther = 0;
+	cmd[whr]->ther = 0;
 	//hena ghir affichit cmd dyal kola pipe 
 	i = 0;
 	printf("---cmd---\n");
-	while (cmd[i].ther != 0) {
-		cmd[i].redirect_in = 0;
-		cmd[i].redirect_out = 0;
-		cmd[i].redirect_append = 0;
-		cmd[i].herdoc = 0;
-		cmd[i].infile = NULL;
-		cmd[i].outfile = NULL;
-		cmd[i].delemiter = NULL;
-		printf("===%s\n",cmd[i].cmd);
+	while (cmd[i]->ther != 0) {
+		cmd[i]->redirect_in = 0;
+		cmd[i]->redirect_out = 0;
+		cmd[i]->redirect_append = 0;
+		cmd[i]->herdoc = 0;
+		cmd[i]->infile = NULL;
+		cmd[i]->outfile = NULL;
+		cmd[i]->delemiter = NULL;
+		printf("===%s\n",cmd[i]->cmd);
 		i++;
 	}
 
@@ -317,7 +323,7 @@ t_command *rmplir_strct(char **splt)
             if(splt[k] == NULL)
                 break;
         }
-        cmd[whr].cmd_parameter = malloc(sizeof(char *) * (cnt + 1));
+        cmd[whr]->cmd_parameter = malloc(sizeof(char *) * (cnt + 1));
         i = k;
         if (splt[i] == NULL) 
             break;
@@ -332,29 +338,29 @@ t_command *rmplir_strct(char **splt)
     while (splt[i]) {
         if(splt[i][0]  != '|')
         {
-            cmd[k].cmd_parameter[j++] = splt[i];
+            cmd[k]->cmd_parameter[j++] = splt[i];
             // j++;
         }
         else{
-            cmd[k].cmd_parameter[j] = NULL;
+            cmd[k]->cmd_parameter[j] = NULL;
             j = 0;
             k++;
         }
         i++;
         if(splt[i]  == NULL)
-            cmd[k].cmd_parameter[j] = NULL;
+            cmd[k]->cmd_parameter[j] = NULL;
     }
 
 	i = 0;
     j = 0;
 	// hena printit mora ma3amrt struct bi argument dyla kola pipe
 	printf("---------parse command----------\n");
-	while(cmd[i].ther)
+	while(cmd[i]->ther)
     {
         j = 0;
-        while(cmd[i].cmd_parameter[j] != NULL)
+        while(cmd[i]->cmd_parameter[j] != NULL)
         {
-            printf("%s\n",cmd[i].cmd_parameter[j++]) ;
+            printf("%s\n",cmd[i]->cmd_parameter[j++]) ;
         }
         printf("----------\n");
         printf("==========\n");
