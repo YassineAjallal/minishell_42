@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/30 13:57:21 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/01 16:29:51 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/03 18:33:21 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,12 +68,14 @@ int pipes(t_command **cmds, int nb_pipe)
 			if (cmds[i]->herdoc == false)
 			{
 				dup2(dup_stdout, STDOUT_FILENO);
-				close_pipes(pipe_arr, nb_pipe);		
+				close_pipes(pipe_arr, nb_pipe);
 			}
 			else
 				cmds[i]->herdoc_stdout = dup_stdout;
 			cmd_exec(cmds[i]);
 		}
+		if (cmds[i]->herdoc == true)
+			wait(NULL);
 	}
 	close_pipes(pipe_arr, nb_pipe);
 	i = -1;
@@ -89,8 +91,8 @@ int main(int ac, char **av, char **env)
 	t_command **cmd;
 	int i;
 	i = 0;
-	cmd = malloc(sizeof(t_command *) * 2);
-	while (i < 2)
+	cmd = malloc(sizeof(t_command *) * 3);
+	while (i < 3)
 	{
 		cmd[i] = malloc(sizeof(t_command));
 		i++;
@@ -101,7 +103,7 @@ int main(int ac, char **av, char **env)
 	g_info->environ = dup_env(env);
 	g_info->export_env = dup_env(env);
 	g_info->env_array = convert_env_array(g_info->environ);
-	g_info->nb_pipe = 1;
+	g_info->nb_pipe = 2;
 
 	cmd[0]->g_info = g_info;
 	cmd[0]->cmd = ft_strdup("cat");
@@ -115,27 +117,28 @@ int main(int ac, char **av, char **env)
 	cmd[0]->herdoc = true;
 	cmd[0]->delemiter = ft_strdup("yajallal");
 
-	cmd[1]->g_info = g_info;
-	cmd[1]->cmd = ft_strdup("wc");
-	cmd[1]->command_path = cmd_path(cmd[1]->cmd, cmd[1]->g_info->env_array);
-	cmd[1]->cmd_parameter = ft_split("wc -l", ' ');
-	/* redirect */
-	cmd[1]->built_in = false;
-	cmd[1]->redirect_in = false;
-	cmd[1]->redirect_append = false;
-	cmd[1]->redirect_out = false;
-	cmd[1]->herdoc = false;
+	// cmd[1]->g_info = g_info;
+	// cmd[1]->cmd = ft_strdup("wc");
+	// cmd[1]->command_path = cmd_path(cmd[1]->cmd, cmd[1]->g_info->env_array);
+	// cmd[1]->cmd_parameter = ft_split("wc -l", ' ');
+	// /* redirect */
+	// cmd[1]->built_in = false;
+	// cmd[1]->redirect_in = false;
+	// cmd[1]->redirect_append = false;
+	// cmd[1]->redirect_out = false;
+	// cmd[1]->herdoc = false;
 
 	// cmd[2]->g_info = g_info;
-	// cmd[2]->cmd = ft_strdup("grep");
+	// cmd[2]->cmd = ft_strdup("ls");
 	// cmd[2]->command_path = cmd_path(cmd[2]->cmd, cmd[2]->g_info->env_array);
-	// cmd[2]->cmd_parameter = ft_split("grep Makefile", ' ');
+	// cmd[2]->cmd_parameter = ft_split("ls", ' ');
 	// /* redirect */
 	// cmd[2]->built_in = false;
 	// cmd[2]->redirect_in = false;
 	// cmd[2]->redirect_append = false;
 	// cmd[2]->redirect_out = false;
 	// cmd[2]->herdoc = false;
+	cmd_exec(cmd[1]);
 
 	// cmd[3]->g_info = g_info;
 	// cmd[3]->cmd = ft_strdup("wc");
@@ -148,5 +151,14 @@ int main(int ac, char **av, char **env)
 	// cmd[3]->redirect_out = false;
 	// cmd[3]->herdoc = false;
 
-	pipes(cmd, g_info->nb_pipe);
+	// pipes(cmd, g_info->nb_pipe);
+	// while(1)
+	// {
+		
+	// 	readline("\e[1;36m➜  \e[1;33mminishell \e[1;32m✗ \e[0;00m");
+	// }
 }
+
+// ls | sleep 5 | echo y
+// cat << yajallal | wc -l | ls
+// readline("\e[1;36m➜  \e[1;33mminishell \e[1;32m✗ \e[0;00m");
