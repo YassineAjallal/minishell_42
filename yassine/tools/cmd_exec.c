@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 21:13:03 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/02 18:52:39 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/05 11:19:01 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,6 @@ void herdoc_mode(t_command *cmd)
 {
 
 	char *heredoc_input;
-	char *cmd_path;
 	int heredoc_pipe[2];
 	
 	if (cmd->herdoc == true)

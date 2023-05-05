@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/25 17:41:51 by yajallal          #+#    #+#             */
-/*   Updated: 2023/04/30 18:54:35 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/05 11:18:20 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,7 @@ char *cmd_path(char *cmd, char **env)
 
 int cmd_validation(t_command *cmd)
 {
+	cmd->command_path = cmd_path(cmd->cmd, cmd->g_info->env_array);
 	if (!cmd->command_path)
 	{
 		ft_perror(2, "minshell: %s: command not found\n", cmd->cmd_parameter[0]);
