@@ -6,17 +6,16 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/04 17:53:45 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/05 11:22:01 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/05 15:55:07 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "structs.h"
-char **lexer(char *str,char **env)
+char **lexer(char *str)
 {
     int i = 0;
 	char *line;
 	int j = 0;
-	int k = 0;
 	int quote = 0;
 	line = malloc(sizeof(char ) * (ft_strlen(str) * 2));
 	char **splt;
@@ -92,9 +91,7 @@ char **lexer(char *str,char **env)
 t_command **rmplir_strct(char **splt, t_global_info *g_info)
 {
 	t_command **cmd;
-	char *str;
 	int stop = 0;
-	char **full_cmd;
 	int i = 0;
 	int j = 0;
 	int k = 0;

@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/30 13:57:21 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/05 11:26:13 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/05 15:58:06 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,10 @@ int pipes(t_command **cmds, int nb_pipe)
 
 int main(int ac, char **av, char **env)
 {
+	if (ac > 1)
+		return (0);
+	if (av[1])
+		return (0);
 	char *input;
 	char **split;
 	t_global_info *g_info;
@@ -101,8 +105,9 @@ int main(int ac, char **av, char **env)
 	g_info->nb_pipe = 2;
 	while(1)
 	{
-		input = readline("\e[1;36m➜  \e[1;33mminishell \e[1;32m✗ \e[0;00m ");
-		split = lexer(input, env);
+		input = readline("\e[1;36m➜  \e[1;33mminishell \e[1;32m✗ \e[0;00m");
+		add_history(input);
+		split = lexer(input);
 		cmd = rmplir_strct(split, g_info);
 		pipes(cmd, g_info->nb_pipe);
 	}

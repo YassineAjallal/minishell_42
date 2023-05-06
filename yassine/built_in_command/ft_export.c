@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 04:45:32 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/02 15:53:01 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/05 15:17:48 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@ void sort_env_variables(t_env *env)
 {
 	int i;
 	int j;
-	char *tmp;
 	size_t length;
 
 	i = 0;

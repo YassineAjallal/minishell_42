@@ -6,14 +6,11 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/25 17:41:51 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/05 11:18:20 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/05 15:40:20 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "tools.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <errno.h>
+#include "cmd_executer.h"
 
 int check_path_var(char **env)
 {
@@ -60,7 +57,6 @@ char *search_command(char *path_var, char *cmd)
 
 char *cmd_path(char *cmd, char **env)
 {
-	char **env_vars;
 	int path_var;
 	char *fpath;
 	int i;
