@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/ttycom.h>
 #include <sys/unistd.h>
 #include <unistd.h>
 
@@ -35,16 +36,34 @@ int is_skiped(char s)
 	}
 	return 0;
 }
+// while (1) {
+// 				quote = 1;
+// 				line[j++] = str[i++];
+// 				while (str[i] != '"' && str[i] != '\0') {
+// 					line[j++] = str[i++];
+// 					if(str[i] == '\'')	
+// 						quote = 2;
+// 				}
+// 				line[j++] = str[i++];
+// 				if(str[i] == ' ' || str[i] == '\0' || str[i] == '>' || str[i] == '<')
+// 				{
+// 					printf("STOP | %c|\n",str[i]);
+// 					break;
+// 				}
+// 				printf("-- %c --\n",str[i + 1]);
+// 				sleep(1);
+// 			}
 char **lexer(char *str,char **env)
 {
     int i = 0;
 	char *line;
 	int j = 0;
 	int k = 0;
-	int quote = 0;
+	int quote;
 	line = malloc(sizeof(char ) * (ft_strlen(str) * 2));
 	char **splt;
 	while (str[i]) {
+		quote = 0;
 		if(str[i] == ' ')
 		{
 			line[j++] = '\n';
@@ -58,7 +77,6 @@ char **lexer(char *str,char **env)
 		}
 		else if(str[i] == '<' && str[i + 1] == '<')
 		{
-			// printf("\n{{!}}\n");
 			line[j++] = '\n';
 			line[j++] = str[i];
 			line[j++] = str[i + 1];
@@ -67,7 +85,6 @@ char **lexer(char *str,char **env)
 		}
 		else if(str[i] == '>' && str[i + 1] == '>')
 		{
-			// printf("\n{{!}}\n");
 			line[j++] = '\n';
 			line[j++] = str[i];
 			line[j++] = str[i + 1];
@@ -86,29 +103,79 @@ char **lexer(char *str,char **env)
 			line[j++] = str[i++];
 			line[j++] = '\n';
 		}
-		else if(str[i] == '"')
+		else if(str[i] == '"' || str[i] == '\'')
 		{
-			quote = 1;
-			line[j++] = str[i++];
-			while (str[i] != '"') {
+			quote =0;
+			while (1) {
+				// quote =0;
+				printf("OUT   %c   OUT\n",str[i]);
+				if(str[i] == '"')
+					quote = 1;
+				else if(str[i] == '\'')
+					quote = 2;
 				line[j++] = str[i++];
+				while (quote && str[i] != '\0') {
+					line[j++] = str[i++];
+					printf("**  %c  **\n",str[i]);
+					if(str[i] == '"' && quote == 1)
+					{
+						printf("** STOP \" **\n");
+						quote = -1;
+						break;
+					}
+					if(str[i] == '\'' && quote == 2)
+					{
+						printf("** STOP ' **\n");
+						quote = -1;
+						break;
+					}
+					usleep(500000);
+				}
+				line[j++] = str[i++];
+				if(str[i] == ' ' || str[i] == '>' || str[i] == '\0')
+					break;
+				printf("$$ %c $$\n",str[i]);
+				sleep(1);
 			}
-			line[j++] = str[i++];
+			printf("quot = %d\n",quote);
+			if(quote != -1)
+			{
+				perror("QUOTE");
+				return 0;
+			}
+			// quote = 0;
+			// line[j++] = str[i++];
+			// while (str[i] != '"' && str[i] != '\0') {
+			// 	line[j++] = str[i++];
+			// 	if(str[i] == '"')	
+			// 		quote = 1;
+			// }
+			// line[j++] = str[i++];
+			// printf("--%c \t |%c|--\n",str[i],line[j - 1]);
 			line[j++] = '\n';
 		}
-		else if(str[i] == '\'')
-		{
-			quote = 1;
-			line[j++] = str[i++];
-			while (str[i] != '\'') {
-				line[j++] = str[i++];
-			}
-			line[j++] = str[i++];
-			line[j++] = '\n';
-		}
+		// else if(str[i] == '\'')
+		// {
+		// 	quote = 0;
+		// 	line[j++] = str[i++];
+		// 	while (str[i] != '\'' && str[i] != '\0') {
+		// 		line[j++] = str[i++];
+		// 		if(str[i] == '\'')	
+		// 			quote = 2;
+		// 	}
+		// 	line[j++] = str[i++];
+		// 	line[j++] = '\n';
+		// }
 		else {
 			line[j++] = str[i++];
 		}
+		// if(quote)
+		// {
+		// 	printf("\n%d\n",quote);
+		// 	perror("QUOT");
+		// 	return 0;
+		// 	// break;
+		// }
 	}
 	line[j] = 0;
 	splt = ft_split(line, '\n');
@@ -542,8 +609,6 @@ t_command *rmplir_strct(char **splt)
 				printf("in -<<%d \t %d |file::%s\n",i,cmd[i].herdoc,cmd[i].herdoc_stdout[k++]);
 			}
 		}
-		// printf("in  ->>%d \t %d |file::%s\n",i,cmd[i].redirect_in,cmd[i].infile);
-		// printf("red_app>  ->>%d \t %d |file::%s\n",i,cmd[i].redirect_append,cmd[i].delemiter);
 		printf("--------\n");
 		i++;
 	}
@@ -563,7 +628,7 @@ int main(int ac,char **av,char *env[])
         splt = lexer(str,env);
 
 		// parser(splt,env);
-		rmplir_strct(splt);
+		// rmplir_strct(splt);
 		str = NULL;
 	}
 }
