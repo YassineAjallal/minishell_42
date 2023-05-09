@@ -94,49 +94,6 @@ char **lexer(char *str,char **env)
 				line[j++] = str[i++];
 			}
 			line[j++] = str[i++];
-			// printf("{%c}%d\n",str[i],i+1);
-			// if (is_skiped(str[i])) {
-			// 	// printf("{LOL}\n");
-			// 	while (1) {
-			// 		int zayd = 0;
-			// 		// printf(" %d %c \n",zayd++,str[i]);
-			// 		if(str[i] == '"')
-			// 		{
-			// 			printf("{KK1|%c}\n",str[i]);
-			// 			// printf("{qoma}\n");
-			// 			if(is_skiped(str[i- 1]))
-			// 				i++;
-			// 			while (str[i] != '"' && str[i] != '\0') {
-			// 				line[j++] = str[i++];
-			// 			}
-			// 			line[j++] = str[i++];
-			// 		}
-			// 		// else if(str[i] == '\'')
-			// 		// {
-			// 		// 	printf("{KK2|%c}\n",str[i]);
-			// 		// 	while (str[i] != '\'' && str[i] != '\0') {
-			// 		// 		line[j++] = str[i++];
-			// 		// 	}
-			// 		// 	line[j++] = str[i++];
-			// 		// }
-			// 		else if(str[i] != ' '){
-			// 			printf("{ZAAAABI|%c}\n",str[i]);
-			// 			while (str[i] != ' ' && str[i] != '\0') {
-			// 				line[j++] = str[i++];
-			// 			}
-			// 			line[j++] = str[i++];
-			// 			// line[j++] = str[i++];
-			// 		}
-			// 		// printf("'%c|%d'\n",str[i],is_skiped(str[i]));
-			// 		// break;
-			// 		if(!is_skiped(str[i]))
-			// 		{
-			// 			printf("IS_skipedf\n");
-			// 			break;
-			// 		}
-			// 	}
-				
-			// }
 			line[j++] = '\n';
 		}
 		else if(str[i] == '\'')
@@ -242,9 +199,10 @@ typedef struct s_command
 	bool redirect_out;
 	bool redirect_append;
 	bool herdoc;
-	char *infile;
-	char *outfile;
-	char *delemiter;
+	char **infile;
+	char **outfile;
+	char **delemiter;
+	char **herdoc_stdout;
 } t_command;
 
 t_command *rmplir_strct(char **splt)
@@ -275,7 +233,6 @@ t_command *rmplir_strct(char **splt)
 		if(strt == 0)
 		{
 			cmd[whr].ther = 1;
-			cmd[whr].cmd = splt[i];
 			strt = 1;
 			whr++;
 		}
@@ -285,7 +242,7 @@ t_command *rmplir_strct(char **splt)
 		i++;
 	}
 	cmd[whr].ther = 0;
-	//hena ghir affichit cmd dyal kola pipe 
+	//hena ghir 3mart kola pipe bi 0 fi > < >>
 	i = 0;
 	printf("---cmd---\n");
 	while (cmd[i].ther != 0) {
@@ -296,7 +253,7 @@ t_command *rmplir_strct(char **splt)
 		cmd[i].infile = NULL;
 		cmd[i].outfile = NULL;
 		cmd[i].delemiter = NULL;
-		printf("===%s\n",cmd[i].cmd);
+		cmd[i].herdoc_stdout = NULL;
 		i++;
 	}
 
@@ -356,10 +313,35 @@ t_command *rmplir_strct(char **splt)
         {
             printf("%s\n",cmd[i].cmd_parameter[j++]) ;
         }
-        printf("----------\n");
         printf("==========\n");
         i++;
     }
+	// 
+	i = 0;
+	j = 0;
+	printf("==== CMD  ====\n");
+	// hena 3amrt kola cmd bi cmd dyalha o xeft wax hiya fi lowl cmd ola katbda >
+	while(cmd[i].ther)
+    {
+        j = 0;
+        while(cmd[i].cmd_parameter[j] != NULL)
+        {
+            if(cmd[i].cmd_parameter[0][0] == '>' || cmd[i].cmd_parameter[0][0] == '<')
+			{
+				cmd[i].cmd = cmd[i].cmd_parameter[2];
+				break;
+			}
+			else {
+				cmd[i].cmd = cmd[i].cmd_parameter[0];
+				break;
+			}
+        }
+		printf("** cmd%d->  %s  **\n",i,cmd[i].cmd);
+        printf("==========\n");
+        i++;
+    }
+	printf("==========\n");
+	printf("==========\n");
 	// hena ghadi nbda n9alb 3la wax kayn redirect o dakxi fi kola pipe
 
 	i = 0;
@@ -372,60 +354,147 @@ t_command *rmplir_strct(char **splt)
         {
 			k = 0;
 			cnt = 0;
-            whr = 0;
-			printf("  \t %s   \n",cmd[i].cmd_parameter[j]);
-			if(cmd[i].cmd_parameter[j][0] == '>' && cmd[i].cmd_parameter[j][1] == '>')
+			if(cmd[i].cmd_parameter[j][0] == '<' && cmd[i].cmd_parameter[j][1] == '<')
+			{
+				cmd[i].herdoc = 1;
+				if (cmd[i].cmd_parameter[j + 2] != NULL && (cmd[i].cmd_parameter[j][0] == '<' && cmd[i].cmd_parameter[j][1] == '<')) {
+					cnt = 0;
+					k = j;
+					while (cmd[i].cmd_parameter[k] != NULL && (cmd[i].cmd_parameter[j][0] == '<' && cmd[i].cmd_parameter[j][1] == '<')) {
+						cnt++;
+						k += 2;
+					}
+					cmd[i].delemiter = malloc((cnt + 1) * sizeof(char *));
+					k = 0;
+					while (cmd[i].cmd_parameter[j] != NULL && (cmd[i].cmd_parameter[j][0] == '<' && cmd[i].cmd_parameter[j][1] == '<')) {
+						cmd[i].herdoc_stdout[k] = cmd[i].cmd_parameter[j + 1];
+						k++;
+						j += 2;
+					}
+					cmd[i].herdoc_stdout[k] = NULL;
+					k = 0;
+				}
+				else {
+					k = 0;
+					j += 1;
+					cmd[i].herdoc_stdout = malloc(2 * sizeof(char *));
+					if(cmd[i].cmd_parameter[j])
+					{
+						cmd[i].herdoc_stdout[k++] = cmd[i].cmd_parameter[j];
+						cmd[i].herdoc_stdout[k] = NULL;
+					}
+					if(cmd[i].cmd_parameter[j] == NULL){
+						printf("%d   STOP\n",i);
+						break;
+					}
+				}
+			}
+			else if(cmd[i].cmd_parameter[j][0] == '>' && cmd[i].cmd_parameter[j][1] == '>')
 			{
 				cmd[i].redirect_append = 1;
-				j += 1;
-				// printf("%d ||befor +2 ==  %s\n",i,cmd[i].cmd_parameter[j]);
-				if(cmd[i].cmd_parameter[j])
-				{
-					// printf("%d ||after +2 ==  %s\n",i,cmd[i].cmd_parameter[j]);
-					cmd[i].delemiter = cmd[i].cmd_parameter[j];
-					// j++;
+				if (cmd[i].cmd_parameter[j + 2] != NULL && (cmd[i].cmd_parameter[j][0] == '>' && cmd[i].cmd_parameter[j][1] == '>')) {
+					cnt = 0;
+					k = j;
+					while (cmd[i].cmd_parameter[k] != NULL && (cmd[i].cmd_parameter[j][0] == '>' && cmd[i].cmd_parameter[j][1] == '>')) {
+						cnt++;
+						k += 2;
+					}
+					cmd[i].delemiter = malloc((cnt + 1) * sizeof(char *));
+					k = 0;
+					while (cmd[i].cmd_parameter[j] != NULL && (cmd[i].cmd_parameter[j][0] == '>' && cmd[i].cmd_parameter[j][1] == '>')) {
+						cmd[i].delemiter[k] = cmd[i].cmd_parameter[j + 1];
+						k++;
+						j += 2;
+					}
+					cmd[i].delemiter[k] = NULL;
+					k = 0;
 				}
-				if(cmd[i].cmd_parameter[j] == NULL){
-					printf("%d   STOP\n",i);
-					break;
+				else {
+					k = 0;
+					j += 1;
+					cmd[i].delemiter = malloc(2 * sizeof(char *));
+					if(cmd[i].cmd_parameter[j])
+					{
+						cmd[i].delemiter[k++] = cmd[i].cmd_parameter[j];
+						cmd[i].delemiter[k] = NULL;
+					}
+					if(cmd[i].cmd_parameter[j] == NULL){
+						printf("%d   STOP\n",i);
+						break;
+					}
 				}
-                whr = 1;
 			}
-			else if(cmd[i].cmd_parameter[j][0] == '>')
-			{
-				cmd[i].redirect_out = 1;
-				// printf("%d ||befor +1 ==  %s\n",i,cmd[i].cmd_parameter[j]);
-				j += 1;
-				if(cmd[i].cmd_parameter[j])
-				{
-					// printf("%d ||after +1 ==  %s\n",i,cmd[i].cmd_parameter[j]);
-					cmd[i].outfile = cmd[i].cmd_parameter[j];
-					// j++;
-				}
-				if(cmd[i].cmd_parameter[j] == NULL) {
-					printf("%d   STOP\n",i);
-					break;
-				}
-                whr = 1;
-			}
-            else if(cmd[i].cmd_parameter[j][0] == '<')
+			else if(cmd[i].cmd_parameter[j][0] == '<')
 			{
 				cmd[i].redirect_in = 1;
-				// printf("%d ||befor +1 ==  %s\n",i,cmd[i].cmd_parameter[j]);
-				j += 1;
-				if(cmd[i].cmd_parameter[j])
-				{
-					// printf("%d ||after +1 ==  %s\n",i,cmd[i].cmd_parameter[j]);
-					cmd[i].infile = cmd[i].cmd_parameter[j];
-					// j++;
+				if (cmd[i].cmd_parameter[j + 2] != NULL && cmd[i].cmd_parameter[j + 2][0] == '<') {
+					cnt = 0;
+					k = j;
+					while (cmd[i].cmd_parameter[k] != NULL && cmd[i].cmd_parameter[k][0] == '<') {
+						cnt++;
+						k += 2;
+					}
+					cmd[i].infile = malloc((cnt + 1) * sizeof(char *));
+					k = 0;
+					while (cmd[i].cmd_parameter[j] != NULL && cmd[i].cmd_parameter[j][0] == '<') {
+						cmd[i].infile[k] = cmd[i].cmd_parameter[j + 1];
+						k++;
+						j += 2;
+					}
+					cmd[i].infile[k] = NULL;
+					k = 0;
 				}
-				if(cmd[i].cmd_parameter[j] == NULL) {
-					printf("%d   STOP\n",i);
-					break;
+				else {
+					k = 0;
+					j += 1;
+					cmd[i].infile = malloc(2 * sizeof(char *));
+					if(cmd[i].cmd_parameter[j])
+					{
+						cmd[i].infile[k++] = cmd[i].cmd_parameter[j];
+						cmd[i].infile[k] = NULL;
+					}
+					if(cmd[i].cmd_parameter[j] == NULL){
+						printf("%d   STOP\n",i);
+						break;
+					}
 				}
-                whr = 1;
 			}
-            // if(whr == 0)
+            else if(cmd[i].cmd_parameter[j][0] == '>')
+			{
+				cmd[i].redirect_out = 1;
+				if (cmd[i].cmd_parameter[j + 2] != NULL && cmd[i].cmd_parameter[j + 2][0] == '>') {
+					cnt = 0;
+					k = j;
+					while (cmd[i].cmd_parameter[k] != NULL && cmd[i].cmd_parameter[k][0] == '>') {
+						cnt++;
+						k += 2;
+					}
+					cmd[i].outfile = malloc((cnt + 1) * sizeof(char *));
+					k = 0;
+					while (cmd[i].cmd_parameter[j] != NULL && cmd[i].cmd_parameter[j][0] == '>') {
+						cmd[i].outfile[k] = cmd[i].cmd_parameter[j + 1];
+						k++;
+						j += 2;
+					}
+					cmd[i].outfile[k] = NULL;
+					k = 0;
+				}
+				else {
+					
+					k = 0;
+					j += 1;
+					cmd[i].outfile = malloc(2 * sizeof(char *));
+					if(cmd[i].cmd_parameter[j])
+					{
+						cmd[i].outfile[k++] = cmd[i].cmd_parameter[j];
+						cmd[i].outfile[k] = NULL;
+					}
+					if(cmd[i].cmd_parameter[j] == NULL){
+						printf("%d   STOP\n",i);
+						break;
+					}
+				}
+			}
 			j++;
         }
         i++;
@@ -436,9 +505,45 @@ t_command *rmplir_strct(char **splt)
 	j = 0;
 	while (cmd[i].ther) {
 		printf("----OUT_FILE LIST-----\n");
-		printf("out ->>%d \t %d |file::%s\n",i,cmd[i].redirect_out,cmd[i].outfile);
-        printf("in -<<%d \t %d |file::%s\n",i,cmd[i].redirect_in,cmd[i].infile);
-		printf("red_app>  ->>%d \t %d |file::%s\n",i,cmd[i].redirect_append,cmd[i].delemiter);
+		if(cmd[i].outfile == NULL)
+			printf("****  NO OUT  >> *****\n");
+		else
+		{
+			k = 0;
+			while (cmd[i].outfile[k]) {
+				printf("out ->>%d \t %d |file::%s\n",i,cmd[i].redirect_out,cmd[i].outfile[k++]);
+			}
+
+		}
+		if(cmd[i].infile == NULL)
+			printf("****  NO IN << *****\n");
+		else
+		{
+			k = 0;
+			while (cmd[i].infile[k]) {
+				printf("in -<<%d \t %d |file::%s\n",i,cmd[i].redirect_in,cmd[i].infile[k++]);
+			}
+		}
+		if(cmd[i].delemiter == NULL)
+			printf("****  NO IN << *****\n");
+		else
+		{
+			k = 0;
+			while (cmd[i].delemiter[k]) {
+				printf("in -<<%d \t %d |file::%s\n",i,cmd[i].redirect_append,cmd[i].delemiter[k++]);
+			}
+		}
+		if(cmd[i].herdoc_stdout == NULL)
+			printf("****  NO IN << *****\n");
+		else
+		{
+			k = 0;
+			while (cmd[i].herdoc_stdout[k]) {
+				printf("in -<<%d \t %d |file::%s\n",i,cmd[i].herdoc,cmd[i].herdoc_stdout[k++]);
+			}
+		}
+		// printf("in  ->>%d \t %d |file::%s\n",i,cmd[i].redirect_in,cmd[i].infile);
+		// printf("red_app>  ->>%d \t %d |file::%s\n",i,cmd[i].redirect_append,cmd[i].delemiter);
 		printf("--------\n");
 		i++;
 	}
