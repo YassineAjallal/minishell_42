@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   structs.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: hkasbaou <hkasbaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/30 14:28:30 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/04 17:49:21 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/09 19:43:53 by hkasbaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,18 +48,18 @@ typedef struct s_command
 {
 	int ther;
 	char *cmd;
-	char *command_path;
-	char option;
+	// char *command_path;
+	// char option;
 	char **cmd_parameter;
-	bool built_in;
+	// bool built_in;
 	bool redirect_in;
 	bool redirect_out;
 	bool redirect_append;
 	bool herdoc;
-	char *infile;
-	char *outfile;
-	char *delemiter;
-	int herdoc_stdout;
+	char **infile;
+	char **outfile;
+	char **delemiter;
+	char **herdoc_stdout;
 	t_global_info *g_info;
 } t_command;
 
