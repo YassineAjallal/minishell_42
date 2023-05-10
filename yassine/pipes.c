@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/30 13:57:21 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/05 15:58:06 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/06 12:50:39 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ int pipes(t_command **cmds, int nb_pipe)
 {
 	pid_t	pid;
 	int		pipe_arr[nb_pipe][2];
+	int     pids[nb_pipe + 1];
 	int		i;
 	int		dup_stdin;
 	int		dup_stdout;
@@ -74,14 +75,16 @@ int pipes(t_command **cmds, int nb_pipe)
 				cmds[i]->herdoc_stdout = dup_stdout;
 			cmd_exec(cmds[i]);
 		}
+		else
+			pids[i] = pid;
 		if (cmds[i]->herdoc == true)
 			wait(NULL);
 	}
 	close_pipes(pipe_arr, nb_pipe);
 	i = -1;
 	while (++i < nb_pipe + 1)
-		wait(&status);
-    // printf("status %d\n", WEXITSTATUS(status));		
+		waitpid(pids[i], &status, 0);
+    printf("status %d\n", WEXITSTATUS(status));		
 	return (0);
 }
 

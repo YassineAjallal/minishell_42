@@ -701,16 +701,16 @@ char *remove_quots(char *str)
 	
 	}
 }
-int check_pepe(char **splt)
-{
-	int i = 0;
-	int j = 0;
-	while (splt[i] != NULL) {
-		j = 0;
-		if(spl)
-	}
-	return 1;
-}
+// int check_pepe(char **splt)
+// {
+// 	int i = 0;
+// 	int j = 0;
+// 	while (splt[i] != NULL) {
+// 		j = 0;
+// 		if(spl)
+// 	}
+// 	return 1;
+// }
 
 int main(int ac,char **av,char *env[])
 {
