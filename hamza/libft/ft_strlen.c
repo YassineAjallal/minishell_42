@@ -6,7 +6,7 @@
 /*   By: hkasbaou <hkasbaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/02 18:20:05 by hkasbaou          #+#    #+#             */
-/*   Updated: 2022/10/12 23:22:21 by hkasbaou         ###   ########.fr       */
+/*   Updated: 2023/05/11 19:24:31 by hkasbaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,8 @@
 size_t	ft_strlen(const char *s)
 {
 	size_t	i;
-
+	if(!s)
+		return 0;
 	i = 0;
 	while (s[i])
 		i++;

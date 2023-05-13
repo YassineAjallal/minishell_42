@@ -1,5 +1,7 @@
 #include "../yassine/minishell.h"
+#include "mini.h"
 #include <stdio.h>
+#include <stdlib.h>
 
 // enum s_cases 
 // {
@@ -7,13 +9,13 @@
 // 	redirects,
 // };
 
-// typedef struct s_mini
-// {
-// 	char	**full_cmd;
-// 	char	*full_path;
-// 	int	infile;
-// 	int	outfile;
-// }		t_mini;
+typedef struct s_v
+{
+	int i;
+	int j;
+	char qts;
+	int k;
+}		t_v;
 
 // typedef struct s_prompt
 // {
@@ -104,8 +106,11 @@ char **lexer(char *str,char **env)
 					quote = 1;
 				else if(str[i] == '\'')
 					quote = 2;
+				else
+				 	quote =-1;
 				line[j++] = str[i++];
-				while (quote && str[i] != '\0') {
+				while ((quote == 1 || quote == 2) && str[i] != '\0') {
+					// printf("%c\t",str[i]);
 					if(str[i] == '"' && quote == 1)
 					{
 						quote = -1;
@@ -119,12 +124,15 @@ char **lexer(char *str,char **env)
 					line[j++] = str[i++];
 				}
 				line[j++] = str[i++];
+				// printf("|%c|\t",str[i]);
 				if(str[i] == ' ' || str[i] == '>' || str[i] == '\0')
 					break;
 			}
+			// printf("%d\n",quote);
 			if(quote != -1)
 			{
 				perror("QUOTE");
+				free(line);
 				return NULL;
 			}
 			line[j++] = '\n';
@@ -251,17 +259,9 @@ t_command  **rmplr_double_str(t_command **cmd,t_global_info g_info,int size)
 	}
 	i = 0;
 	j = 0;
-	while (cmd_rtr[i]->ther) {
-		j = 0;
-		while (cmd_rtr[i]->cmd_parameter[j]) {
-			printf("%s\n",cmd_rtr[i]->cmd_parameter[j]);
-			j++;
-		}
-		printf("-------\n");
-		i++;
-	}
 	return cmd_rtr;
 }
+
 t_command **rmplir_strct(char **splt, t_global_info *g_info)
 {
 	t_command **cmd;
@@ -398,7 +398,10 @@ t_command **rmplir_strct(char **splt, t_global_info *g_info)
 
 	i = 0;
 	j = 0;
-	
+	// while (cmd[i]->ther) {
+	// 	printf("%s\n",cmd[i]->cmd);
+	// 	i++;
+	// }
 	while(cmd[i]->ther)
     {
         j = 0;
@@ -644,22 +647,24 @@ int error_redirect(char **splt)
 	return 1;
 }
 
-int main(int ac,char **av,char *env[])
+int main(int ac,char **av,char **env)
 {
 	char	*str;
 	int		i;
 	char **splt;
 	t_global_info g_info;
 	i = 0;
+	g_info.env_array = env;
 	while (1)
 	{
 		str = readline("Shell->");
 		add_history(str);
         splt = lexer(str,env);
-		if (splt != NULL) {
-			rmplir_strct(splt, &g_info);
-		}
-		// parser(splt,env);
+		if(splt != NULL)
+			expand_splt(splt,g_info);
+		// if (splt != NULL) {
+		// 	rmplir_strct(splt, &g_info);
+		// }
 		str = NULL;
 	}
 }
