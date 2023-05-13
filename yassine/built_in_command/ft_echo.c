@@ -6,52 +6,55 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/10 15:30:22 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/02 12:58:12 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/11 14:30:05 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "built_in_command.h"
 
-// int get_next_space(char *echo_str, int current_pos)
-// {
-// 	int next_space;
-// 	next_space = 0;
+int just_n(char *str)
+{
+	int i;
 
-// 	while(echo_str[current_pos] != ' ' && echo_str[current_pos])
-// 	{
-// 		next_space++;
-// 		current_pos++;
-// 	}
-// 	return (next_space);
-// }
-
-// int check_var_in_env(char *env_var, int var_length, char **env)
-// {
-// 	int i;
-	
-// 	i = 0;
-// 	while(env[i])
-// 	{
-// 		if (ft_strncmp(env_var, env[i], var_length) == 0)
-// 			return (i);
-// 		i++;
-// 	}
-// 	return (-1);
-// }
-
+	i = 0;
+	if (str[i] == '-')
+		i++;
+	else
+		return (0);
+	while(str[i])
+	{
+		if (str[i] != 'n')
+			return (0);
+		i++;
+	}
+	return (1);
+}
 void ft_echo(t_command *cmd)
 {
 	int i;
-	i = 2;
+	int nl_print;
+
+	i = 1;
+	nl_print = 0;
 	
-	while (cmd->cmd_parameter[i])
-	{
-		printf ("%s", cmd->cmd_parameter[i]);
-		i++;
-		if (cmd->cmd_parameter[i])
-			printf(" ");
-	}
-	if (ft_strcmp(cmd->cmd_parameter[1], "-n") != 0)
+	if (ft_strlen2d(cmd->cmd_parameter) == 1)
 		printf("\n");
+	else
+	{
+		while(just_n(cmd->cmd_parameter[i]))
+		{
+			nl_print = 1;
+			i++;
+		}
+		while (cmd->cmd_parameter[i])
+		{
+			printf ("%s", cmd->cmd_parameter[i]);
+			i++;
+			if (cmd->cmd_parameter[i])
+				printf(" ");
+		}
+		if (nl_print == 0)
+			printf("\n");
+	}
 }
 

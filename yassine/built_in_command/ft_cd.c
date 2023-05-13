@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/02 22:18:08 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/01 20:00:28 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/11 12:04:41 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ int ft_cd(t_command *cmd)
 {
 	char *new_path;
 	char **home;
+	int home_pos;
 	int i;
 	
 	i = 0;
@@ -32,15 +33,23 @@ int ft_cd(t_command *cmd)
 		}
 		if (chdir(cmd->cmd_parameter[1]) != 0)
 		{
-			printf("minishell: cd: %s: No such file or directory\n", cmd->cmd_parameter[1]);
+			ft_putstr_fd("minishell: cd: No such file or directory\n", 2);
 			return (0);
 		}
 	}
 	else
 	{
-		if (chdir(getenv("HOME")) != 0)
+		if (search_env(cmd->g_info->environ, "HOME", &home_pos))
+		{	
+			if (chdir(cmd->g_info->environ->variables[home_pos].value) != 0)
+			{
+				ft_putstr_fd("minishell: cd: No such file or directory\n", 2);
+				return (0);
+			}
+		}
+		else
 		{
-			printf("minishell: cd: %s: No such file or directory\n", getenv("HOME"));
+			ft_putstr_fd("minishell: cd: HOME not set\n", 2);
 			return (0);
 		}
 	}

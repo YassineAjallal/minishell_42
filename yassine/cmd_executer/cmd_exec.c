@@ -6,95 +6,143 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 21:13:03 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/05 15:39:15 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/13 15:22:40 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cmd_executer.h"
 
 /* redirect input */
-void stdin_redirect(t_command *cmd)
+int stdin_redirect(t_command *cmd)
 {
+	int i;
 	int stdin_fd;
+
 	if (cmd->redirect_in == true)
 	{
-		ft_checkf(cmd->infile, 1);
-		ft_checkr(cmd->infile, 1);
-		stdin_fd = open(cmd->infile, O_RDONLY);
-		if (stdin_fd < 0)
-		{
-			ft_perror(2, "minishell: %s: No such file or directory\n", cmd->infile);
-			exit(EXIT_FAILURE);
+		i = 0;
+		while(cmd->infile[i])
+		{	
+			if (!ft_checkf(cmd->infile[i]))
+			{
+				cmd->g_info->exit_code = 0;
+				return (0);
+			}
+			if (!ft_checkr(cmd->infile[i]))
+			{
+				cmd->g_info->exit_code = 1;
+				return (0);
+			}
+			stdin_fd = open(cmd->infile[i], O_RDONLY);
+			if (stdin_fd < 0)
+			{
+				ft_perror(2, "minishell: %s: No such file or directory\n", cmd->infile[i]);
+				cmd->g_info->exit_code = 1;
+				return (0);
+			}
+			i++;
 		}
 		if (dup2(stdin_fd, STDIN_FILENO) < 0)
 		{
-			ft_perror(2, "redirect error", cmd->infile);
-			exit(EXIT_FAILURE);
+			ft_perror(2, "redirect error", cmd->infile[i - 1]);
+			cmd->g_info->exit_code = 1;
+			return (0);
 		}
 		close(stdin_fd);
 	}
+	return (1);
 }
 
 /* redirect output */
-void stdout_redirect(t_command *cmd)
+int stdout_redirect(t_command *cmd)
 {
 	int stdout_fd;
+	int i;
 	if (cmd->redirect_out == true)
 	{
-		stdout_fd = open(cmd->outfile, O_CREAT | O_WRONLY | O_TRUNC, 0644);
-		if (stdout_fd < 0)
+		i = 0;
+		while (cmd->outfile[i])
 		{
-			ft_perror(2, "minishell : %s: opening error", cmd->outfile);
-			exit(EXIT_FAILURE);
-
+			stdout_fd = open(cmd->outfile[i], O_CREAT | O_RDWR | O_TRUNC, 0644);
+			if (!ft_checkw(cmd->outfile[i]))
+			{
+				cmd->g_info->exit_code = 1;
+				return (0);
+			}
+			
+			if (stdout_fd < 0)
+			{
+				ft_perror(2, "minishell : %s: opening error\n", cmd->outfile[i]);
+				cmd->g_info->exit_code = 1;
+				return (0);
+			}	
+			i++;
 		}
 		if (dup2(stdout_fd, STDOUT_FILENO) < 0)
 		{
-			ft_perror(2, "redirect error", cmd->outfile);
-			exit(EXIT_FAILURE);
+			ft_perror(2, "redirect error", cmd->outfile[i - 1]);
+			cmd->g_info->exit_code = 1;
+			return (0);
 
 		}
 		close(stdout_fd);
 	}
+	return (1);
 }
 
 /* redirect output in append mode */
-void append_redirect(t_command *cmd)
+int append_redirect(t_command *cmd)
 {
 	int append_fd;
+	int i;
 	if (cmd->redirect_append == true)
 	{
-		append_fd = open(cmd->outfile, O_CREAT | O_WRONLY | O_APPEND, 0644);
-		if (append_fd < 0)
+		i = 0;
+		while(cmd->outfile[i])
 		{
-			ft_perror(2, "minishell : %s: opening error", cmd->outfile);
-			exit(EXIT_FAILURE);
+			append_fd = open(cmd->outfile[i], O_CREAT | O_RDWR | O_APPEND, 0644);
+			if (!ft_checkw(cmd->outfile[i]))
+			{
+				cmd->g_info->exit_code = 1;
+				return (0);
+			}
+			if (append_fd < 0)
+			{
+				ft_perror(2, "minishell : %s: opening error\n", cmd->outfile[i]);
+				cmd->g_info->exit_code = 1;
+				return (0);
+			}
+			i++;
 		}
 		if (dup2(append_fd, STDOUT_FILENO) < 0)
 		{
-			ft_perror(2, "redirect error", cmd->outfile);
-			exit(EXIT_FAILURE);
+			ft_perror(2, "redirect error", cmd->outfile[i - 1]);
+			cmd->g_info->exit_code = 1;
+			return (0);
 		}
 	}
+	return (1);
 }
-void herdoc_mode(t_command *cmd)
+int herdoc_mode(t_command *cmd)
 {
 
 	char *heredoc_input;
+	int l_delemiter;
 	int heredoc_pipe[2];
 	
 	if (cmd->herdoc == true)
 	{		
+		l_delemiter = ft_strlen2d(cmd->delemiter) - 1;
 		if (pipe(heredoc_pipe) < 0)
 		{
-			ft_perror(2, "pipe error", cmd->outfile);
-			exit(EXIT_FAILURE);
+			ft_perror(2, "pipe error", cmd->delemiter[l_delemiter]);
+			cmd->g_info->exit_code = 1;
+			return (0);
 		}
 		while(1)
 		{
 			heredoc_input = readline("herdoc> ");
-			if (ft_strncmp(cmd->delemiter, heredoc_input, ft_strlen(cmd->delemiter)) == 0
-				&& ft_strlen(cmd->delemiter) == ft_strlen(heredoc_input))
+			if (ft_strcmp(cmd->delemiter[l_delemiter], heredoc_input) == 0)
 				break;
 			else
 			{
@@ -107,30 +155,98 @@ void herdoc_mode(t_command *cmd)
 		dup2(cmd->herdoc_stdout, STDOUT_FILENO);
 		close(heredoc_pipe[1]);
 	}
+	return (1);
 }
-
-void exec_built_in(t_command *cmd)
+void search_built_in(t_command *cmd)
 {
-	if(ft_strcmp(cmd->cmd, "pwd") == 0)
-		printf("%s\n", ft_pwd());
-	else if (ft_strcmp(cmd->cmd, "env") == 0)
-		ft_env(cmd->g_info->environ);
-	else if (ft_strcmp(cmd->cmd, "cd") == 0)
-		ft_cd(cmd);
+	char **all_built_in;
+	int i;
+
+	i = 0;
+	if (cmd->cmd)
+	{
+		all_built_in = ft_split("echo cd pwd export unset env exit", ' ');
+		while (all_built_in[i])
+		{
+			// if (!cmd->cmd)
+			// {
+			// 	cmd->built_in = false;
+			// 	cmd->g_info->exit_code = 0;
+			// }
+			if (!ft_strcmp(cmd->cmd, all_built_in[i]))
+			{
+				cmd->built_in = true;
+				return;
+			}
+			else
+				cmd->built_in = false;
+			i++;
+		}
+	}
+	
 }
-void cmd_exec(t_command *cmd)
+int exec_built_in(t_command *cmd)
 {
 	stdin_redirect(cmd);
 	stdout_redirect(cmd);
 	append_redirect(cmd);
 	herdoc_mode(cmd);
+	if(!ft_strcmp(cmd->cmd, "pwd"))
+		ft_pwd(cmd);
+	else if (!ft_strcmp(cmd->cmd, "env"))
+		ft_env(cmd->g_info->environ);
+	else if (!ft_strcmp(cmd->cmd, "cd"))
+	{
+		if (!ft_cd(cmd))
+			return (0);
+	}
+	else if (!ft_strcmp(cmd->cmd , "echo"))
+		ft_echo(cmd);
+	else if (!ft_strcmp(cmd->cmd , "unset"))
+	{
+		if(!ft_unset(cmd))
+			return (0);
+	}
+	else if (!ft_strcmp(cmd->cmd , "export"))
+	{
+		if (ft_strlen2d(cmd->cmd_parameter) == 1)
+			export_no_param(cmd->g_info->export_env);
+		else
+		{
+			if(ft_export(cmd))
+				return (0);
+		}
+	}
+	else if (!ft_strcmp(cmd->cmd, "exit"))
+	{
+		if (ft_exit(cmd))
+			exit (cmd->g_info->exit_code);
+	}
+	return (1);
+}
+void cmd_exec(t_command *cmd)
+{
+	search_built_in(cmd);
 	if (cmd->built_in == false)
-	{		
-		if(cmd_validation(cmd))
+	{
+		if(!stdin_redirect(cmd))
+			exit(cmd->g_info->exit_code);
+		if(!stdout_redirect(cmd))
+			exit(cmd->g_info->exit_code);
+		if(!append_redirect(cmd))
+			exit(cmd->g_info->exit_code);
+		if(!herdoc_mode(cmd))
+			exit(cmd->g_info->exit_code);
+		else if(cmd_validation(cmd))
 			execve(cmd->command_path, cmd->cmd_parameter, cmd->g_info->env_array);
+		else
+			exit(cmd->g_info->exit_code);
 	}
 	else
 	{
-		exec_built_in(cmd);
+		if (!exec_built_in(cmd))
+			exit(EXIT_FAILURE);
+		else
+			exit(EXIT_SUCCESS);
 	}
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   structs.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hkasbaou <hkasbaou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/30 14:28:30 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/09 19:43:53 by hkasbaou         ###   ########.fr       */
+/*   Updated: 2023/05/12 17:30:05 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,16 +42,17 @@ typedef struct s_global_info
 	char 	**env_array;
 	int		exit_code;
 	int		nb_pipe;
+	int		old_stdout;
 }	t_global_info;
 
 typedef struct s_command
 {
 	int ther;
 	char *cmd;
-	// char *command_path;
-	// char option;
+	char *command_path;
+	char option;
 	char **cmd_parameter;
-	// bool built_in;
+	bool built_in;
 	bool redirect_in;
 	bool redirect_out;
 	bool redirect_append;
@@ -59,8 +60,12 @@ typedef struct s_command
 	char **infile;
 	char **outfile;
 	char **delemiter;
-	char **herdoc_stdout;
+	int herdoc_stdout;
+	char **original_input;
 	t_global_info *g_info;
 } t_command;
+
+char *ft_expand(char *string, t_global_info *g_info);
+char *expand_var(char *string, t_global_info *g_info);
 
 #endif

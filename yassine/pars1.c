@@ -1,6 +1,5 @@
-#include "../yassine/minishell.h"
+#include "minishell.h"
 #include <stdio.h>
-
 // enum s_cases 
 // {
 // 	quotes,
@@ -251,15 +250,18 @@ t_command  **rmplr_double_str(t_command **cmd,t_global_info g_info,int size)
 	}
 	i = 0;
 	j = 0;
-	while (cmd_rtr[i]->ther) {
-		j = 0;
-		while (cmd_rtr[i]->cmd_parameter[j]) {
-			printf("%s\n",cmd_rtr[i]->cmd_parameter[j]);
-			j++;
-		}
-		printf("-------\n");
-		i++;
-	}
+	i = 0;
+	j = 0;
+	// printf("COMMAND_ARGUMENTS\n");
+	// while (cmd_rtr[i]->ther) {
+	// 	j = 0;
+	// 	while (cmd_rtr[i]->cmd_parameter[j]) {
+	// 		printf("%s\n",cmd_rtr[i]->cmd_parameter[j]);
+	// 		j++;
+	// 	}
+	// 	printf("-------\n");
+	// 	i++;
+	// }
 	return cmd_rtr;
 }
 t_command **rmplir_strct(char **splt, t_global_info *g_info)
@@ -624,42 +626,39 @@ t_command **rmplir_strct(char **splt, t_global_info *g_info)
 	cmd_rtr = rmplr_double_str(cmd,*g_info, size);
 	return  cmd_rtr;
 }
+// char *remove_quots(char *str)
+// {
+// 	int i = 0;
+// 	while (expression) {
+	
+// 	}
+// }
+// int check_pepe(char **splt)
+// {
+// 	int i = 0;
+// 	int j = 0;
+// 	while (splt[i] != NULL) {
+// 		j = 0;
+// 		if(spl)
+// 	}
+// 	return 1;
+// }
 
-int error_redirect(char **splt)
-{
-	int i = 0;
-	int j = 0;
-	while (splt[i] != NULL) {
-		printf("{{%s}}\n",splt[i]);
-		if(splt[i][0] == '<' || splt[i][0] == '>')
-		{
-			printf("$$  %s  $$\n",splt[i + 1]);
-			if(splt[i + 1] == NULL)
-				return 0;
-			if(splt[i + 1][0] == '<' || splt[i + 1][0] == '>')
-				return 0;
-		}
-		i++;
-	}
-	return 1;
-}
-
-int main(int ac,char **av,char *env[])
-{
-	char	*str;
-	int		i;
-	char **splt;
-	t_global_info g_info;
-	i = 0;
-	while (1)
-	{
-		str = readline("Shell->");
-		add_history(str);
-        splt = lexer(str,env);
-		if (splt != NULL) {
-			rmplir_strct(splt, &g_info);
-		}
-		// parser(splt,env);
-		str = NULL;
-	}
-}
+// int main(int ac,char **av,char *env[])
+// {
+// 	char	*str;
+// 	int		i;
+// 	char **splt;
+// 	t_global_info g_info;
+// 	i = 0;
+// 	while (1)
+// 	{
+// 		str = readline("Shell->");
+// 		add_history(str);
+//         splt = lexer(str,env);
+// 		if (splt != NULL) {
+// 			rmplir_strct(splt, &g_info);
+// 		}
+// 		str = NULL;
+// 	}
+// }

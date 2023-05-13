@@ -6,64 +6,48 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 21:15:08 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/06 12:52:18 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/13 11:51:10 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cmd_executer.h"
 
-void	ft_perror(int fd, char *s, char *str)
-{
-	int		i;
-
-	i = 0;
-	while (s[i])
-	{
-		if (s[i] == '%')
-		{
-			i++;
-			if (s[i] == 's')
-				ft_putstr_fd(str, fd);
-		}
-		else
-			ft_putchar_fd(s[i], fd);
-		if (s[i])
-			i++;
-	}
-}
-
-void	ft_checkf(char *file, int ex)
+int	ft_checkf(char *file)
 {
 	if (access(file, F_OK) < 0)
 	{
 		ft_perror(2, "minishell: %s: No such file or directory\n", file);
-		exit(ex);
+		return (0);
 	}
+	return (1);
 }
 
-void	ft_checkw(char *file, int ex)
+int	ft_checkw(char *file)
 {
 	if (access(file, W_OK) < 0)
 	{
 		ft_perror(2, "minishell: %s: permission denied\n", file);
-		exit(ex);
+		return (0);
 	}
+	return (1);
 }
 
-void	ft_checkr(char *file, int ex)
+int	ft_checkr(char *file)
 {
 	if (access(file, R_OK) < 0)
 	{
 		ft_perror(2, "minishell: %s: permission denied\n", file);
-		exit(ex);
+		return (0);
 	}
+	return (1);
 }
 
-void	ft_checkx(char *file, int ex)
+int	ft_checkx(char *file)
 {
 	if (access(file, X_OK) < 0)
 	{
 		ft_perror(2, "minishell: %s: permission denied\n", file);
-		exit(ex);
+		return (0);
 	}
+	return (1);
 }

@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 14:14:36 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/02 15:42:20 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/11 19:04:30 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ int valid_name(char *name)
 	return (1);
 }
 
-int ft_export(t_command *cmd, t_global_info *g_info)
+int ft_export(t_command *cmd)
 {
 	char **equal_split;
 	int error_count;
@@ -59,13 +59,21 @@ int ft_export(t_command *cmd, t_global_info *g_info)
 			{
 				new_var.name = ft_strdup(equal_split[0]);
 				if (ft_strchr(cmd->cmd_parameter[i], '='))
+				{
 					new_var.value = ft_strdup("");
+					export_normal_var(new_var, cmd->g_info);
+				}
 				else
+				{
 					new_var.value = NULL;
-				fill_var_list(new_var, g_info->export_env);
+					fill_var_list(new_var, cmd->g_info->export_env);	
+				}
 			}
 			else
+			{
+				ft_putstr_fd("minishell: not a valid identifier\n", 2);
 				error_count++;
+			}
 		}
 		else if (ft_strlen2d(equal_split) > 1)
 		{
@@ -74,10 +82,13 @@ int ft_export(t_command *cmd, t_global_info *g_info)
 				equal_pos = get_until_equal(cmd->cmd_parameter[i]);
 				new_var.name = ft_substr(cmd->cmd_parameter[i], 0, equal_pos);
 				new_var.value = ft_substr(cmd->cmd_parameter[i], equal_pos + 1, ft_strlen(cmd->cmd_parameter[i]));
-				export_normal_var(new_var, g_info);
+				export_normal_var(new_var, cmd->g_info);
 			}
 			else
+			{
+				ft_putstr_fd("minishell: not a valid identifier\n", 2);
 				error_count++;
+			}
 		}
 		else
 			error_count++;

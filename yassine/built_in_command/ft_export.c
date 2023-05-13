@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 04:45:32 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/05 15:17:48 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/12 11:49:37 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,19 @@ void sort_env_variables(t_env *env)
 }
 
 /* export with no parameter */
+void print_export_value(char *value)
+{
+	int i;
+
+	i = 0;
+	while(value[i])
+	{
+		if (ft_strchr("\"$", value[i]))
+			printf("\\");
+		printf("%c", value[i]);
+		i++;
+	}
+}
 void export_no_param(t_env *export)
 {
 	int i;
@@ -66,9 +79,13 @@ void export_no_param(t_env *export)
 		if (!export->variables[i].value)
 			printf("declare -x %s\n", export->variables[i].name);
 		else if (ft_strlen(export->variables[i].value) > 0)
-			printf("declare -x %s=\"%s\"\n", export->variables[i].name, export->variables[i].value);
+		{
+			printf("declare -x %s=\"", export->variables[i].name);
+			print_export_value(export->variables[i].value);
+			printf("\"\n");
+		}
 		else if (ft_strlen(export->variables[i].value) == 0)
-			printf("declare -x %s=""\n", export->variables[i].name);
+			printf("declare -x %s=\"\"\n", export->variables[i].name);
 		i++;
 	}
 }
@@ -89,6 +106,11 @@ int fill_var_list(t_variable new_var, t_env *env)
 		free(env->variables[i].name);
 		if (!env->variables[i].value)
 			new_vars[i].value = NULL;
+		else if (ft_strlen(env->variables[i].value) == 0)
+		{
+			new_vars[i].value = ft_strdup("");
+			free(env->variables[i].value);
+		}	
 		else
 		{	
 			new_vars[i].value = ft_strdup(env->variables[i].value);
@@ -107,27 +129,38 @@ int fill_var_list(t_variable new_var, t_env *env)
 	return (1);
 }
 /* reblace the old var by the new var if it is already exist*/
-void replace_variable(t_variable new_var, t_env *env)
+int replace_variable(t_variable new_var, t_env *env)
 {
 	int existed;
 	existed = already_exist(new_var.name, env);
 	if (existed > -1)
 	{
 		free(env->variables[existed].value);
-		env->variables[existed].value = ft_strdup(new_var.value);
+		if (!new_var.value)
+			env->variables[existed].value = NULL;
+		else if (ft_strlen(new_var.value) == 0)
+			env->variables[existed].value = ft_strdup("");
+		else
+			env->variables[existed].value = ft_strdup(new_var.value);
+		return (1);
 	}
+	return (0);
 }
-/* add a new vRble to export and env */
+/* add a new vriable to export and env */
 int export_normal_var(t_variable new_var, t_global_info *g_info)
 {
+	char *tmp;
 
-	replace_variable(new_var, g_info->environ);
+	tmp = ft_strtrim(new_var.value, "\"\'");
+	free(new_var.value);
+	new_var.value = tmp;
+	if (replace_variable(new_var, g_info->environ) && replace_variable(new_var, g_info->export_env))
+		return (1);
 	if (!fill_var_list(new_var, g_info->environ))
 		return (0);
 	if (g_info->env_array)
 		ft_free2d(g_info->env_array);
 	g_info->env_array = convert_env_array(g_info->environ);
-	replace_variable(new_var, g_info->export_env);
 	if (!fill_var_list(new_var, g_info->export_env))
 		return (0);
 	return (1);

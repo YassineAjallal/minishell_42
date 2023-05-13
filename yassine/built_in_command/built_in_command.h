@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 21:43:56 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/05 15:19:52 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/13 11:54:16 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@
 // }	t_env;
 
 int ft_cd(t_command *cmd);
-char *ft_pwd(void);
+void ft_pwd(t_command *cmd);
 int ft_strlen2d(char **str);
 char *multiple_join(char **path, int length);
 void	ft_free2d(char **str);
@@ -45,4 +45,13 @@ void export_no_param(t_env *export);
 int fill_var_list(t_variable new_var, t_env *env);
 int export_normal_var(t_variable new_var, t_global_info *g_info);
 int already_exist(char *name, t_env *env);
+
+void ft_echo(t_command *cmd);
+int ft_unset(t_command *cmd);
+
+int search_env(t_env *env, char *to_search, int *var_pos);
+int ft_export(t_command *cmd);
+
+void	ft_perror(int fd, char *s, char *str);
+int ft_exit(t_command *cmd);
 #endif

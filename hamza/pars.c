@@ -155,12 +155,12 @@ char **lexer(char *str,char **env)
 	}
 	line[j] = 0;
 	splt = ft_split(line, '\n');
-	i = 0;
-	while (splt[i]) {
-		printf("%s\n",splt[i]);
-		i++;
-	}
-	printf("\n");
+	// i = 0;
+	// while (splt[i]) {
+	// 	printf("%s\n",splt[i]);
+	// 	i++;
+	// }
+	// printf("\n");
 	// printf("%s\n",line);
 	return splt;
 }
@@ -436,7 +436,7 @@ int main(int ac,char **av,char *env[])
 		add_history(str);
         splt = lexer(str,env);
 		// parser(splt,env);
-		// rmplir_strct(splt);
+		rmplir_strct(splt);
 		str = NULL;
 	}
 }
