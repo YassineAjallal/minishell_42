@@ -6,7 +6,7 @@
 /*   By: hkasbaou <hkasbaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/08 16:42:02 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/13 00:42:50 by hkasbaou         ###   ########.fr       */
+/*   Updated: 2023/05/13 20:09:28 by hkasbaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,23 +157,66 @@ char **expand_splt(char **splt,t_global_info g_info)
 {
 	int i = 0;
 	int j = 0;
-
-	char **dup_splt;
-	while (splt[i] != NULL) {
-		i++;
-	}
-	dup_splt = malloc((i + 1) * sizeof(char *));
+	// char **dup_splt;
+	// char *str;
+	// while (splt[i] != NULL) {
+	// 	i++;
+	// }
+	// dup_splt = malloc((i + 1) * sizeof(char *));
 	
 	i = 0;
 	while (splt[i]) {
-		dup_splt[i] = remove_quots(splt[i],g_info);
+		splt[i] = remove_quots(splt[i],g_info);
+		// free(splt[i]);
+		// splt[i] = str;
+		// free(str);
 		i++;
 	}
-	dup_splt[i] = NULL;
+	// dup_splt[i] = NULL;
 	i = 0;
-	while (dup_splt[i] != NULL) {
-		printf("%s\n",dup_splt[i]);
-		i++;
-	}
-	return dup_splt;
+	// while (splt[i] != NULL) {
+	// 	printf("%s\n",splt[i]);
+	// 	i++;
+	// }
+	return splt;
 }
+
+
+
+size_t	ft_strlen_double(char **s)
+{
+	size_t	i;
+	if(!s)
+		return 0;
+	i = 0;
+	while (s[i] != NULL)
+		i++;
+	return (i);
+}
+char	**ft_strjoin_double(char **s1, char *s2)
+{
+	size_t	ttl;
+	char	**str;
+	size_t	i;
+	int		j;
+	i =  -1;
+	j = 0;
+	ttl = 1 + ft_strlen_double(s1);
+	str = ft_calloc(ttl + 1, sizeof(char));
+	if (!str || !s2 || !s1)
+		return (NULL);
+	while (s1[++i] != NULL) {
+		str[i] = s1[i];
+	}
+	str[i++] = s2;
+	str[i]= NULL;
+	return (str);
+}
+// int main(int ac ,char **av)
+// {
+// 	char **s ;
+// 	int i = 0;
+// 	s = ft_strjoin_double(s, "bonjour");
+// 	if(!s)
+// 		printf("HHH\n");
+// }
