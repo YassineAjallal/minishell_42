@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 21:13:03 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/13 15:22:40 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/13 19:47:49 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int stdin_redirect(t_command *cmd)
 		{	
 			if (!ft_checkf(cmd->infile[i]))
 			{
-				cmd->g_info->exit_code = 0;
+				cmd->g_info->exit_code = 1;
 				return (0);
 			}
 			if (!ft_checkr(cmd->infile[i]))
@@ -61,10 +61,13 @@ int stdout_redirect(t_command *cmd)
 	if (cmd->redirect_out == true)
 	{
 		i = 0;
-		while (cmd->outfile[i])
+		while (cmd->outfile[i]->file)
 		{
-			stdout_fd = open(cmd->outfile[i], O_CREAT | O_RDWR | O_TRUNC, 0644);
-			if (!ft_checkw(cmd->outfile[i]))
+			if (cmd->outfile[i]->mode == true)
+				stdout_fd = open(cmd->outfile[i]->file, O_CREAT | O_RDWR | O_TRUNC, 0644);
+			else
+				stdout_fd = open(cmd->outfile[i]->file, O_CREAT | O_RDWR | O_APPEND, 0644);
+			if (!ft_checkw(cmd->outfile[i]->file))
 			{
 				cmd->g_info->exit_code = 1;
 				return (0);
@@ -72,7 +75,7 @@ int stdout_redirect(t_command *cmd)
 			
 			if (stdout_fd < 0)
 			{
-				ft_perror(2, "minishell : %s: opening error\n", cmd->outfile[i]);
+				ft_perror(2, "minishell : %s: opening error\n", cmd->outfile[i]->file);
 				cmd->g_info->exit_code = 1;
 				return (0);
 			}	
@@ -80,7 +83,7 @@ int stdout_redirect(t_command *cmd)
 		}
 		if (dup2(stdout_fd, STDOUT_FILENO) < 0)
 		{
-			ft_perror(2, "redirect error", cmd->outfile[i - 1]);
+			ft_perror(2, "redirect error", cmd->outfile[i - 1]->file);
 			cmd->g_info->exit_code = 1;
 			return (0);
 
@@ -91,38 +94,38 @@ int stdout_redirect(t_command *cmd)
 }
 
 /* redirect output in append mode */
-int append_redirect(t_command *cmd)
-{
-	int append_fd;
-	int i;
-	if (cmd->redirect_append == true)
-	{
-		i = 0;
-		while(cmd->outfile[i])
-		{
-			append_fd = open(cmd->outfile[i], O_CREAT | O_RDWR | O_APPEND, 0644);
-			if (!ft_checkw(cmd->outfile[i]))
-			{
-				cmd->g_info->exit_code = 1;
-				return (0);
-			}
-			if (append_fd < 0)
-			{
-				ft_perror(2, "minishell : %s: opening error\n", cmd->outfile[i]);
-				cmd->g_info->exit_code = 1;
-				return (0);
-			}
-			i++;
-		}
-		if (dup2(append_fd, STDOUT_FILENO) < 0)
-		{
-			ft_perror(2, "redirect error", cmd->outfile[i - 1]);
-			cmd->g_info->exit_code = 1;
-			return (0);
-		}
-	}
-	return (1);
-}
+// int append_redirect(t_command *cmd)
+// {
+// 	int append_fd;
+// 	int i;
+// 	if (cmd->redirect_append == true)
+// 	{
+// 		i = 0;
+// 		while(cmd->outfile[i])
+// 		{
+// 			append_fd = open(cmd->outfile[i], O_CREAT | O_RDWR | O_APPEND, 0644);
+// 			if (!ft_checkw(cmd->outfile[i]))
+// 			{
+// 				cmd->g_info->exit_code = 1;
+// 				return (0);
+// 			}
+// 			if (append_fd < 0)
+// 			{
+// 				ft_perror(2, "minishell : %s: opening error\n", cmd->outfile[i]);
+// 				cmd->g_info->exit_code = 1;
+// 				return (0);
+// 			}
+// 			i++;
+// 		}
+// 		if (dup2(append_fd, STDOUT_FILENO) < 0)
+// 		{
+// 			ft_perror(2, "redirect error", cmd->outfile[i - 1]);
+// 			cmd->g_info->exit_code = 1;
+// 			return (0);
+// 		}
+// 	}
+// 	return (1);
+// }
 int herdoc_mode(t_command *cmd)
 {
 
@@ -168,11 +171,11 @@ void search_built_in(t_command *cmd)
 		all_built_in = ft_split("echo cd pwd export unset env exit", ' ');
 		while (all_built_in[i])
 		{
-			// if (!cmd->cmd)
-			// {
-			// 	cmd->built_in = false;
-			// 	cmd->g_info->exit_code = 0;
-			// }
+			if (!cmd->cmd)
+			{
+				cmd->built_in = false;
+				cmd->g_info->exit_code = 0;
+			}
 			if (!ft_strcmp(cmd->cmd, all_built_in[i]))
 			{
 				cmd->built_in = true;
@@ -189,7 +192,7 @@ int exec_built_in(t_command *cmd)
 {
 	stdin_redirect(cmd);
 	stdout_redirect(cmd);
-	append_redirect(cmd);
+	// append_redirect(cmd);
 	herdoc_mode(cmd);
 	if(!ft_strcmp(cmd->cmd, "pwd"))
 		ft_pwd(cmd);
@@ -233,8 +236,8 @@ void cmd_exec(t_command *cmd)
 			exit(cmd->g_info->exit_code);
 		if(!stdout_redirect(cmd))
 			exit(cmd->g_info->exit_code);
-		if(!append_redirect(cmd))
-			exit(cmd->g_info->exit_code);
+		// if(!append_redirect(cmd))
+		// 	exit(cmd->g_info->exit_code);
 		if(!herdoc_mode(cmd))
 			exit(cmd->g_info->exit_code);
 		else if(cmd_validation(cmd))

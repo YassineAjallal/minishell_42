@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/30 14:28:30 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/12 17:30:05 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/13 16:11:41 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,12 @@ typedef struct s_global_info
 	int		old_stdout;
 }	t_global_info;
 
+typedef struct s_outfile
+{
+	char *file;
+	bool mode;
+}	t_outfile;
+
 typedef struct s_command
 {
 	int ther;
@@ -55,10 +61,9 @@ typedef struct s_command
 	bool built_in;
 	bool redirect_in;
 	bool redirect_out;
-	bool redirect_append;
 	bool herdoc;
 	char **infile;
-	char **outfile;
+	t_outfile **outfile;
 	char **delemiter;
 	int herdoc_stdout;
 	char **original_input;

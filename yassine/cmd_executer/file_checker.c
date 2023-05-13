@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 21:15:08 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/13 11:51:10 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/13 15:41:45 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ int	ft_checkf(char *file)
 {
 	if (access(file, F_OK) < 0)
 	{
-		ft_perror(2, "minishell: %s: No such file or directory\n", file);
+		ft_putstr_fd("minishell: No such file or directory\n", 2);
 		return (0);
 	}
 	return (1);
