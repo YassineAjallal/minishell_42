@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/10 15:30:22 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/11 14:30:05 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/14 10:40:19 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,13 +48,13 @@ void ft_echo(t_command *cmd)
 		}
 		while (cmd->cmd_parameter[i])
 		{
-			printf ("%s", cmd->cmd_parameter[i]);
+			ft_putstr_fd(cmd->cmd_parameter[i], 1);
 			i++;
 			if (cmd->cmd_parameter[i])
-				printf(" ");
+				ft_putchar_fd(' ', 1);
 		}
 		if (nl_print == 0)
-			printf("\n");
+			ft_putchar_fd('\n', 1);
 	}
 }
 

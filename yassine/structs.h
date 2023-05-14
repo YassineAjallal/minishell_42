@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/30 14:28:30 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/13 16:11:41 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/14 17:45:46 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,9 @@ typedef struct s_command
 	t_global_info *g_info;
 } t_command;
 
-char *ft_expand(char *string, t_global_info *g_info);
-char *expand_var(char *string, t_global_info *g_info);
+// char *ft_expand(char *string, t_global_info *g_info);
+// char *expand_var(char *string, t_global_info *g_info);
 
+
+int ambiguous_redirect(char *split, t_global_info *g_info);
 #endif

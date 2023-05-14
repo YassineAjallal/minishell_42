@@ -1,18 +1,20 @@
 #include "minishell.h"
 #include <stdio.h>
+#include <stdlib.h>
+
 // enum s_cases 
 // {
 // 	quotes,
 // 	redirects,
 // };
 
-// typedef struct s_mini
-// {
-// 	char	**full_cmd;
-// 	char	*full_path;
-// 	int	infile;
-// 	int	outfile;
-// }		t_mini;
+typedef struct s_v
+{
+	int i;
+	int j;
+	char qts;
+	int k;
+}		t_v;
 
 // typedef struct s_prompt
 // {
@@ -103,8 +105,11 @@ char **lexer(char *str,char **env)
 					quote = 1;
 				else if(str[i] == '\'')
 					quote = 2;
+				else
+				 	quote =-1;
 				line[j++] = str[i++];
-				while (quote && str[i] != '\0') {
+				while ((quote == 1 || quote == 2) && str[i] != '\0') {
+					// printf("%c\t",str[i]);
 					if(str[i] == '"' && quote == 1)
 					{
 						quote = -1;
@@ -118,12 +123,15 @@ char **lexer(char *str,char **env)
 					line[j++] = str[i++];
 				}
 				line[j++] = str[i++];
+				// printf("|%c|\t",str[i]);
 				if(str[i] == ' ' || str[i] == '>' || str[i] == '\0')
 					break;
 			}
+			// printf("%d\n",quote);
 			if(quote != -1)
 			{
 				perror("QUOTE");
+				free(line);
 				return NULL;
 			}
 			line[j++] = '\n';
@@ -249,20 +257,9 @@ t_command  **rmplr_double_str(t_command **cmd,t_global_info g_info,int size)
 	}
 	i = 0;
 	j = 0;
-	i = 0;
-	j = 0;
-	// printf("COMMAND_ARGUMENTS\n");
-	// while (cmd_rtr[i]->ther) {
-	// 	j = 0;
-	// 	while (cmd_rtr[i]->cmd_parameter[j]) {
-	// 		printf("%s\n",cmd_rtr[i]->cmd_parameter[j]);
-	// 		j++;
-	// 	}
-	// 	printf("-------\n");
-	// 	i++;
-	// }
 	return cmd_rtr;
 }
+
 t_command **rmplir_strct(char **splt, t_global_info *g_info)
 {
 	t_command **cmd;
@@ -391,17 +388,17 @@ t_command **rmplir_strct(char **splt, t_global_info *g_info)
 			}
         }
 		if(cmd[i]->cmd[0] == '<' || cmd[i]->cmd[0] == '>')
-		{
 			cmd[i]->cmd = NULL;
-			cmd[i]->g_info = g_info;
-		}
         i++;
     }
 	// hena ghadi nbda n9alb 3la wax kayn redirect o dakxi fi kola pipe
 
 	i = 0;
 	j = 0;
-	
+	// while (cmd[i]->ther) {
+	// 	printf("%s\n",cmd[i]->cmd);
+	// 	i++;
+	// }
 	while(cmd[i]->ther)
     {
         j = 0;
@@ -495,7 +492,7 @@ t_command **rmplir_strct(char **splt, t_global_info *g_info)
 						cmd[i]->outfile[k]->file = cmd[i]->cmd_parameter[j + 1];
 						if(cmd[i]->cmd_parameter[j][0] == '>' && cmd[i]->cmd_parameter[j][1] == '>')
 							cmd[i]->outfile[k]->mode = false;
-						else if (cmd[i]->cmd_parameter[j][0] == '>')
+						else
 							cmd[i]->outfile[k]->mode = true;
 						k++;
 						j += 2;
@@ -515,7 +512,7 @@ t_command **rmplir_strct(char **splt, t_global_info *g_info)
 						cmd[i]->outfile[k]->file = cmd[i]->cmd_parameter[j];
 						if(cmd[i]->cmd_parameter[j][0] == '>' && cmd[i]->cmd_parameter[j][1] == '>')
 							cmd[i]->outfile[k]->mode = false;
-						else if (cmd[i]->cmd_parameter[j][0] == '>')
+						else
 							cmd[i]->outfile[k]->mode = true;
 						k++;
 						cmd[i]->outfile[k] = malloc(sizeof(t_outfile));
@@ -576,7 +573,6 @@ t_command **rmplir_strct(char **splt, t_global_info *g_info)
 	// 	printf("--------\n");
 	// 	i++;
 	// }
-
 	t_command ** cmd_rtr;
 	i = 0;
 	j = 0;
@@ -607,39 +603,44 @@ t_command **rmplir_strct(char **splt, t_global_info *g_info)
 	cmd_rtr = rmplr_double_str(cmd,*g_info, size);
 	return  cmd_rtr;
 }
-// char *remove_quots(char *str)
-// {
-// 	int i = 0;
-// 	while (expression) {
-	
-// 	}
-// }
-// int check_pepe(char **splt)
-// {
-// 	int i = 0;
-// 	int j = 0;
-// 	while (splt[i] != NULL) {
-// 		j = 0;
-// 		if(spl)
-// 	}
-// 	return 1;
-// }
 
-// int main(int ac,char **av,char *env[])
+int error_redirect(char **splt)
+{
+	int i = 0;
+	int j = 0;
+	while (splt[i] != NULL) {
+		printf("{{%s}}\n",splt[i]);
+		if(splt[i][0] == '<' || splt[i][0] == '>')
+		{
+			printf("$$  %s  $$\n",splt[i + 1]);
+			if(splt[i + 1] == NULL)
+				return 0;
+			if(splt[i + 1][0] == '<' || splt[i + 1][0] == '>')
+				return 0;
+		}
+		i++;
+	}
+	return 1;
+}
+
+// int main(int ac,char **av,char **env)
 // {
 // 	char	*str;
 // 	int		i;
 // 	char **splt;
 // 	t_global_info g_info;
 // 	i = 0;
+// 	g_info.env_array = env;
 // 	while (1)
 // 	{
 // 		str = readline("Shell->");
 // 		add_history(str);
 //         splt = lexer(str,env);
-// 		if (splt != NULL) {
-// 			rmplir_strct(splt, &g_info);
-// 		}
+// 		if(splt != NULL)
+// 			expand_splt(splt,g_info);
+// 		// if (splt != NULL) {
+// 		// 	rmplir_strct(splt, &g_info);
+// 		// }
 // 		str = NULL;
 // 	}
 // }

@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 21:13:03 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/13 19:47:49 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/14 15:34:56 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,20 @@ int stdin_redirect(t_command *cmd)
 {
 	int i;
 	int stdin_fd;
+	char *tmp;
 
 	if (cmd->redirect_in == true)
 	{
 		i = 0;
 		while(cmd->infile[i])
-		{	
+		{
+			if (!ambiguous_redirect(cmd->infile[i], cmd->g_info))
+			{
+				cmd->g_info->exit_code = 1;
+				return (0);;
+			}
+			tmp = ft_expand(cmd->infile[i], cmd->g_info);
+			cmd->infile[i] = tmp;
 			if (!ft_checkf(cmd->infile[i]))
 			{
 				cmd->g_info->exit_code = 1;
@@ -56,6 +64,7 @@ int stdin_redirect(t_command *cmd)
 /* redirect output */
 int stdout_redirect(t_command *cmd)
 {
+	char *tmp;
 	int stdout_fd;
 	int i;
 	if (cmd->redirect_out == true)
@@ -63,6 +72,13 @@ int stdout_redirect(t_command *cmd)
 		i = 0;
 		while (cmd->outfile[i]->file)
 		{
+			if(!ambiguous_redirect(cmd->outfile[i]->file, cmd->g_info))
+			{
+				cmd->g_info->exit_code = 1;
+				return (0);
+			}
+			tmp = ft_expand(cmd->outfile[i]->file, cmd->g_info);
+			cmd->outfile[i]->file = tmp;
 			if (cmd->outfile[i]->mode == true)
 				stdout_fd = open(cmd->outfile[i]->file, O_CREAT | O_RDWR | O_TRUNC, 0644);
 			else
@@ -93,39 +109,6 @@ int stdout_redirect(t_command *cmd)
 	return (1);
 }
 
-/* redirect output in append mode */
-// int append_redirect(t_command *cmd)
-// {
-// 	int append_fd;
-// 	int i;
-// 	if (cmd->redirect_append == true)
-// 	{
-// 		i = 0;
-// 		while(cmd->outfile[i])
-// 		{
-// 			append_fd = open(cmd->outfile[i], O_CREAT | O_RDWR | O_APPEND, 0644);
-// 			if (!ft_checkw(cmd->outfile[i]))
-// 			{
-// 				cmd->g_info->exit_code = 1;
-// 				return (0);
-// 			}
-// 			if (append_fd < 0)
-// 			{
-// 				ft_perror(2, "minishell : %s: opening error\n", cmd->outfile[i]);
-// 				cmd->g_info->exit_code = 1;
-// 				return (0);
-// 			}
-// 			i++;
-// 		}
-// 		if (dup2(append_fd, STDOUT_FILENO) < 0)
-// 		{
-// 			ft_perror(2, "redirect error", cmd->outfile[i - 1]);
-// 			cmd->g_info->exit_code = 1;
-// 			return (0);
-// 		}
-// 	}
-// 	return (1);
-// }
 int herdoc_mode(t_command *cmd)
 {
 
@@ -190,10 +173,12 @@ void search_built_in(t_command *cmd)
 }
 int exec_built_in(t_command *cmd)
 {
-	stdin_redirect(cmd);
-	stdout_redirect(cmd);
-	// append_redirect(cmd);
-	herdoc_mode(cmd);
+	if(!stdin_redirect(cmd))
+		return (0);
+	if(!stdout_redirect(cmd))
+		return (0);
+	if(!herdoc_mode(cmd))
+		return (0);
 	if(!ft_strcmp(cmd->cmd, "pwd"))
 		ft_pwd(cmd);
 	else if (!ft_strcmp(cmd->cmd, "env"))
@@ -236,8 +221,6 @@ void cmd_exec(t_command *cmd)
 			exit(cmd->g_info->exit_code);
 		if(!stdout_redirect(cmd))
 			exit(cmd->g_info->exit_code);
-		// if(!append_redirect(cmd))
-		// 	exit(cmd->g_info->exit_code);
 		if(!herdoc_mode(cmd))
 			exit(cmd->g_info->exit_code);
 		else if(cmd_validation(cmd))

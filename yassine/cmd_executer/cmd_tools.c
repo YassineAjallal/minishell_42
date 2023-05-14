@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/25 17:41:51 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/13 15:34:53 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/13 21:16:24 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ int cmd_validation(t_command *cmd)
 {
 	if (!cmd->cmd)
 	{
-		cmd->g_info->exit_code = 0;
+		cmd->g_info->exit_code = 1;
 		return (0);
 	}
 	cmd->command_path = cmd_path(cmd);
