@@ -407,6 +407,7 @@ t_command **rmplir_strct(char **splt, t_global_info *g_info)
         {
 			k = 0;
 			cnt = 0;
+			// printf("cmd->||%s\n",cmd[i]->cmd_parameter[j]);
 			if(cmd[i]->cmd_parameter[j][0] == '<' && cmd[i]->cmd_parameter[j][1] == '<')
 			{
 				cmd[i]->herdoc = 1;
@@ -459,6 +460,9 @@ t_command **rmplir_strct(char **splt, t_global_info *g_info)
 						j += 2;
 					}
 					cmd[i]->infile[k] = NULL;
+					if(cmd[i]->cmd_parameter[j] == NULL){
+						break;
+					}
 					k = 0;
 				}
 				else {
@@ -500,6 +504,9 @@ t_command **rmplir_strct(char **splt, t_global_info *g_info)
 					}
 					cmd[i]->outfile[k] = malloc(sizeof(t_outfile));
 					cmd[i]->outfile[k]->file = NULL;
+					if(cmd[i]->cmd_parameter[j] == NULL){
+						break;
+					}
 					k = 0;
 				}
 				else {
@@ -638,11 +645,11 @@ int main(int ac,char **av,char **env)
 		str = readline("Shell->");
 		add_history(str);
         splt = lexer(str,env);
-		if(splt != NULL)
-			expand_splt(splt,g_info);
-		// if (splt != NULL) {
-		// 	rmplir_strct(splt, &g_info);
-		// }
+		// if(splt != NULL)
+		// 	expand_splt(splt,g_info);
+		if (splt != NULL) {
+			rmplir_strct(splt, &g_info);
+		}
 		str = NULL;
 	}
 }
