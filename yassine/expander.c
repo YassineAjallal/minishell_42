@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/08 16:42:02 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/14 18:58:52 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/14 21:41:41 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,12 +145,12 @@ char **ft_strjoin2d(char **s1, char **s2)
 	new_array = malloc(sizeof(char *) * (ft_strlen2d(s1) + ft_strlen2d(s2) + 1));
 	if (!new_array)
 		return (NULL);
-	while(s1[i] && s1)
+	while(s1[i])
 	{
 		new_array[i] = ft_strdup(s1[i]);
 		i++;
 	}
-	while(s2[j] && s2)
+	while(s2[j])
 	{
 		new_array[i] = ft_strdup(s2[j]);
 		i++;
@@ -202,6 +202,7 @@ char **ft_expand(char *string, t_global_info *g_info)
 	new_cmd_param = malloc(sizeof(char *));
 	if (!new_cmd_param)
 		return (NULL);
+	new_cmd_param[0] = NULL;
 	while(string[i])
 	{
 		if (string[i] == '\"')
@@ -213,8 +214,8 @@ char **ft_expand(char *string, t_global_info *g_info)
 			if (string[i] == '\"')
 				i++;
 			tmp = ft_substr(string, pos, i - pos - 1);
-			printf("double : %s\n", tmp);
 			expand_double_q = expand_var(tmp, g_info);
+			// printf("expand_double_q : %s\n", expand_double_q);
 			if (expand_without_q[ft_strlen(expand_without_q) - 1] != ' ')
 			{
 				tmp = ft_strjoin(new_cmd_param[ft_strlen2d(new_cmd_param) - 1], expand_double_q);
@@ -233,7 +234,6 @@ char **ft_expand(char *string, t_global_info *g_info)
 			if (string[i] == '\'')
 				i++;
 			expand_double_q = ft_substr(string, pos, i - pos - 1);
-			printf("single : %s\n", expand_double_q);
 			if (expand_without_q[ft_strlen(expand_without_q) - 1] != ' ')
 			{
 				tmp = ft_strjoin(new_cmd_param[ft_strlen2d(new_cmd_param) - 1], expand_double_q);
@@ -249,7 +249,6 @@ char **ft_expand(char *string, t_global_info *g_info)
 			while(string[i] != '\"' && string[i] != '\'' && string[i])
 				i++;
 			tmp = ft_substr(string, pos, i);
-			printf("no quotes : %s\n", tmp);
 			expand_without_q = expand_var(tmp, g_info);
 			no_qoutes = ft_split(expand_without_q, ' ');
 			param_tmp = ft_strjoin2d(new_cmd_param, no_qoutes);
@@ -260,42 +259,47 @@ char **ft_expand(char *string, t_global_info *g_info)
 	return (new_cmd_param);
 }
 
-// char **expand_all_param(t_command *cmd, t_global_info *g_info)
-// {
-// 	int i;
-// 	char **expanded_param;
-	
-// 	expanded_param = malloc(sizeof(char *) * (ft_strlen2d(cmd->cmd_parameter) + 1));
-// 	i = 0;
-// 	while(cmd->cmd_parameter[i])
-// 	{
-// 		printf("%s\n", cmd->cmd_parameter[i]);
-// 		expanded_param[i] = ft_expand(cmd->cmd_parameter[i], g_info);
-// 		i++;
-// 	}
-// 	expanded_param[i] = NULL;
-// 	// ft_free2d(cmd->cmd_parameter);
-// 	cmd->cmd = ft_strdup(expanded_param[0]);
-// 	return(expanded_param);
-// }
-
-int main(int ac, char **av, char **env)
+char **expand_all_param(t_command *cmd, t_global_info *g_info)
 {
-	t_global_info g_info;
-	char *string;
-	char **tmp;
-	g_info.environ = dup_env(env);
-	g_info.exit_code = 0;
-	string = ft_strdup("$a$a\'$USER\'\"$HOME\"");
-	printf("---------------  %s  -----------------\n\n\n", string);
-	tmp = ft_expand(string, &g_info);
 	int i;
+	char **expanded_param;
+	char **tmp;
+	char **exp;
+	expanded_param = malloc(sizeof(char *));
+	if (!expanded_param)
+		return (NULL);
+	expanded_param[0] = NULL;
 	i = 0;
-	printf("----------------output------------------\n");
-	while(tmp[i])
+	while(cmd->cmd_parameter[i])
 	{
-		printf("%s\n", tmp[i]);
+		exp = ft_expand(cmd->cmd_parameter[i], g_info);
+		tmp = ft_strjoin2d(expanded_param, exp);
+		free(expanded_param);
+		expanded_param = tmp;
 		i++;
 	}
-	// free(tmp);
+	// expanded_param[i] = NULL;
+	cmd->cmd = ft_strdup(expanded_param[0]);
+	ft_free2d(cmd->cmd_parameter);
+	return(expanded_param);
 }
+
+// int main(int ac, char **av, char **env)
+// {
+// 	t_global_info g_info;
+// 	char *string;
+// 	char **tmp;
+// 	g_info.environ = dup_env(env);
+// 	g_info.exit_code = 0;
+// 	string = ft_strdup("$a");
+// 	printf("---------------  %s  -----------------\n\n\n", string);
+// 	tmp = ft_expand(string, &g_info);
+// 	int i;
+// 	i = 0;
+// 	while(tmp[i])
+// 	{
+// 		printf("%s\n", tmp[i]);
+// 		i++;
+// 	}
+// 	// free(tmp);
+// }

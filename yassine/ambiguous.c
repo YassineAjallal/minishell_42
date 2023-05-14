@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 16:38:13 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/14 11:28:37 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/14 20:20:12 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ int ambiguous_redirect(char *file, t_global_info *g_info)
 	free(file);
 	file = tmp;
 	nb_spaces = calc_space(file);
-	expand_file = ft_expand(file, g_info);
+	// expand_file = ft_expand(file, g_info);
 	
 	// if (!ft_strchr(file, '$'))
 	// 	return(1);
