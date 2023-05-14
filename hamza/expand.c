@@ -6,7 +6,7 @@
 /*   By: hkasbaou <hkasbaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/08 16:42:02 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/13 20:09:28 by hkasbaou         ###   ########.fr       */
+/*   Updated: 2023/05/13 21:48:50 by hkasbaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,49 +101,49 @@ char *remove_quots(char *splt,t_global_info g_info)
 		{
 			i++;
 			while (splt[i] && splt[i] != '"') {	
-				if(splt[i] == '$')
-				{
-					i++;
-					j = i;
-					while (splt[j] && (ft_isalnum(splt[j]) || splt[j] == '_'))
-						j++;
-					to_find = ft_substr(splt, i, j - i);
-					to_find = ft_strjoin_char(to_find, '=');
-					to_join = find_valr(to_find,g_info);
-					if(to_join)
-						str = ft_strjoin(str, to_join);
-					free(to_find);
-					to_find = NULL;
-					i = j;
-					if (splt[i] != '\0' && splt[i] != '"') 
-						str = ft_strjoin_char(str, splt[i]);
-				}
-				else
+				// if(splt[i] == '$')
+				// {
+				// 	i++;
+				// 	j = i;
+				// 	while (splt[j] && (ft_isalnum(splt[j]) || splt[j] == '_'))
+				// 		j++;
+				// 	to_find = ft_substr(splt, i, j - i);
+				// 	to_find = ft_strjoin_char(to_find, '=');
+				// 	to_join = find_valr(to_find,g_info);
+				// 	if(to_join)
+				// 		str = ft_strjoin(str, to_join);
+				// 	free(to_find);
+				// 	to_find = NULL;
+				// 	i = j;
+				// 	if (splt[i] != '\0' && splt[i] != '"') 
+				// 		str = ft_strjoin_char(str, splt[i]);
+				// }
+				// else
 					str = ft_strjoin_char(str, splt[i]);
-				if(splt[i] != '$' && splt[i] != '\0' && splt[i] != '"')
+				// if(splt[i] != '$' && splt[i] != '\0' && splt[i] != '"')
 					i++;
 			}
 		}
 		if(splt[i] != '"' && splt[i] != '\'' && splt[i] != '\0')
 		{
-			if(splt[i] == '$')
-			{
-				i++;
-				j = i;
-				while (splt[j] && (ft_isalnum(splt[j]) || splt[j] == '_'))
-					j++;
-				to_find = ft_substr(splt, i, j - i);
-				to_find = ft_strjoin_char(to_find, '=');
-				to_join = find_valr(to_find,g_info);
-				if(to_join)
-					str = ft_strjoin(str, to_join);
-				free(to_find);
-				to_find = NULL;
-				i = j;
-				if (splt[i] != '\0' && splt[i] != '"' && splt[i] != '\'')
-					str = ft_strjoin_char(str, splt[i]);
-			}
-			else
+			// if(splt[i] == '$')
+			// {
+			// 	i++;
+			// 	j = i;
+			// 	while (splt[j] && (ft_isalnum(splt[j]) || splt[j] == '_'))
+			// 		j++;
+			// 	to_find = ft_substr(splt, i, j - i);
+			// 	to_find = ft_strjoin_char(to_find, '=');
+			// 	to_join = find_valr(to_find,g_info);
+			// 	if(to_join)
+			// 		str = ft_strjoin(str, to_join);
+			// 	free(to_find);
+			// 	to_find = NULL;
+			// 	i = j;
+			// 	if (splt[i] != '\0' && splt[i] != '"' && splt[i] != '\'')
+			// 		str = ft_strjoin_char(str, splt[i]);
+			// }
+			// else
 				str = ft_strjoin_char(str, splt[i]);
 		}
 		i++;
@@ -167,6 +167,7 @@ char **expand_splt(char **splt,t_global_info g_info)
 	i = 0;
 	while (splt[i]) {
 		splt[i] = remove_quots(splt[i],g_info);
+		printf("%s\n",splt[i]);
 		// free(splt[i]);
 		// splt[i] = str;
 		// free(str);
@@ -220,3 +221,37 @@ char	**ft_strjoin_double(char **s1, char *s2)
 // 	if(!s)
 // 		printf("HHH\n");
 // }
+
+char *rem_quots(char *splt,t_global_info g_info)
+{
+	char *str = "";
+	char *to_find;
+	char *to_join;
+	char qts;
+	int i = 0;
+	int j = 0;
+	while (splt[i]) {
+		if(splt[i] == '\'')
+		{
+			i++;
+			while (splt[i] && splt[i] != '\'') {	
+				str = ft_strjoin_char(str, splt[i]);
+				i++;
+			}
+		}
+		if(splt[i] == '"')
+		{
+			i++;
+			while (splt[i] && splt[i] != '"') {	
+				str = ft_strjoin_char(str, splt[i]);
+				i++;
+			}
+		}
+		if(splt[i] != '"' && splt[i] != '\'' && splt[i] != '\0')
+		{
+			str = ft_strjoin_char(str, splt[i]);
+		}
+		i++;
+	}
+	return str;
+}
