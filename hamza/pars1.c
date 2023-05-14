@@ -2,6 +2,7 @@
 #include "mini.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/_types/_u_char.h>
 
 // enum s_cases 
 // {
@@ -645,8 +646,9 @@ int main(int ac,char **av,char **env)
 		str = readline("Shell->");
 		add_history(str);
         splt = lexer(str,env);
-		// if(splt != NULL)
-		// 	expand_splt(splt,g_info);
+		if(splt != NULL)
+			if(!syntx_error_a(splt) || !syntx_error_b(splt))
+				return 0;;
 		if (splt != NULL) {
 			rmplir_strct(splt, &g_info);
 		}

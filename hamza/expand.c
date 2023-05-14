@@ -6,14 +6,16 @@
 /*   By: hkasbaou <hkasbaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/08 16:42:02 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/13 21:48:50 by hkasbaou         ###   ########.fr       */
+/*   Updated: 2023/05/15 00:40:34 by hkasbaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../yassine/minishell.h"
 #include "libft/libft.h"
+#include <i386/types.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/_types/_ssize_t.h>
 #include <unistd.h>
 
 char	*ft_strjoin_char(char const *s1, char s2)
@@ -222,7 +224,7 @@ char	**ft_strjoin_double(char **s1, char *s2)
 // 		printf("HHH\n");
 // }
 
-char *rem_quots(char *splt,t_global_info g_info)
+char *rem_quots(char *splt)
 {
 	char *str = "";
 	char *to_find;
@@ -254,4 +256,71 @@ char *rem_quots(char *splt,t_global_info g_info)
 		i++;
 	}
 	return str;
+}
+
+int check_empty(char *str)
+{
+	int i = 0;
+	char *s = rem_quots(str);
+	if(s[0] == '\0')
+		return 0;
+	return 1;
+}
+int  syntx_error_b(char **splt)
+{
+	int i = 0;
+	int j = 0;
+	while (splt[i]) {
+		if(splt[i][0] == '>' || splt[i][0] == '<')
+		{
+			if(splt[i + 1] == NULL || splt[i + 1][0] == '|' || splt[i + 1][0] == '>' || splt[i + 1][0] == '<' || !check_empty(splt[i + 1]))
+			{
+				perror("SYNTAX ERROR");
+				return 0;
+			}
+		}
+		i++;
+	}
+	return 1;
+}
+int syntx_error_a(char **splt)
+{
+	int i = 0;
+	int j = 0;
+	while (splt[i]) {
+		if(splt[i][0] == '|')
+		{
+			if(i == 0 || !check_empty(splt[i - 1]) )
+			{
+				perror("SYNATX ERROR");
+				return 0;
+			}
+			if(splt[i + 1] == NULL || !check_empty(splt[i + 1]) || splt[i + 1][0] == '\0' || splt[i + 1][0] == '|')
+			{
+				if((splt[i + 1][0] == '>' || splt[i + 1][0] == '<'))
+				{
+				printf("%s\n",splt[i]);
+					i++;
+					if(splt[i + 1] == NULL ||(splt[i + 1][0] == '>' || splt[i + 1][0] == '<') || !check_empty(splt[i]))
+					{
+						perror("SYNATX ERROR");
+						return 0;
+					}
+				}
+				else {				
+					perror("SYNATX ERROR");
+					return 0;
+				}
+			}
+			// else {
+			// 	if((splt[i + 1][0] == '>' || splt[i + 1][0] == '<') && splt[i + 1] != NULL)
+			// 	{
+			// 		i++;
+			// 		printf("%s\n",splt[i]);
+			// 	}
+			// }
+		}
+		i++;
+	}
+	return 1;
 }
