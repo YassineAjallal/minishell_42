@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/30 13:57:21 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/15 10:05:33 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/15 16:02:28 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,27 @@ void close_pipes(int pipes[1][2], int nb_pipe)
 		i++;
 	}
 }
+
+void ft_strtrim2d(char **param)
+{
+	char *tmp;
+	int i;
+	
+	i = 0;
+	while(param[i])
+	{
+		tmp = ft_strtrim(param[i], " ");
+		if (ft_strlen(tmp) == 0)
+		{
+			free(tmp);
+			tmp = ft_strdup(" ");
+		}
+		free(param[i]);
+		param[i] = tmp;
+		i++;
+	}
+}
+
 int pipes(t_command **cmds, t_global_info *g_info)
 {
 	pid_t	pid;
@@ -55,10 +76,8 @@ int pipes(t_command **cmds, t_global_info *g_info)
 	{
 		g_info->old_stdout = dup(STDOUT_FILENO);
 		cmds[0]->cmd_parameter = expand_all_param(cmds[0], g_info);
+		// ft_strtrim2d(cmds[0]->cmd_parameter);
 		exec_built_in(cmds[0]);
-		// 	g_info->exit_code = 1;
-		// else
-		// 	g_info->exit_code = 0;
 		dup2(g_info->old_stdout, STDOUT_FILENO);
 	}
 	else
@@ -70,6 +89,7 @@ int pipes(t_command **cmds, t_global_info *g_info)
 		while(++i < g_info->nb_pipe + 1)
 		{
 			cmds[i]->cmd_parameter = expand_all_param(cmds[i], g_info);
+			// ft_strtrim2d(cmds[i]->cmd_parameter);
 			if (i != 0)
 				dup_stdin = pipe_arr[i - 1][0];
 			if (i == g_info->nb_pipe)
