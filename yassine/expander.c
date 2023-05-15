@@ -6,13 +6,11 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/08 16:42:02 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/14 21:41:41 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/15 13:21:09 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-
 
 int search_in_env(t_env *env, char *string)
 {
@@ -40,6 +38,48 @@ int next_dollar_pos(char *str, int pos)
 	return (pos);
 }
 
+char *space_trim(char *str)
+{
+	int i;
+	char **split_space;
+	char *string_trim;
+	char *tmp;
+
+	i = 0;
+	split_space = ft_split(str, ' ');
+	if (ft_strlen(str) > 0 && ft_strlen2d(split_space) == 0)
+	{
+		string_trim = ft_strdup(" ");
+		return (string_trim);
+	}
+	while(split_space[i])
+	{
+		tmp = ft_strjoin(string_trim, split_space[i]);
+		free(string_trim);
+		string_trim = tmp;
+		if (split_space[i + 1])
+		{
+			tmp = ft_strjoin(string_trim, " ");
+			free(string_trim);
+			string_trim = tmp;
+		}
+		i++;
+	}
+	if (str[0] == ' ')
+	{
+		tmp = ft_strjoin(" ", string_trim);
+		free(string_trim);
+		string_trim = tmp;
+	}
+	if (str[ft_strlen(str) - 1] == ' ')
+	{
+		tmp = ft_strjoin(string_trim, " ");
+		free(string_trim);
+		string_trim = tmp;
+	}
+	return (string_trim);
+}
+
 char *expand_var(char *string, t_global_info *g_info)
 {
 	int i;
@@ -56,6 +96,8 @@ char *expand_var(char *string, t_global_info *g_info)
 	expand_string = ft_strdup("");
 	expand_split = ft_split(string, '$');
 	len = ft_strlen(string);
+	if (ft_strlen(string) == 0)
+		return (expand_string);
 	if (string[0] != '$')
 	{
 		tmp = ft_strjoin(expand_string, expand_split[0]);
@@ -87,6 +129,7 @@ char *expand_var(char *string, t_global_info *g_info)
 		free(expand_string);
 		expand_string = tmp;
 		rest = ft_substr(expand_split[i], j, ft_strlen(expand_split[i]) - j);
+		// printf("rest : %s\n", rest);
 		tmp = ft_strjoin(expand_string, rest);
 		free(expand_string);
 		expand_string = tmp;
@@ -145,14 +188,16 @@ char **ft_strjoin2d(char **s1, char **s2)
 	new_array = malloc(sizeof(char *) * (ft_strlen2d(s1) + ft_strlen2d(s2) + 1));
 	if (!new_array)
 		return (NULL);
-	while(s1[i])
+	while(s1[i] && s1)
 	{
+		// printf("s1 : %s-->\n", s1[i]);
 		new_array[i] = ft_strdup(s1[i]);
 		i++;
 	}
-	while(s2[j])
+	while(s2[j] && s2)
 	{
 		new_array[i] = ft_strdup(s2[j]);
+		// printf("s2 : %s-->\n", s2[j]);
 		i++;
 		j++;
 	}
@@ -181,8 +226,8 @@ char **strjoin2d_string(char **s1, char *s2)
 	new_array[i] = ft_strdup(s2);
 	i++;
 	new_array[i] = NULL;
-	ft_free2d(s1);
-	free(s2);
+	// ft_free2d(s1);
+	// free(s2);
 	return (new_array);
 }
 
@@ -215,7 +260,6 @@ char **ft_expand(char *string, t_global_info *g_info)
 				i++;
 			tmp = ft_substr(string, pos, i - pos - 1);
 			expand_double_q = expand_var(tmp, g_info);
-			// printf("expand_double_q : %s\n", expand_double_q);
 			if (expand_without_q[ft_strlen(expand_without_q) - 1] != ' ')
 			{
 				tmp = ft_strjoin(new_cmd_param[ft_strlen2d(new_cmd_param) - 1], expand_double_q);
@@ -223,7 +267,11 @@ char **ft_expand(char *string, t_global_info *g_info)
 				new_cmd_param[ft_strlen2d(new_cmd_param) - 1] = tmp;
 			}
 			else
-				strjoin2d_string(new_cmd_param, expand_double_q);
+			{
+				param_tmp = strjoin2d_string(new_cmd_param, expand_double_q);
+				ft_free2d(new_cmd_param);
+				new_cmd_param = param_tmp;
+			}
 		}
 		else if (string[i] == '\'')
 		{
@@ -241,7 +289,11 @@ char **ft_expand(char *string, t_global_info *g_info)
 				new_cmd_param[ft_strlen2d(new_cmd_param) - 1] = tmp;
 			}
 			else
-				strjoin2d_string(new_cmd_param, expand_double_q);
+			{
+				param_tmp = strjoin2d_string(new_cmd_param, expand_double_q);
+				ft_free2d(new_cmd_param);
+				new_cmd_param = param_tmp;
+			}
 		}
 		else
 		{
@@ -249,13 +301,26 @@ char **ft_expand(char *string, t_global_info *g_info)
 			while(string[i] != '\"' && string[i] != '\'' && string[i])
 				i++;
 			tmp = ft_substr(string, pos, i);
+			// printf("tmp : %s\n", tmp);
 			expand_without_q = expand_var(tmp, g_info);
+			// printf("%s-->\n", expand_without_q);
 			no_qoutes = ft_split(expand_without_q, ' ');
-			param_tmp = ft_strjoin2d(new_cmd_param, no_qoutes);
+			if (ft_strlen2d(no_qoutes) == 1)
+				param_tmp = strjoin2d_string(new_cmd_param, expand_without_q);
+			else
+				param_tmp = ft_strjoin2d(new_cmd_param, no_qoutes);
+			// printf("---------------from ft_expand---------------\n");
 			ft_free2d(new_cmd_param);
 			new_cmd_param = param_tmp;
 		}
 	}
+	// int k;
+	// k = 0;
+	// while(new_cmd_param[k])
+	// {
+	// 	printf("%s\n", new_cmd_param[k]);
+	// 	k++;
+	// }
 	return (new_cmd_param);
 }
 
@@ -273,7 +338,16 @@ char **expand_all_param(t_command *cmd, t_global_info *g_info)
 	while(cmd->cmd_parameter[i])
 	{
 		exp = ft_expand(cmd->cmd_parameter[i], g_info);
+		// printf("%s\n", cmd->cmd_parameter[i]);
 		tmp = ft_strjoin2d(expanded_param, exp);
+		// printf("------------------------------\n");
+		// int k;
+		// k = 0;
+		// while(exp[k])
+		// {
+		// 	printf("%s\n", exp[k]);
+		// 	k++;
+		// }
 		free(expanded_param);
 		expanded_param = tmp;
 		i++;
@@ -284,22 +358,16 @@ char **expand_all_param(t_command *cmd, t_global_info *g_info)
 	return(expanded_param);
 }
 
-// int main(int ac, char **av, char **env)
-// {
-// 	t_global_info g_info;
-// 	char *string;
-// 	char **tmp;
-// 	g_info.environ = dup_env(env);
-// 	g_info.exit_code = 0;
-// 	string = ft_strdup("$a");
-// 	printf("---------------  %s  -----------------\n\n\n", string);
-// 	tmp = ft_expand(string, &g_info);
-// 	int i;
-// 	i = 0;
-// 	while(tmp[i])
-// 	{
-// 		printf("%s\n", tmp[i]);
-// 		i++;
-// 	}
-// 	// free(tmp);
-// }
+int main(int ac, char **av, char **env)
+{
+	t_global_info g_info;
+	char *string;
+	char *tmp;
+	g_info.environ = dup_env(env);
+	g_info.exit_code = 0;
+	string = ft_strdup(" a   b    c ");
+	printf("---------------  %s  -----------------\n", string);
+	tmp = space_trim(string);
+	printf("%s\n", tmp);
+	// free(tmp);
+}

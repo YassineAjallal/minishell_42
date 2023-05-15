@@ -1,6 +1,4 @@
 #include "minishell.h"
-#include <stdio.h>
-#include <stdlib.h>
 
 // enum s_cases 
 // {
@@ -406,6 +404,7 @@ t_command **rmplir_strct(char **splt, t_global_info *g_info)
         {
 			k = 0;
 			cnt = 0;
+			// printf("cmd->||%s\n",cmd[i]->cmd_parameter[j]);
 			if(cmd[i]->cmd_parameter[j][0] == '<' && cmd[i]->cmd_parameter[j][1] == '<')
 			{
 				cmd[i]->herdoc = 1;
@@ -458,6 +457,9 @@ t_command **rmplir_strct(char **splt, t_global_info *g_info)
 						j += 2;
 					}
 					cmd[i]->infile[k] = NULL;
+					if(cmd[i]->cmd_parameter[j] == NULL){
+						break;
+					}
 					k = 0;
 				}
 				else {
@@ -492,13 +494,16 @@ t_command **rmplir_strct(char **splt, t_global_info *g_info)
 						cmd[i]->outfile[k]->file = cmd[i]->cmd_parameter[j + 1];
 						if(cmd[i]->cmd_parameter[j][0] == '>' && cmd[i]->cmd_parameter[j][1] == '>')
 							cmd[i]->outfile[k]->mode = false;
-						else
+						else if (cmd[i]->cmd_parameter[j][0] == '>')
 							cmd[i]->outfile[k]->mode = true;
 						k++;
 						j += 2;
 					}
 					cmd[i]->outfile[k] = malloc(sizeof(t_outfile));
 					cmd[i]->outfile[k]->file = NULL;
+					if(cmd[i]->cmd_parameter[j] == NULL){
+						break;
+					}
 					k = 0;
 				}
 				else {
@@ -512,7 +517,7 @@ t_command **rmplir_strct(char **splt, t_global_info *g_info)
 						cmd[i]->outfile[k]->file = cmd[i]->cmd_parameter[j];
 						if(cmd[i]->cmd_parameter[j][0] == '>' && cmd[i]->cmd_parameter[j][1] == '>')
 							cmd[i]->outfile[k]->mode = false;
-						else
+						else if (cmd[i]->cmd_parameter[j][0] == '>')
 							cmd[i]->outfile[k]->mode = true;
 						k++;
 						cmd[i]->outfile[k] = malloc(sizeof(t_outfile));
@@ -573,6 +578,7 @@ t_command **rmplir_strct(char **splt, t_global_info *g_info)
 	// 	printf("--------\n");
 	// 	i++;
 	// }
+
 	t_command ** cmd_rtr;
 	i = 0;
 	j = 0;
@@ -637,10 +643,11 @@ int error_redirect(char **splt)
 // 		add_history(str);
 //         splt = lexer(str,env);
 // 		if(splt != NULL)
-// 			expand_splt(splt,g_info);
-// 		// if (splt != NULL) {
-// 		// 	rmplir_strct(splt, &g_info);
-// 		// }
+// 			if(!syntx_error_a(splt) || !syntx_error_b(splt))
+// 				return 0;;
+// 		if (splt != NULL) {
+// 			rmplir_strct(splt, &g_info);
+// 		}
 // 		str = NULL;
 // 	}
 // }

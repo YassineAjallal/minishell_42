@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/30 13:57:21 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/14 21:09:36 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/15 10:05:33 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,17 +55,10 @@ int pipes(t_command **cmds, t_global_info *g_info)
 	{
 		g_info->old_stdout = dup(STDOUT_FILENO);
 		cmds[0]->cmd_parameter = expand_all_param(cmds[0], g_info);
-		// int k;
-		// k = 0;
-		// while(cmds[0]->cmd_parameter[k])
-		// {
-		// 	printf("%s\n", cmds[0]->cmd_parameter[k]);
-		// 	k++;
-		// }
-		if (!exec_built_in(cmds[0]))
-			g_info->exit_code = 1;
-		else
-			g_info->exit_code = 0;
+		exec_built_in(cmds[0]);
+		// 	g_info->exit_code = 1;
+		// else
+		// 	g_info->exit_code = 0;
 		dup2(g_info->old_stdout, STDOUT_FILENO);
 	}
 	else
