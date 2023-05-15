@@ -6,7 +6,7 @@
 /*   By: hkasbaou <hkasbaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/08 16:42:02 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/15 00:40:34 by hkasbaou         ###   ########.fr       */
+/*   Updated: 2023/05/15 15:56:38 by hkasbaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -290,35 +290,16 @@ int syntx_error_a(char **splt)
 	while (splt[i]) {
 		if(splt[i][0] == '|')
 		{
-			if(i == 0 || !check_empty(splt[i - 1]) )
+			if(i == 0 ||!check_empty(splt[i - 1]))
 			{
-				perror("SYNATX ERROR");
+				perror("SYNTAX ERROR");
 				return 0;
 			}
-			if(splt[i + 1] == NULL || !check_empty(splt[i + 1]) || splt[i + 1][0] == '\0' || splt[i + 1][0] == '|')
+			if(i != 0 && (splt[i + 1] == NULL ||!check_empty(splt[i + 1]) || splt[i + 1][0] =='|'))
 			{
-				if((splt[i + 1][0] == '>' || splt[i + 1][0] == '<'))
-				{
-				printf("%s\n",splt[i]);
-					i++;
-					if(splt[i + 1] == NULL ||(splt[i + 1][0] == '>' || splt[i + 1][0] == '<') || !check_empty(splt[i]))
-					{
-						perror("SYNATX ERROR");
-						return 0;
-					}
-				}
-				else {				
-					perror("SYNATX ERROR");
-					return 0;
-				}
+				perror("SYNTAX ERROR");
+				return 0;
 			}
-			// else {
-			// 	if((splt[i + 1][0] == '>' || splt[i + 1][0] == '<') && splt[i + 1] != NULL)
-			// 	{
-			// 		i++;
-			// 		printf("%s\n",splt[i]);
-			// 	}
-			// }
 		}
 		i++;
 	}
