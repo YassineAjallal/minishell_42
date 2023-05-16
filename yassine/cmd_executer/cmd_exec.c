@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 21:13:03 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/14 20:24:38 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/16 19:57:06 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,7 +182,7 @@ int exec_built_in(t_command *cmd)
 	if(!ft_strcmp(cmd->cmd, "pwd"))
 		ft_pwd(cmd);
 	else if (!ft_strcmp(cmd->cmd, "env"))
-		ft_env(cmd->g_info->environ);
+		ft_env(cmd);
 	else if (!ft_strcmp(cmd->cmd, "cd"))
 	{
 		if (!ft_cd(cmd))
@@ -191,19 +191,13 @@ int exec_built_in(t_command *cmd)
 	else if (!ft_strcmp(cmd->cmd , "echo"))
 		ft_echo(cmd);
 	else if (!ft_strcmp(cmd->cmd , "unset"))
-	{
-		if(!ft_unset(cmd))
-			return (0);
-	}
+		ft_unset(cmd);
 	else if (!ft_strcmp(cmd->cmd , "export"))
 	{
 		if (ft_strlen2d(cmd->cmd_parameter) == 1)
-			export_no_param(cmd->g_info->export_env);
+			export_no_param(cmd);
 		else
-		{
-			if(ft_export(cmd))
-				return (0);
-		}
+			ft_export(cmd);
 	}
 	else if (!ft_strcmp(cmd->cmd, "exit"))
 	{

@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 14:14:36 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/16 15:40:24 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/16 19:59:25 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,10 @@ int ft_export(t_command *cmd)
 			error_count++;
 		i++;
 	}
+	if (error_count > 0)
+		cmd->g_info->exit_code = 1;
+	else
+		cmd->g_info->exit_code = 0;
 	return (error_count);
 }
 

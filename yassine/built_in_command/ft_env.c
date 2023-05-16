@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 00:28:08 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/11 18:27:12 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/16 19:55:51 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,14 +69,15 @@ char **convert_env_array(t_env *env)
 }
 
 /* print environment variables */
-void ft_env(t_env *env)
+void ft_env(t_command *cmd)
 {
 	int i;
 
 	i = 0;
-	while(i < env->nb_variables)
+	while(i < cmd->g_info->environ->nb_variables)
 	{
-		printf("%s=%s\n", env->variables[i].name, env->variables[i].value);
+		printf("%s=%s\n", cmd->g_info->environ->variables[i].name, cmd->g_info->environ->variables[i].value);
 		i++;
 	}
+	cmd->g_info->exit_code = 0;
 }

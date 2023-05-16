@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/02 22:18:08 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/13 21:23:37 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/16 19:42:56 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ int ft_cd(t_command *cmd)
 		if (chdir(cmd->cmd_parameter[1]) != 0)
 		{
 			ft_putstr_fd("minishell: cd: No such file or directory\n", 2);
+			cmd->g_info->exit_code = 1;
 			return (0);
 		}
 	}
@@ -44,14 +45,17 @@ int ft_cd(t_command *cmd)
 			if (chdir(cmd->g_info->environ->variables[home_pos].value) != 0)
 			{
 				ft_putstr_fd("minishell: cd: No such file or directory\n", 2);
+				cmd->g_info->exit_code = 1;
 				return (0);
 			}
 		}
 		else
 		{
 			ft_putstr_fd("minishell: cd: HOME not set\n", 2);
+			cmd->g_info->exit_code = 1;
 			return (0);
 		}
 	}
+	cmd->g_info->exit_code = 0;
 	return (1);
 }

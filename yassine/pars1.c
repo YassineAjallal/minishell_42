@@ -121,9 +121,9 @@ char **lexer(char *str, t_global_info *g_info)
 					line[j++] = str[i++];
 				}
 				line[j++] = str[i++];
-				// printf("|%c|\t",str[i]);
-				if(str[i] == ' ' || str[i] == '>' || str[i] == '\0')
+				if(str[i] == ' ' || str[i] == '>' || str[i] == '\0' || str[i - 1] == '\0')
 					break;
+				// printf("|%c|\t",str[i]);
 			}
 			// printf("%d\n",quote);
 			if(quote != -1)

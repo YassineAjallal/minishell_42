@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 04:45:32 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/15 10:10:52 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/16 19:52:57 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,26 +68,27 @@ void print_export_value(char *value)
 		i++;
 	}
 }
-void export_no_param(t_env *export)
+void export_no_param(t_command *cmd)
 {
 	int i;
 
 	i = 0;
-	sort_env_variables(export);
-	while(i < export->nb_variables)
+	sort_env_variables(cmd->g_info->export_env);
+	while(i < cmd->g_info->export_env->nb_variables)
 	{
-		if (!export->variables[i].value)
-			printf("declare -x %s\n", export->variables[i].name);
-		else if (ft_strlen(export->variables[i].value) > 0)
+		if (!cmd->g_info->export_env->variables[i].value)
+			printf("declare -x %s\n", cmd->g_info->export_env->variables[i].name);
+		else if (ft_strlen(cmd->g_info->export_env->variables[i].value) > 0)
 		{
-			printf("declare -x %s=\"", export->variables[i].name);
-			print_export_value(export->variables[i].value);
+			printf("declare -x %s=\"", cmd->g_info->export_env->variables[i].name);
+			print_export_value(cmd->g_info->export_env->variables[i].value);
 			printf("\"\n");
 		}
-		else if (ft_strlen(export->variables[i].value) == 0)
-			printf("declare -x %s=\"\"\n", export->variables[i].name);
+		else if (ft_strlen(cmd->g_info->export_env->variables[i].value) == 0)
+			printf("declare -x %s=\"\"\n", cmd->g_info->export_env->variables[i].name);
 		i++;
 	}
+	cmd->g_info->exit_code = 0;
 }
 
 /* add new variable */

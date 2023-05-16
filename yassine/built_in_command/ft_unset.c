@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/06 23:04:30 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/02 18:51:41 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/16 19:50:58 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,11 +69,15 @@ int ft_unset(t_command *cmd)
 	while (cmd->cmd_parameter[i])
 	{
 		if (!unset_one_var(cmd->cmd_parameter[i], cmd->g_info->environ))
+		{
 			return (0);
+			cmd->g_info->exit_code = 0;
+		}
 		i++;
 	}
 	if (cmd->g_info->env_array)
 		ft_free2d(cmd->g_info->env_array);
 	cmd->g_info->env_array = convert_env_array(cmd->g_info->environ);
+	cmd->g_info->exit_code = 1;
 	return (1);
 }

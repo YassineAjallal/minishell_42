@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 21:43:56 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/13 11:54:16 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/16 19:56:36 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,13 +35,13 @@ void	ft_free2d(char **str);
 
 int	unset_one_var(char *unset_var, t_env *old_env);
 t_env 	*dup_env(char **inherit_env);
-void	ft_env(t_env *env);
+void	ft_env(t_command *cmd);
 int get_until_equal(char *str);
 char **convert_env_array(t_env *env);
 
 void swap_variable(t_variable *var1, t_variable *var2);
 void sort_env_variables(t_env *env);
-void export_no_param(t_env *export);
+void export_no_param(t_command *cmd);
 int fill_var_list(t_variable new_var, t_env *env);
 int export_normal_var(t_variable new_var, t_global_info *g_info);
 int already_exist(char *name, t_env *env);

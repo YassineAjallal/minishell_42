@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/08 16:42:02 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/16 18:31:40 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/16 19:37:24 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int next_dollar_pos(char *str, int pos)
 	return (pos);
 }
 
-char *space_trim(char *str)
+char *space_trim(char *str, char c)
 {
 	int i;
 	char **split_space;
@@ -50,23 +50,10 @@ char *space_trim(char *str)
 	string_trim[0] = 0;
 	if (!str)
 		return (NULL);
-	split_space = ft_split(str, ' ');
-	if (ft_strlen(str) > 0 && ft_strlen2d(split_space) == 0)
-	{
-		tmp = ft_strdup(" ");
-		string_trim = tmp;
-		return (string_trim);
-	}
+	split_space = ft_split(str, c);
 	while(split_space[i])
 	{
-		tmp = ft_strjoin(string_trim, split_space[i]);
-		string_trim = tmp;
-		if (split_space[i + 1])
-		{
-			tmp = ft_strjoin(string_trim, " ");
-			free(string_trim);
-			string_trim = tmp;
-		}
+		string_trim = ft_strjoin(string_trim, split_space[i]);
 		i++;
 	}
 	return (string_trim);
@@ -360,6 +347,7 @@ int	ft_len(char *s, char c, int p)
 	return (len);
 }
 
+
 char **split_expander(char *expand_all)
 {
 	int nb_word;
@@ -434,6 +422,13 @@ char **expand_all_param(t_command *cmd, t_global_info *g_info)
 		i++;
 	}
 	expanded_param = split_expander(expand_all);
+	i = 0;
+	while (expanded_param[i])
+	{
+		expanded_param[i] = space_trim(expanded_param[i], '\"');
+		expanded_param[i] = space_trim(expanded_param[i], '\'');
+		i++;
+	}	
 	cmd->cmd = ft_strdup(expanded_param[0]);
 	ft_free2d(cmd->cmd_parameter);
 	return(expanded_param);
