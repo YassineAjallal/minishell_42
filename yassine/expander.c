@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/08 16:42:02 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/15 21:11:39 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/16 18:31:40 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,8 @@ char *space_trim(char *str)
 	i = 0;
 	string_trim = malloc(sizeof(char));
 	string_trim[0] = 0;
+	if (!str)
+		return (NULL);
 	split_space = ft_split(str, ' ');
 	if (ft_strlen(str) > 0 && ft_strlen2d(split_space) == 0)
 	{
@@ -116,9 +118,9 @@ char *expand_var(char *string, t_global_info *g_info)
 			tmp = ft_strjoin(expand_string, "");
 		else
 		{
-			char *tmp1;
-			tmp1 = space_trim(g_info->environ->variables[var_index].value);
-			g_info->environ->variables[var_index].value = tmp1;
+			// char *tmp1;
+			// tmp1 = space_trim(g_info->environ->variables[var_index].value);
+			// g_info->environ->variables[var_index].value = tmp1;
 			tmp = ft_strjoin(expand_string, g_info->environ->variables[var_index].value);
 		}
 		free(expand_string);
@@ -131,9 +133,7 @@ char *expand_var(char *string, t_global_info *g_info)
 	}
 	if (string[len - 1] == '$' && string[len - 2] != '$')
 	{
-		tmp = ft_strjoin(expand_string, "$");
-		free(expand_string);
-		expand_string = tmp;
+		expand_string = ft_strjoin(expand_string, "$");
 	}
 	return (expand_string);
 }
@@ -149,12 +149,12 @@ char **ft_strjoin2d(char **s1, char **s2)
 	new_array = malloc(sizeof(char *) * (ft_strlen2d(s1) + ft_strlen2d(s2) + 1));
 	if (!new_array)
 		return (NULL);
-	while(s1[i] && s1)
+	while(s1[i])
 	{
 		new_array[i] = ft_strdup(s1[i]);
 		i++;
 	}
-	while(s2[j] && s2)
+	while(s2[j])
 	{
 		new_array[i] = ft_strdup(s2[j]);
 		i++;
@@ -163,7 +163,6 @@ char **ft_strjoin2d(char **s1, char **s2)
 	new_array[i] = NULL;
 	return (new_array);
 }
-
 char **strjoin2d_string(char **s1, char *s2)
 {
 	int i;
@@ -186,15 +185,16 @@ char **strjoin2d_string(char **s1, char *s2)
 	return (new_array);
 }
 
-char **ft_expand(char *string, t_global_info *g_info)
+
+char *ft_expand(char *string, t_global_info *g_info)
 {
 	int i;
 	int j;
+	char *expand;
 	char **new_cmd_param;
 	char *tmp;
 	char *expand_without_q;
-	char **no_qoutes;
-	char **param_tmp;
+	char **quote;
 	char *expand_double_q;
 	int last_el;
 	int pos;
@@ -204,6 +204,8 @@ char **ft_expand(char *string, t_global_info *g_info)
 	if (!new_cmd_param)
 		return (NULL);
 	new_cmd_param[0] = NULL;
+	expand= malloc(sizeof(char));
+	expand[0] = 0;
 	while(string[i])
 	{
 		if (string[i] == '\"')
@@ -216,23 +218,11 @@ char **ft_expand(char *string, t_global_info *g_info)
 				i++;
 			tmp = ft_substr(string, pos, i - pos - 1);
 			expand_double_q = expand_var(tmp, g_info);
-			last_el = ft_strlen2d(new_cmd_param);
-			if (expand_without_q[0] != ' ' && new_cmd_param[last_el - 1][ft_strlen(new_cmd_param[last_el - 1]) - 1] != ' ')
-			{
-				tmp = ft_strjoin(new_cmd_param[ft_strlen2d(new_cmd_param) - 1], expand_double_q);
-				free(new_cmd_param[ft_strlen2d(new_cmd_param) - 1]);
-				new_cmd_param[ft_strlen2d(new_cmd_param) - 1] = tmp;
-			}
-			else
-			{
-				expand_without_q = space_trim(expand_without_q);
-				char *t1;
-				t1 = space_trim(new_cmd_param[last_el - 1]);
-				new_cmd_param[last_el - 1]= t1;
-				param_tmp = strjoin2d_string(new_cmd_param, expand_double_q);
-				ft_free2d(new_cmd_param);
-				new_cmd_param = param_tmp;
-			}
+			expand = ft_strjoin(expand, "\"");
+			// printf("expand %s\n", expand);
+			expand = ft_strjoin(expand, expand_double_q);
+			expand = ft_strjoin(expand, "\"");
+			// new_cmd_param[ft_strlen2d(new_cmd_param) - 1] = ft_strjoin(new_cmd_param[ft_strlen2d(new_cmd_param) - 1], expand_double_q);
 		}
 		else if (string[i] == '\'')
 		{
@@ -243,23 +233,10 @@ char **ft_expand(char *string, t_global_info *g_info)
 			if (string[i] == '\'')
 				i++;
 			expand_double_q = ft_substr(string, pos, i - pos - 1);
-			last_el = ft_strlen2d(new_cmd_param);
-			if (expand_without_q[0] != ' ' && new_cmd_param[last_el - 1][ft_strlen(new_cmd_param[last_el - 1]) - 1] != ' ')
-			{
-				tmp = ft_strjoin(new_cmd_param[ft_strlen2d(new_cmd_param) - 1], expand_double_q);
-				free(new_cmd_param[ft_strlen2d(new_cmd_param) - 1]);
-				new_cmd_param[ft_strlen2d(new_cmd_param) - 1] = tmp;
-			}
-			else
-			{
-				expand_without_q = space_trim(expand_without_q);
-				char *t1;
-				t1 = space_trim(new_cmd_param[last_el - 1]);
-				new_cmd_param[last_el - 1]= t1;
-				param_tmp = strjoin2d_string(new_cmd_param, expand_double_q);
-				ft_free2d(new_cmd_param);
-				new_cmd_param = param_tmp;
-			}
+			// new_cmd_param[ft_strlen2d(new_cmd_param) - 1] = ft_strjoin(new_cmd_param[ft_strlen2d(new_cmd_param) - 1], expand_double_q);
+			expand = ft_strjoin(expand, "\'");
+			expand = ft_strjoin(expand, expand_double_q);
+			expand = ft_strjoin(expand, "\'");
 		}
 		else
 		{
@@ -268,37 +245,195 @@ char **ft_expand(char *string, t_global_info *g_info)
 				i++;
 			tmp = ft_substr(string, pos, i);
 			expand_without_q = expand_var(tmp, g_info);
-			no_qoutes = ft_split(expand_without_q, ' ');
-			if (ft_strlen2d(no_qoutes) == 1)
-				param_tmp = strjoin2d_string(new_cmd_param, expand_without_q);
-			else
-			param_tmp = ft_strjoin2d(new_cmd_param, no_qoutes);
-			ft_free2d(new_cmd_param);
-			new_cmd_param = param_tmp;
+			// char **expand_without_q_2d;
+			// expand_without_q_2d = ft_split(expand_without_q, ' ');
+			expand = ft_strjoin(expand, expand_without_q);
+			// if (ft_strlen2d(expand_without_q_2d) == 0)
+			// {
+			// 	expand_without_q_2d = strjoin2d_string(expand_without_q_2d, " ");
+			// }	
+			// last_el = ft_strlen2d(new_cmd_param);
+			// if (last_el > 0)
+			// {
+			// 	if (expand_without_q[0] != ' ' && new_cmd_param[last_el - 1][ft_strlen(new_cmd_param[last_el - 1]) - 1] != ' ')
+			// 	{
+			// 		new_cmd_param[ft_strlen2d(new_cmd_param) - 1] = ft_strjoin(new_cmd_param[ft_strlen2d(new_cmd_param) - 1], expand_without_q);
+			// 	}
+			// 	else
+			// 	{
+			// 		new_cmd_param = ft_strjoin2d(new_cmd_param, expand_without_q_2d);
+			// 	}
+			// }
+			// else
+			// {
+			// 	new_cmd_param = ft_strjoin2d(new_cmd_param, expand_without_q_2d);
+			// }
 		}
 	}
-	return (new_cmd_param);
+	// printf("-------%s-------\n", expand);
+	return (expand);
+}
+
+int split_expander_len(char *expand_all)
+{
+	int i;
+	int count;
+	char c;
+	i = 0;
+	count = 0;
+	while (expand_all[i] == ' ')
+		i++;
+	while(expand_all[i])
+	{
+		if (expand_all[i] == '\"')
+		{
+			i++;
+			while(expand_all[i] != '\"' && expand_all[i])
+				i++;
+			count++;
+			i++;
+		}
+		else if (expand_all[i] == '\'')
+		{
+			i++;
+			while(expand_all[i] != '\'' && expand_all[i])
+				i++;
+			count++;
+			i++;
+		}
+		else
+		{
+			while(expand_all[i] != ' ' && expand_all[i])
+			{
+				if (expand_all[i] == '\"' || expand_all[i] == '\'')
+				{
+					c = expand_all[i];
+					i++;
+					while (expand_all[i] != c)
+						i++;
+				}
+				i++;
+			}
+			count++;
+		}
+		while (expand_all[i] == ' ')
+			i++;
+	}
+	return(count);
+}
+
+
+int	ft_len(char *s, char c, int p)
+{
+	int	len;
+	char save;
+
+	len = 0;
+	
+	if (c == ' ')
+	{
+		while (s[p] != c && s[p] != '\0')
+		{
+			if (s[p] == '\"' || s[p] == '\'')
+			{
+				save = s[p];
+				len++;
+				p++;
+				while (s[p] != save)
+				{
+					len++;
+					p++;
+				}
+			}
+			len++;
+			p++;
+		}
+	}
+	else
+	{
+		while (s[p] != c && s[p] != '\0')
+		{
+			len++;
+			p++;
+		}
+	}
+	return (len);
+}
+
+char **split_expander(char *expand_all)
+{
+	int nb_word;
+	char **split_exp;
+	int len;
+	int j;
+	int i;
+	
+	i = 0;
+	j = 0;
+	nb_word = split_expander_len(expand_all);
+	split_exp = malloc(sizeof(char *) * (nb_word + 1));
+	if (!split_exp)
+		return (NULL);
+	while(expand_all[i] == ' ')
+		i++;
+	while(expand_all[i])
+	{
+		while(expand_all[i] == ' ')
+			i++;
+		if (expand_all[i])
+		{	
+			if (expand_all[i] == '\"')
+			{
+				i++;
+				len = ft_len(expand_all, '\"', i);
+				split_exp[j] = ft_substr(expand_all, i, len);
+				j++;
+				while(expand_all[i] != '\"' && expand_all[i])
+					i++;
+			}
+			else if (expand_all[i] == '\'')
+			{
+				i++;
+				len = ft_len(expand_all, '\'', i);
+				split_exp[j] = ft_substr(expand_all, i, len);
+				j++;
+				while(expand_all[i] != '\'' && expand_all[i])
+					i++;
+			}
+			else
+			{
+				len = ft_len(expand_all, ' ', i);
+				split_exp[j] = ft_substr(expand_all, i, len);
+				j++;
+				// while(expand_all[i] != ' ' && expand_all[i])
+				// 	i++;
+				i += len;
+			}
+			i++;
+		}
+	}
+	split_exp[j] = NULL;
+	return(split_exp);
 }
 
 char **expand_all_param(t_command *cmd, t_global_info *g_info)
 {
 	int i;
 	char **expanded_param;
-	char **tmp;
-	char **exp;
-	expanded_param = malloc(sizeof(char *));
-	if (!expanded_param)
-		return (NULL);
-	expanded_param[0] = NULL;
+	char *expand_all;
+	char *exp;
+
 	i = 0;
+	expand_all = malloc(sizeof(char));
+	expand_all[0] = 0;
 	while(cmd->cmd_parameter[i])
 	{
 		exp = ft_expand(cmd->cmd_parameter[i], g_info);
-		tmp = ft_strjoin2d(expanded_param, exp);
-		free(expanded_param);
-		expanded_param = tmp;
+		exp = ft_strjoin(exp, " ");
+		expand_all = ft_strjoin(expand_all, exp);
 		i++;
 	}
+	expanded_param = split_expander(expand_all);
 	cmd->cmd = ft_strdup(expanded_param[0]);
 	ft_free2d(cmd->cmd_parameter);
 	return(expanded_param);

@@ -45,7 +45,7 @@ typedef struct s_v
 // 				printf("-- %c --\n",str[i + 1]);
 // 				sleep(1);
 // 			}
-char **lexer(char *str,char **env)
+char **lexer(char *str, t_global_info *g_info)
 {
     int i = 0;
 	char *line;
@@ -128,7 +128,8 @@ char **lexer(char *str,char **env)
 			// printf("%d\n",quote);
 			if(quote != -1)
 			{
-				perror("QUOTE");
+				ft_putstr_fd("minishell: unexpected EOF while looking for matching\n", 2);
+				g_info->exit_code = 2;
 				free(line);
 				return NULL;
 			}

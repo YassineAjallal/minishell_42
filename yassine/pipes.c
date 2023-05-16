@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/30 13:57:21 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/15 16:02:28 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/16 18:50:37 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,12 +154,17 @@ int main(int ac, char **av, char **env)
 		if (ft_strlen(input) != 0)
 		{
 			add_history(input);
-			syntax_error(input);
-			split = lexer(input, g_info->env_array);
+			split = lexer(input, g_info);
+			if(split != NULL)
+			{
+				if(syntx_error_a(split, g_info) && syntx_error_b(split, g_info))
+				{
+					cmd = rmplir_strct(split, g_info);
+					pipes(cmd, g_info);				
+				}
+			}
 			// split =  expand_splt(split, *g_info);
 			// ambiguous_redirect(split, g_info);
-			cmd = rmplir_strct(split, g_info);
-			pipes(cmd, g_info);
 		}
 		else
 			g_info->exit_code = 0;
