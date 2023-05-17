@@ -126,7 +126,7 @@ char **lexer(char *str, t_global_info *g_info)
 				}
 				line[j++] = str[i++];
 				// printf("|%c|\t",str[i]);
-				if(str[i] == ' ' || str[i] == '>' || str[i] == '\0')
+				if(str[i] == ' ' || str[i] == '>' || str[i] == '\0' || str[i - 1] == '\0')
 					break;
 			}
 			// printf("%d\n",quote);
@@ -632,26 +632,36 @@ int error_redirect(char **splt)
 	}
 	return 1;
 }
-
+t_global_info g_info;
+void check_leaks();
 int main(int ac,char **av,char **env)
 {
 	char	*str;
 	int		i;
 	char **splt;
-	t_global_info g_info;
 	i = 0;
-	g_info.env_array = env;
+	// g_info.env_array = env;
 	while (1)
 	{
 		str = readline("Shell->");
 		add_history(str);
         splt = lexer(str,&g_info);
+		// if(splt != NULL)
 		if(splt != NULL)
-			if(!syntx_error_a(splt,&g_info) || !syntx_error_b(splt,&g_info))
-				return 0;;
-		if (splt != NULL) {
-			rmplir_strct(splt, &g_info);
+		{
+			i = 0;
+			while (splt[i]) {
+				free(splt[i++]);
+			}
+			free(splt);
 		}
+		// 	if(!syntx_error_a(splt,&g_info) || !syntx_error_b(splt,&g_info))
+		// 		return 0;;
+		// if (splt != NULL) {
+		// 	rmplir_strct(splt, &g_info);
+		// }
+		// check_leaks();
 		str = NULL;
+		free(str);
 	}
 }
