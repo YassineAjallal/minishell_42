@@ -6,7 +6,7 @@
 /*   By: hkasbaou <hkasbaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/08 16:42:02 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/17 18:21:27 by hkasbaou         ###   ########.fr       */
+/*   Updated: 2023/05/18 00:29:17 by hkasbaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -227,8 +227,6 @@ char	**ft_strjoin_double(char **s1, char *s2)
 char *rem_quots(char *splt)
 {
 	char *str = "";
-	char *to_find;
-	char *to_join;
 	char qts;
 	int i = 0;
 	int j = 0;
@@ -263,7 +261,13 @@ int check_empty(char *str)
 	int i = 0;
 	char *s = rem_quots(str);
 	if(s[0] == '\0')
+	{
+		s = NULL;
+		free(s);
 		return 0;
+	}
+	s = NULL;
+	free(s);
 	return 1;
 }
 int  syntx_error_b(char **splt, t_global_info *g_info)

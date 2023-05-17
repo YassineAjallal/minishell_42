@@ -1,5 +1,6 @@
 #include "../yassine/minishell.h"
 #include "mini.h"
+#include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/_types/_u_char.h>
@@ -125,9 +126,9 @@ char **lexer(char *str, t_global_info *g_info)
 					line[j++] = str[i++];
 				}
 				line[j++] = str[i++];
-				// printf("|%c|\t",str[i]);
-				if(str[i] == ' ' || str[i] == '>' || str[i] == '\0' || str[i - 1] == '\0')
+				if(str[i - 1] == '\0' || str[i] == '\0'  ||str[i] == ' ' || str[i] == '>')
 					break;
+				// printf("|%c|\t",str[i]);
 			}
 			// printf("%d\n",quote);
 			if(quote != -1)
@@ -145,6 +146,7 @@ char **lexer(char *str, t_global_info *g_info)
 	line[j] = 0;
 	splt = ft_split(line, '\n');
 	free(line);
+	line = NULL;
 	return splt;
 }
 
@@ -261,6 +263,8 @@ t_command  **rmplr_double_str(t_command **cmd,t_global_info g_info,int size)
 	j = 0;
 	return cmd_rtr;
 }
+
+
 
 t_command **rmplir_strct(char **splt, t_global_info *g_info)
 {
@@ -611,9 +615,31 @@ t_command **rmplir_strct(char **splt, t_global_info *g_info)
 	i = 0;
 	j = 0;
 	cmd_rtr = rmplr_double_str(cmd,*g_info, size);
+	i = 0;
+	while(cmd[i]->ther)
+	{
+		free(cmd[i]->cmd_parameter);
+		free(cmd[i]);
+		i++;
+	}
+	free(cmd[i]);
+	free(cmd);
+	// free_first(cmd);
 	return  cmd_rtr;
 }
 
+void free_first(t_command **cmd)
+{
+	int i = 0;
+	int j = 0;
+	while(cmd[i]->ther)
+	{
+		free(cmd[i]->cmd_parameter);
+		free(cmd[i]);
+		i++;
+	}
+	free(cmd);
+}
 int error_redirect(char **splt)
 {
 	int i = 0;
@@ -633,35 +659,79 @@ int error_redirect(char **splt)
 	return 1;
 }
 t_global_info g_info;
-void check_leaks();
+
+void free_split(char **splt)
+{
+	int i = 0;
+	while (splt[i])
+	{
+		free(splt[i++]);
+	}
+	free(splt);
+}
+void free_last(t_command **cmd)
+{
+	int i;
+	i = 0;
+	while(cmd[i]->ther)
+	{
+		free(cmd[i]->cmd_parameter);
+		free(cmd[i++]);
+	}
+	free(cmd[i]);
+	free(cmd);
+}
+
+void    handler(int sig)
+{
+    (void)sig;
+    printf("\n");
+    rl_on_new_line();
+    rl_replace_line("", 0);
+    rl_redisplay();
+}
+
+void quit(int signum)
+{
+	rl_redisplay();
+}
+void handleCtrlBackslash(int sig)
+{
+	exit(0);
+}
 int main(int ac,char **av,char **env)
 {
 	char	*str;
 	int		i;
 	char **splt;
+	t_command **cma;
 	i = 0;
 	// g_info.env_array = env;
 	while (1)
 	{
+		signal(SIGINT, handler);
+		signal(SIGQUIT, quit);
 		str = readline("Shell->");
 		add_history(str);
-        splt = lexer(str,&g_info);
-		// if(splt != NULL)
-		if(splt != NULL)
+		if(str != NULL)
 		{
-			i = 0;
-			while (splt[i]) {
-				free(splt[i++]);
+        	splt = lexer(str,&g_info);
+			if(splt == NULL)
+			{
+				i = 0;
 			}
-			free(splt);
+			else 
+			{
+				if(syntx_error_a(splt,&g_info) && syntx_error_b(splt,&g_info))
+				{
+					cma = rmplir_strct(splt, &g_info);
+					free_split(splt);
+					free_last(cma);
+				}
+			}
+			free(str);
 		}
-		// 	if(!syntx_error_a(splt,&g_info) || !syntx_error_b(splt,&g_info))
-		// 		return 0;;
-		// if (splt != NULL) {
-		// 	rmplir_strct(splt, &g_info);
-		// }
-		// check_leaks();
-		str = NULL;
-		free(str);
+		else
+			exit(0);
 	}
 }
