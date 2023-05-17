@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/08 16:42:02 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/16 19:37:24 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/17 15:52:05 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int next_dollar_pos(char *str, int pos)
 	return (pos);
 }
 
-char *space_trim(char *str, char c)
+char *quote_trim(char *str, char c)
 {
 	int i;
 	char **split_space;
@@ -104,12 +104,7 @@ char *expand_var(char *string, t_global_info *g_info)
 		else if (var_index == -1)
 			tmp = ft_strjoin(expand_string, "");
 		else
-		{
-			// char *tmp1;
-			// tmp1 = space_trim(g_info->environ->variables[var_index].value);
-			// g_info->environ->variables[var_index].value = tmp1;
 			tmp = ft_strjoin(expand_string, g_info->environ->variables[var_index].value);
-		}
 		free(expand_string);
 		expand_string = tmp;
 		rest = ft_substr(expand_split[i], j, ft_strlen(expand_split[i]) - j);
@@ -206,10 +201,8 @@ char *ft_expand(char *string, t_global_info *g_info)
 			tmp = ft_substr(string, pos, i - pos - 1);
 			expand_double_q = expand_var(tmp, g_info);
 			expand = ft_strjoin(expand, "\"");
-			// printf("expand %s\n", expand);
 			expand = ft_strjoin(expand, expand_double_q);
 			expand = ft_strjoin(expand, "\"");
-			// new_cmd_param[ft_strlen2d(new_cmd_param) - 1] = ft_strjoin(new_cmd_param[ft_strlen2d(new_cmd_param) - 1], expand_double_q);
 		}
 		else if (string[i] == '\'')
 		{
@@ -220,7 +213,6 @@ char *ft_expand(char *string, t_global_info *g_info)
 			if (string[i] == '\'')
 				i++;
 			expand_double_q = ft_substr(string, pos, i - pos - 1);
-			// new_cmd_param[ft_strlen2d(new_cmd_param) - 1] = ft_strjoin(new_cmd_param[ft_strlen2d(new_cmd_param) - 1], expand_double_q);
 			expand = ft_strjoin(expand, "\'");
 			expand = ft_strjoin(expand, expand_double_q);
 			expand = ft_strjoin(expand, "\'");
@@ -232,32 +224,9 @@ char *ft_expand(char *string, t_global_info *g_info)
 				i++;
 			tmp = ft_substr(string, pos, i);
 			expand_without_q = expand_var(tmp, g_info);
-			// char **expand_without_q_2d;
-			// expand_without_q_2d = ft_split(expand_without_q, ' ');
 			expand = ft_strjoin(expand, expand_without_q);
-			// if (ft_strlen2d(expand_without_q_2d) == 0)
-			// {
-			// 	expand_without_q_2d = strjoin2d_string(expand_without_q_2d, " ");
-			// }	
-			// last_el = ft_strlen2d(new_cmd_param);
-			// if (last_el > 0)
-			// {
-			// 	if (expand_without_q[0] != ' ' && new_cmd_param[last_el - 1][ft_strlen(new_cmd_param[last_el - 1]) - 1] != ' ')
-			// 	{
-			// 		new_cmd_param[ft_strlen2d(new_cmd_param) - 1] = ft_strjoin(new_cmd_param[ft_strlen2d(new_cmd_param) - 1], expand_without_q);
-			// 	}
-			// 	else
-			// 	{
-			// 		new_cmd_param = ft_strjoin2d(new_cmd_param, expand_without_q_2d);
-			// 	}
-			// }
-			// else
-			// {
-			// 	new_cmd_param = ft_strjoin2d(new_cmd_param, expand_without_q_2d);
-			// }
 		}
 	}
-	// printf("-------%s-------\n", expand);
 	return (expand);
 }
 
@@ -374,8 +343,11 @@ char **split_expander(char *expand_all)
 			{
 				i++;
 				len = ft_len(expand_all, '\"', i);
-				split_exp[j] = ft_substr(expand_all, i, len);
-				j++;
+				if (len != 0)
+				{
+					split_exp[j] = ft_substr(expand_all, i, len);
+					j++;
+				}
 				while(expand_all[i] != '\"' && expand_all[i])
 					i++;
 			}
@@ -383,24 +355,32 @@ char **split_expander(char *expand_all)
 			{
 				i++;
 				len = ft_len(expand_all, '\'', i);
-				split_exp[j] = ft_substr(expand_all, i, len);
-				j++;
+				if (len != 0)
+				{
+					split_exp[j] = ft_substr(expand_all, i, len);
+					j++;
+				}
 				while(expand_all[i] != '\'' && expand_all[i])
 					i++;
 			}
 			else
 			{
 				len = ft_len(expand_all, ' ', i);
-				split_exp[j] = ft_substr(expand_all, i, len);
-				j++;
-				// while(expand_all[i] != ' ' && expand_all[i])
-				// 	i++;
+				if (len != 0)
+				{
+					split_exp[j] = ft_substr(expand_all, i, len);
+					j++;
+				}
 				i += len;
 			}
 			i++;
 		}
 	}
-	split_exp[j] = NULL;
+	while(j < nb_word + 1)
+	{
+		split_exp[j] = NULL;
+		j++;
+	}
 	return(split_exp);
 }
 
@@ -425,8 +405,8 @@ char **expand_all_param(t_command *cmd, t_global_info *g_info)
 	i = 0;
 	while (expanded_param[i])
 	{
-		expanded_param[i] = space_trim(expanded_param[i], '\"');
-		expanded_param[i] = space_trim(expanded_param[i], '\'');
+		expanded_param[i] = quote_trim(expanded_param[i], '\"');
+		expanded_param[i] = quote_trim(expanded_param[i], '\'');
 		i++;
 	}	
 	cmd->cmd = ft_strdup(expanded_param[0]);

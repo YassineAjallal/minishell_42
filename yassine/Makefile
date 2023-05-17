@@ -2,7 +2,7 @@
 CC = gcc
 CFLAGS = -lreadline  #-Wall -Wextra -Werror
 NAME = minishell
-SRC = pipes.c pars1.c expander.c parsing.c
+SRC = pipes.c pars1.c expander.c parsing.c ambiguous.c
 LIB_PATH = ./libft/libft.a
 BUILT_IN_PATH = ./built_in_command/built_in_command.a
 CMD_EXEC_PATH = ./cmd_executer/cmd_executer.a

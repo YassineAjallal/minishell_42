@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 21:13:03 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/16 19:57:06 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/17 14:57:01 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,20 +17,18 @@ int stdin_redirect(t_command *cmd)
 {
 	int i;
 	int stdin_fd;
-	// char *tmp;
 
 	if (cmd->redirect_in == true)
 	{
 		i = 0;
 		while(cmd->infile[i])
 		{
-			// if (!ambiguous_redirect(cmd->infile[i], cmd->g_info))
-			// {
-			// 	cmd->g_info->exit_code = 1;
-			// 	return (0);;
-			// }
-			// tmp = ft_expand(cmd->infile[i], cmd->g_info);
-			// cmd->infile[i] = tmp;
+			if(!ambiguous_redirect(cmd->infile[i], cmd->g_info))
+				return (0);
+			cmd->infile[i] = ft_expand(cmd->infile[i], cmd->g_info);
+			cmd->infile[i] = quote_trim(cmd->infile[i], '\'');
+			cmd->infile[i] = quote_trim(cmd->infile[i], '\"');
+			// printf("---%s---\n", cmd->infile[i]);
 			if (!ft_checkf(cmd->infile[i]))
 			{
 				cmd->g_info->exit_code = 1;
@@ -61,29 +59,57 @@ int stdin_redirect(t_command *cmd)
 	return (1);
 }
 
+// char **convert_out_2d(t_outfile **outfile)
+// {
+// 	int len;
+// 	char **outfiles;
+// 	int i;
+
+// 	i = 0;
+// 	len = 0;
+// 	while(outfile[i]->file)
+// 	{
+// 		len++;
+// 		i++;
+// 	}
+// 	outfiles = malloc(sizeof(char *) * (len + 1));
+// 	if (!outfiles)
+// 		return (NULL);
+// 	i = 0;
+// 	while(outfile[i]->file)
+// 	{
+// 		outfiles[i] = ft_strdup(outfile[i]->file);
+// 		i++;
+// 	}
+// 	outfiles[i] = NULL;
+// 	return (outfiles);
+// }
 /* redirect output */
 int stdout_redirect(t_command *cmd)
 {
-	// char *tmp;
 	int stdout_fd;
 	int i;
+
 	if (cmd->redirect_out == true)
 	{
 		i = 0;
 		while (cmd->outfile[i]->file)
 		{
-			// if(!ambiguous_redirect(cmd->outfile[i]->file, cmd->g_info))
-			// {
-			// 	cmd->g_info->exit_code = 1;
-			// 	return (0);
-			// }
-			// tmp = ft_expand(cmd->outfile[i]->file, cmd->g_info);
-			// cmd->outfile[i]->file = tmp;
+			if (!ambiguous_redirect(cmd->outfile[i]->file, cmd->g_info))
+				return (0);
+			cmd->outfile[i]->file = ft_expand(cmd->outfile[i]->file, cmd->g_info);
+			cmd->outfile[i]->file = quote_trim(cmd->outfile[i]->file, '\"');
+			cmd->outfile[i]->file = quote_trim(cmd->outfile[i]->file, '\'');
 			if (cmd->outfile[i]->mode == true)
 				stdout_fd = open(cmd->outfile[i]->file, O_CREAT | O_RDWR | O_TRUNC, 0644);
 			else
 				stdout_fd = open(cmd->outfile[i]->file, O_CREAT | O_RDWR | O_APPEND, 0644);
-			if (!ft_checkw(cmd->outfile[i]->file))
+			if (!ft_checkf(cmd->outfile[i]->file))
+			{
+				cmd->g_info->exit_code = 1;
+				return (0);
+			}
+			else if (!ft_checkw(cmd->outfile[i]->file))
 			{
 				cmd->g_info->exit_code = 1;
 				return (0);

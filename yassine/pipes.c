@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/30 13:57:21 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/16 18:50:37 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/17 09:44:03 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,6 @@ int pipes(t_command **cmds, t_global_info *g_info)
 	{
 		g_info->old_stdout = dup(STDOUT_FILENO);
 		cmds[0]->cmd_parameter = expand_all_param(cmds[0], g_info);
-		// ft_strtrim2d(cmds[0]->cmd_parameter);
 		exec_built_in(cmds[0]);
 		dup2(g_info->old_stdout, STDOUT_FILENO);
 	}
@@ -89,7 +88,6 @@ int pipes(t_command **cmds, t_global_info *g_info)
 		while(++i < g_info->nb_pipe + 1)
 		{
 			cmds[i]->cmd_parameter = expand_all_param(cmds[i], g_info);
-			// ft_strtrim2d(cmds[i]->cmd_parameter);
 			if (i != 0)
 				dup_stdin = pipe_arr[i - 1][0];
 			if (i == g_info->nb_pipe)
@@ -148,9 +146,7 @@ int main(int ac, char **av, char **env)
 		input = readline("\e[1;36m➜  \e[1;33mminishell \e[1;32m✗ \e[0;00m");
 		if(!input)
 			exit(g_info->exit_code);
-		tmp = ft_strtrim(input, " ");
-		free(input);
-		input = tmp;
+		input = ft_strtrim(input, " ");
 		if (ft_strlen(input) != 0)
 		{
 			add_history(input);
@@ -163,13 +159,10 @@ int main(int ac, char **av, char **env)
 					pipes(cmd, g_info);				
 				}
 			}
-			// split =  expand_splt(split, *g_info);
-			// ambiguous_redirect(split, g_info);
 		}
 		else
 			g_info->exit_code = 0;
 	}
-	
 }
 
 // ls | sleep 5 | echo y

@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/30 14:28:30 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/16 16:18:34 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/17 11:21:34 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,10 +70,16 @@ typedef struct s_command
 	t_global_info *g_info;
 } t_command;
 
-char *ft_expand(char *string, t_global_info *g_info);
+
+int ambiguous_redirect(char *files, t_global_info *g_info);
 char **expand_all_param(t_command *cmd, t_global_info *g_info);
-// char *expand_var(char *string, t_global_info *g_info);
-
-
-int ambiguous_redirect(char *split, t_global_info *g_info);
+char **split_expander(char *expand_all);
+int	ft_len(char *s, char c, int p);
+int split_expander_len(char *expand_all);
+char *ft_expand(char *string, t_global_info *g_info);
+char **strjoin2d_string(char **s1, char *s2);
+char **ft_strjoin2d(char **s1, char **s2);
+char *expand_var(char *string, t_global_info *g_info);
+char *quote_trim(char *str, char c);
+int search_in_env(t_env *env, char *string);
 #endif
