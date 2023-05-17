@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 16:38:13 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/17 15:55:03 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/17 20:00:42 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ char *space_trim(char *file)
 	new_file[j] = 0;
 	return (new_file);
 }
-int ambiguous_redirect(char *file, t_global_info *g_info)
+char *ambiguous_redirect(char *file, t_global_info *g_info)
 {
 	int i;
 	char *expand_file;
@@ -116,37 +116,40 @@ int ambiguous_redirect(char *file, t_global_info *g_info)
 	
 	// trim_file = space_trim(file);
 	expand_file = ft_expand(file, g_info);
-	// printf("Expand : --%s--\n", expand_file);
-	// printf("expand file : --%s--\n", expand_file);
-	// expand_file = ft_strtrim(expand_file, " ");
-	// expand_file = quote_trim(expand_file, '\"');
-	// expand_file = quote_trim(expand_file, '\'');
-	split_file = split_expander(expand_file);
-	i = 0;
-	while (split_file[i])
+	if (ft_strlen(expand_file) == 0)
 	{
-		// printf("split : --%s--\n", split_file[i]);
-		split_file[i] = quote_trim(split_file[i], '\"');
-		split_file[i] = quote_trim(split_file[i], '\'');
-		i++;
-	}	
-	if (ft_strlen2d(split_file) != 1 || ft_strlen(expand_file) == 0)
-	{
-		// printf("ERROR1 : ---%s---\n", expand_file);
 		ft_putstr_fd("minishell: ambiguous redirect\n", 2);
 		g_info->exit_code = 1;
 		return (0);
 	}
-	// else
-	// {
-	// 	if (ft_strchr(expand_file, ' '))
-	// 	{
-	// 		printf("ERROR2 : ---%s---\n", expand_file);
-	// 		ft_putstr_fd("minishell: ambiguous redirect\n", 2);
-	// 		g_info->exit_code = 1;
-	// 		return (0);
-	// 	}
-	// }
+	else
+	{
+		split_file = split_expander(expand_file);
+		i = 0;
+		while (split_file[i])
+		{
+			split_file[i] = quote_trim(split_file[i], '\"');
+			split_file[i] = quote_trim(split_file[i], '\'');
+			i++;
+		}
+		expand_file = quote_trim(expand_file, '\"');
+		expand_file = quote_trim(expand_file, '\'');
+		if (ft_strlen2d(split_file) > 1)
+		{
+			ft_putstr_fd("minishell: ambiguous redirect\n", 2);
+			g_info->exit_code = 1;
+			return (0);
+		}
+		else if (ft_strlen2d(split_file) == 0 && ft_strlen(expand_file) > 0)
+		{
+			ft_putstr_fd("minishell: ambiguous redirect\n", 2);
+			g_info->exit_code = 1;
+			return (0);
+		}
+		else if (ft_strlen(expand_file) == 0 && ft_strlen2d(split_file) == 0)
+			return (expand_file);
+	}
 	g_info->exit_code = 0;
-	return (1);
+	
+	return (split_file[0]);
 }

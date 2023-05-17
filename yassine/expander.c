@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/08 16:42:02 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/17 15:52:05 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/17 19:31:48 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -222,7 +222,7 @@ char *ft_expand(char *string, t_global_info *g_info)
 			pos = i;
 			while(string[i] != '\"' && string[i] != '\'' && string[i])
 				i++;
-			tmp = ft_substr(string, pos, i);
+			tmp = ft_substr(string, pos, i - pos);
 			expand_without_q = expand_var(tmp, g_info);
 			expand = ft_strjoin(expand, expand_without_q);
 		}
@@ -295,7 +295,7 @@ int	ft_len(char *s, char c, int p)
 				save = s[p];
 				len++;
 				p++;
-				while (s[p] != save)
+				while (s[p] != save && s[p])
 				{
 					len++;
 					p++;
@@ -311,7 +311,18 @@ int	ft_len(char *s, char c, int p)
 		{
 			len++;
 			p++;
+			if(s[p] == c && (s[p + 1] == ' ' || !s[p + 1]))
+				break;
+			else
+			{
+				while(s[p] == c)
+				{
+					len++;
+					p++;
+				}
+			}
 		}
+		
 	}
 	return (len);
 }
@@ -348,8 +359,7 @@ char **split_expander(char *expand_all)
 					split_exp[j] = ft_substr(expand_all, i, len);
 					j++;
 				}
-				while(expand_all[i] != '\"' && expand_all[i])
-					i++;
+				i += len;
 			}
 			else if (expand_all[i] == '\'')
 			{
@@ -360,8 +370,7 @@ char **split_expander(char *expand_all)
 					split_exp[j] = ft_substr(expand_all, i, len);
 					j++;
 				}
-				while(expand_all[i] != '\'' && expand_all[i])
-					i++;
+				i += len;
 			}
 			else
 			{

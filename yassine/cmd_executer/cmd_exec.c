@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 21:13:03 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/17 14:57:01 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/17 19:57:38 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,9 @@ int stdin_redirect(t_command *cmd)
 		i = 0;
 		while(cmd->infile[i])
 		{
-			if(!ambiguous_redirect(cmd->infile[i], cmd->g_info))
+			cmd->infile[i] = ambiguous_redirect(cmd->infile[i], cmd->g_info);
+			if(!cmd->infile[i])
 				return (0);
-			cmd->infile[i] = ft_expand(cmd->infile[i], cmd->g_info);
-			cmd->infile[i] = quote_trim(cmd->infile[i], '\'');
-			cmd->infile[i] = quote_trim(cmd->infile[i], '\"');
-			// printf("---%s---\n", cmd->infile[i]);
 			if (!ft_checkf(cmd->infile[i]))
 			{
 				cmd->g_info->exit_code = 1;
@@ -95,11 +92,9 @@ int stdout_redirect(t_command *cmd)
 		i = 0;
 		while (cmd->outfile[i]->file)
 		{
-			if (!ambiguous_redirect(cmd->outfile[i]->file, cmd->g_info))
+			cmd->outfile[i]->file = ambiguous_redirect(cmd->outfile[i]->file, cmd->g_info);
+			if (!cmd->outfile[i]->file)
 				return (0);
-			cmd->outfile[i]->file = ft_expand(cmd->outfile[i]->file, cmd->g_info);
-			cmd->outfile[i]->file = quote_trim(cmd->outfile[i]->file, '\"');
-			cmd->outfile[i]->file = quote_trim(cmd->outfile[i]->file, '\'');
 			if (cmd->outfile[i]->mode == true)
 				stdout_fd = open(cmd->outfile[i]->file, O_CREAT | O_RDWR | O_TRUNC, 0644);
 			else
