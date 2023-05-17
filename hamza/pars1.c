@@ -49,7 +49,7 @@ typedef struct s_v
 // 				printf("-- %c --\n",str[i + 1]);
 // 				sleep(1);
 // 			}
-char **lexer(char *str,char **env)
+char **lexer(char *str, t_global_info *g_info)
 {
     int i = 0;
 	char *line;
@@ -645,9 +645,9 @@ int main(int ac,char **av,char **env)
 	{
 		str = readline("Shell->");
 		add_history(str);
-        splt = lexer(str,env);
+        splt = lexer(str,&g_info);
 		if(splt != NULL)
-			if(!syntx_error_a(splt) || !syntx_error_b(splt))
+			if(!syntx_error_a(splt,&g_info) || !syntx_error_b(splt,&g_info))
 				return 0;;
 		if (splt != NULL) {
 			rmplir_strct(splt, &g_info);

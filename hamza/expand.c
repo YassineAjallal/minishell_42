@@ -6,7 +6,7 @@
 /*   By: hkasbaou <hkasbaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/08 16:42:02 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/15 15:56:38 by hkasbaou         ###   ########.fr       */
+/*   Updated: 2023/05/17 18:21:27 by hkasbaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -266,7 +266,7 @@ int check_empty(char *str)
 		return 0;
 	return 1;
 }
-int  syntx_error_b(char **splt)
+int  syntx_error_b(char **splt, t_global_info *g_info)
 {
 	int i = 0;
 	int j = 0;
@@ -283,7 +283,7 @@ int  syntx_error_b(char **splt)
 	}
 	return 1;
 }
-int syntx_error_a(char **splt)
+int syntx_error_a(char **splt, t_global_info *g_info)
 {
 	int i = 0;
 	int j = 0;
