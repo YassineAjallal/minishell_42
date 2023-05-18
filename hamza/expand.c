@@ -6,12 +6,13 @@
 /*   By: hkasbaou <hkasbaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/08 16:42:02 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/18 17:05:10 by hkasbaou         ###   ########.fr       */
+/*   Updated: 2023/05/18 18:53:11 by hkasbaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../yassine/minishell.h"
 #include "libft/libft.h"
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -182,7 +183,44 @@ char **expand_splt(char **splt,t_global_info g_info)
 	return splt;
 }
 
+// ================================
+int ft_strlen_out(t_outfile **str)
+{
+	int i;
 
+	i = 0;
+	while(str[i])
+		i++;
+	return (i);
+}
+
+t_outfile **ft_strjoin_out(t_outfile **s1, char *s2,char *mode)
+{
+	int i;
+	int j;
+	t_outfile **new_array;
+	
+	i = 0;
+	j = 0;
+	new_array = malloc(sizeof(t_outfile *) * (ft_strlen_out(s1) + 2));
+	if (!new_array)
+		return (NULL);
+	while(s1[i] && s1)
+	{
+		new_array[i] = malloc(1 * sizeof(t_outfile));
+		new_array[i]->file = s1[i]->file;
+		i++;
+	}
+	new_array[i] = malloc(1 * sizeof(t_outfile));
+	new_array[i]->file = s2;
+	if(mode[1] != '\0' && (mode[0] == '>' && mode[1] == '>'))
+		new_array[i]->mode = false;
+	if(mode[0] == '>')
+		new_array[i]->mode = true;
+	i++;
+	new_array[i] = NULL;
+	return (new_array);
+}
 int ft_strlen2d(char **str)
 {
 	int i;
@@ -214,6 +252,7 @@ char **ft_strjoin_2d(char **s1, char *s2)
 	new_array[i] = NULL;
 	return (new_array);
 }
+// ================================
 // size_t	ft_strlen_double(char **s)
 // {
 // 	size_t	i;
