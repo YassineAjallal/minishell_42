@@ -6,16 +6,14 @@
 /*   By: hkasbaou <hkasbaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/08 16:42:02 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/18 00:29:17 by hkasbaou         ###   ########.fr       */
+/*   Updated: 2023/05/18 17:05:10 by hkasbaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../yassine/minishell.h"
 #include "libft/libft.h"
-#include <i386/types.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <sys/_types/_ssize_t.h>
 #include <unistd.h>
 
 char	*ft_strjoin_char(char const *s1, char s2)
@@ -185,36 +183,66 @@ char **expand_splt(char **splt,t_global_info g_info)
 }
 
 
-
-size_t	ft_strlen_double(char **s)
+int ft_strlen2d(char **str)
 {
-	size_t	i;
-	if(!s)
-		return 0;
+	int i;
+
 	i = 0;
-	while (s[i] != NULL)
+	while(str[i])
 		i++;
 	return (i);
 }
-char	**ft_strjoin_double(char **s1, char *s2)
+
+char **ft_strjoin_2d(char **s1, char *s2)
 {
-	size_t	ttl;
-	char	**str;
-	size_t	i;
-	int		j;
-	i =  -1;
+	int i;
+	int j;
+	char **new_array;
+	
+	i = 0;
 	j = 0;
-	ttl = 1 + ft_strlen_double(s1);
-	str = ft_calloc(ttl + 1, sizeof(char));
-	if (!str || !s2 || !s1)
+	new_array = malloc(sizeof(char *) * (ft_strlen2d(s1) + 2));
+	if (!new_array)
 		return (NULL);
-	while (s1[++i] != NULL) {
-		str[i] = s1[i];
+	while(s1[i] && s1)
+	{
+		new_array[i] = ft_strdup(s1[i]);
+		i++;
 	}
-	str[i++] = s2;
-	str[i]= NULL;
-	return (str);
+	new_array[i] = ft_strdup(s2);
+	i++;
+	new_array[i] = NULL;
+	return (new_array);
 }
+// size_t	ft_strlen_double(char **s)
+// {
+// 	size_t	i;
+// 	if(!s)
+// 		return 0;
+// 	i = 0;
+// 	while (s[i] != NULL)
+// 		i++;
+// 	return (i);
+// }
+// char	**ft_strjoin_double(char **s1, char *s2)
+// {
+// 	size_t	ttl;
+// 	char	**str;
+// 	size_t	i;
+// 	int		j;
+// 	i =  -1;
+// 	j = 0;
+// 	ttl = 1 + ft_strlen_double(s1);
+// 	str = ft_calloc(ttl + 1, sizeof(char));
+// 	if (!str || !s2 || !s1)
+// 		return (NULL);
+// 	while (s1[++i] != NULL) {
+// 		str[i] = s1[i];
+// 	}
+// 	str[i++] = s2;
+// 	str[i]= NULL;
+// 	return (str);
+// }
 // int main(int ac ,char **av)
 // {
 // 	char **s ;

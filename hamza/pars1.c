@@ -3,7 +3,6 @@
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <sys/_types/_u_char.h>
 
 // enum s_cases 
 // {
@@ -405,137 +404,169 @@ t_command **rmplir_strct(char **splt, t_global_info *g_info)
 	// 	printf("%s\n",cmd[i]->cmd);
 	// 	i++;
 	// }
+	cnt = 0;
 	while(cmd[i]->ther)
     {
         j = 0;
         while(cmd[i]->cmd_parameter[j] != NULL)
         {
 			k = 0;
-			cnt = 0;
 			// printf("cmd->||%s\n",cmd[i]->cmd_parameter[j]);
 			if(cmd[i]->cmd_parameter[j][0] == '<' && cmd[i]->cmd_parameter[j][1] == '<')
 			{
 				cmd[i]->herdoc = 1;
-				if (cmd[i]->cmd_parameter[j + 2] != NULL && (cmd[i]->cmd_parameter[j][0] == '<' && cmd[i]->cmd_parameter[j][1] == '<')) {
-					cnt = 0;
-					k = j;
-					while (cmd[i]->cmd_parameter[k] != NULL && (cmd[i]->cmd_parameter[j][0] == '<' && cmd[i]->cmd_parameter[j][1] == '<')) {
-						cnt++;
-						k += 2;
-					}
-					cmd[i]->delemiter = malloc((cnt + 1) * sizeof(char *));
+				if(cnt == 0)
+				{
+					// printf("AAAA %d\n",k);
 					k = 0;
-					while (cmd[i]->cmd_parameter[j] != NULL && (cmd[i]->cmd_parameter[j][0] == '<' && cmd[i]->cmd_parameter[j][1] == '<')) {
-						cmd[i]->delemiter[k] = cmd[i]->cmd_parameter[j + 1];
-						k++;
-						j += 2;
-					}
-					cmd[i]->delemiter[k] = NULL;
-					k = 0;
-				}
-				else {
-					k = 0;
+					cnt = 1;
 					j += 1;
 					cmd[i]->delemiter = malloc(2 * sizeof(char *));
 					if(cmd[i]->cmd_parameter[j])
 					{
-						cmd[i]->delemiter[k++] = cmd[i]->cmd_parameter[j];
-						cmd[i]->delemiter[k] = NULL;
+						cmd[i]->delemiter[0] = cmd[i]->cmd_parameter[j];
+						cmd[i]->delemiter[1] = NULL;
 					}
 					if(cmd[i]->cmd_parameter[j] == NULL){
 						break;
 					}
-				}
-			}
-			else if(cmd[i]->cmd_parameter[j][0] == '<')
-			{
-				cmd[i]->redirect_in = 1;
-				if (cmd[i]->cmd_parameter[j + 2] != NULL && cmd[i]->cmd_parameter[j + 2][0] == '<') {
-					cnt = 0;
-					k = j;
-					while (cmd[i]->cmd_parameter[k] != NULL && cmd[i]->cmd_parameter[k][0] == '<') {
-						cnt++;
-						k += 2;
-					}
-					cmd[i]->infile = malloc((cnt + 1) * sizeof(char *));
-					k = 0;
-					while (cmd[i]->cmd_parameter[j] != NULL && cmd[i]->cmd_parameter[j][0] == '<') {
-						cmd[i]->infile[k] = cmd[i]->cmd_parameter[j + 1];
-						k++;
-						j += 2;
-					}
-					cmd[i]->infile[k] = NULL;
-					if(cmd[i]->cmd_parameter[j] == NULL){
-						break;
-					}
-					k = 0;
 				}
 				else {
-					k = 0;
-					j += 1;
-					cmd[i]->infile = malloc(2 * sizeof(char *));
-					if(cmd[i]->cmd_parameter[j])
+					if(cmd[i]->cmd_parameter[j + 1])
 					{
-						cmd[i]->infile[k++] = cmd[i]->cmd_parameter[j];
-						cmd[i]->infile[k] = NULL;
+						j++;
+						// printf("%s\n",cmd[i]->cmd_parameter[j]);
+						// printf("----------------\n");
+						cmd[i]->delemiter = ft_strjoin_2d(cmd[i]->delemiter, cmd[i]->cmd_parameter[j]);
+						// printf("----------------\n");
+						// printf("HHH %d\n",k);
 					}
 					if(cmd[i]->cmd_parameter[j] == NULL){
+						// printf("EXIT\n");
 						break;
 					}
+					// sleep(1);
 				}
+				// if (cmd[i]->cmd_parameter[j + 2] != NULL && (cmd[i]->cmd_parameter[j][0] == '<' && cmd[i]->cmd_parameter[j][1] == '<')) {
+				// 	cnt = 0;
+				// 	k = j;
+				// 	while (cmd[i]->cmd_parameter[k] != NULL && (cmd[i]->cmd_parameter[j][0] == '<' && cmd[i]->cmd_parameter[j][1] == '<')) {
+				// 		cnt++;
+				// 		k += 2;
+				// 	}
+				// 	cmd[i]->delemiter = malloc((cnt + 1) * sizeof(char *));
+				// 	k = 0;
+				// 	while (cmd[i]->cmd_parameter[j] != NULL && (cmd[i]->cmd_parameter[j][0] == '<' && cmd[i]->cmd_parameter[j][1] == '<')) {
+				// 		cmd[i]->delemiter[k] = cmd[i]->cmd_parameter[j + 1];
+				// 		k++;
+				// 		j += 2;
+				// 	}
+				// 	cmd[i]->delemiter[k] = NULL;
+				// 	k = 0;
+				// }
+				// else {
+				// 	k = 0;
+				// 	j += 1;
+				// 	cmd[i]->delemiter = malloc(2 * sizeof(char *));
+				// 	if(cmd[i]->cmd_parameter[j])
+				// 	{
+				// 		cmd[i]->delemiter[k++] = cmd[i]->cmd_parameter[j];
+				// 		cmd[i]->delemiter[k] = NULL;
+				// 	}
+				// 	if(cmd[i]->cmd_parameter[j] == NULL){
+				// 		break;
+				// 	}
+				// }
 			}
-            else if(cmd[i]->cmd_parameter[j][0] == '>')
-			{
-				cmd[i]->redirect_out = 1;
-				if (cmd[i]->cmd_parameter[j + 2] != NULL && cmd[i]->cmd_parameter[j + 2][0] == '>') {
-					cnt = 0;
-					k = j;
-					while (cmd[i]->cmd_parameter[k] != NULL && cmd[i]->cmd_parameter[k][0] == '>') {
-						cnt++;
-						k += 2;
-					}
-					cmd[i]->outfile = malloc((cnt + 1) * sizeof(t_outfile *));
-					k = 0;
-					while (cmd[i]->cmd_parameter[j] != NULL && cmd[i]->cmd_parameter[j][0] == '>') 
-					{
-						cmd[i]->outfile[k] = malloc(sizeof(t_outfile));
-						cmd[i]->outfile[k]->file = cmd[i]->cmd_parameter[j + 1];
-						if(cmd[i]->cmd_parameter[j][0] == '>' && cmd[i]->cmd_parameter[j][1] == '>')
-							cmd[i]->outfile[k]->mode = false;
-						else if (cmd[i]->cmd_parameter[j][0] == '>')
-							cmd[i]->outfile[k]->mode = true;
-						k++;
-						j += 2;
-					}
-					cmd[i]->outfile[k] = malloc(sizeof(t_outfile));
-					cmd[i]->outfile[k]->file = NULL;
-					if(cmd[i]->cmd_parameter[j] == NULL){
-						break;
-					}
-					k = 0;
-				}
-				else {
+			// else if(cmd[i]->cmd_parameter[j][0] == '<')
+			// {
+			// 	cmd[i]->redirect_in = 1;
+			// 	if (cmd[i]->cmd_parameter[j + 2] != NULL && cmd[i]->cmd_parameter[j + 2][0] == '<') {
+			// 		cnt = 0;
+			// 		k = j;
+			// 		while (cmd[i]->cmd_parameter[k] != NULL && cmd[i]->cmd_parameter[k][0] == '<') {
+			// 			cnt++;
+			// 			k += 2;
+			// 		}
+			// 		cmd[i]->infile = malloc((cnt + 1) * sizeof(char *));
+			// 		k = 0;
+			// 		while (cmd[i]->cmd_parameter[j] != NULL && cmd[i]->cmd_parameter[j][0] == '<') {
+			// 			cmd[i]->infile[k] = cmd[i]->cmd_parameter[j + 1];
+			// 			k++;
+			// 			j += 2;
+			// 		}
+			// 		cmd[i]->infile[k] = NULL;
+			// 		if(cmd[i]->cmd_parameter[j] == NULL){
+			// 			break;
+			// 		}
+			// 		k = 0;
+			// 	}
+			// 	else {
+			// 		k = 0;
+			// 		j += 1;
+			// 		cmd[i]->infile = malloc(2 * sizeof(char *));
+			// 		if(cmd[i]->cmd_parameter[j])
+			// 		{
+			// 			cmd[i]->infile[k++] = cmd[i]->cmd_parameter[j];
+			// 			cmd[i]->infile[k] = NULL;
+			// 		}
+			// 		if(cmd[i]->cmd_parameter[j] == NULL){
+			// 			break;
+			// 		}
+			// 	}
+			// }
+            // else if(cmd[i]->cmd_parameter[j][0] == '>')
+			// {
+			// 	cmd[i]->redirect_out = 1;
+			// 	if (cmd[i]->cmd_parameter[j + 2] != NULL && cmd[i]->cmd_parameter[j + 2][0] == '>') {
+			// 		cnt = 0;
+			// 		k = j;
+			// 		while (cmd[i]->cmd_parameter[k] != NULL && cmd[i]->cmd_parameter[k][0] == '>') {
+			// 			cnt++;
+			// 			k += 2;
+			// 		}
+			// 		cmd[i]->outfile = malloc((cnt + 1) * sizeof(t_outfile *));
+			// 		k = 0;
+			// 		while (cmd[i]->cmd_parameter[j] != NULL && cmd[i]->cmd_parameter[j][0] == '>') 
+			// 		{
+			// 			cmd[i]->outfile[k] = malloc(sizeof(t_outfile));
+			// 			cmd[i]->outfile[k]->file = cmd[i]->cmd_parameter[j + 1];
+			// 			if(cmd[i]->cmd_parameter[j][0] == '>' && cmd[i]->cmd_parameter[j][1] == '>')
+			// 				cmd[i]->outfile[k]->mode = false;
+			// 			else if (cmd[i]->cmd_parameter[j][0] == '>')
+			// 				cmd[i]->outfile[k]->mode = true;
+			// 			k++;
+			// 			j += 2;
+			// 		}
+			// 		cmd[i]->outfile[k] = malloc(sizeof(t_outfile));
+			// 		cmd[i]->outfile[k]->file = NULL;
+			// 		if(cmd[i]->cmd_parameter[j] == NULL){
+			// 			break;
+			// 		}
+			// 		k = 0;
+			// 	}
+			// 	else {
 					
-					k = 0;
-					j += 1;
-					cmd[i]->outfile = malloc(2 * sizeof(t_outfile *));
-					if(cmd[i]->cmd_parameter[j])
-					{
-						cmd[i]->outfile[k] = malloc(sizeof(t_outfile));
-						cmd[i]->outfile[k]->file = cmd[i]->cmd_parameter[j];
-						if(cmd[i]->cmd_parameter[j][0] == '>' && cmd[i]->cmd_parameter[j][1] == '>')
-							cmd[i]->outfile[k]->mode = false;
-						else if (cmd[i]->cmd_parameter[j][0] == '>')
-							cmd[i]->outfile[k]->mode = true;
-						k++;
-						cmd[i]->outfile[k] = malloc(sizeof(t_outfile));
-						cmd[i]->outfile[k]->file = NULL;
-					}
-					if(cmd[i]->cmd_parameter[j] == NULL){
-						break;
-					}
-				}
-			}
+			// 		k = 0;
+			// 		j += 1;
+			// 		cmd[i]->outfile = malloc(2 * sizeof(t_outfile *));
+			// 		if(cmd[i]->cmd_parameter[j])
+			// 		{
+			// 			cmd[i]->outfile[k] = malloc(sizeof(t_outfile));
+			// 			cmd[i]->outfile[k]->file = cmd[i]->cmd_parameter[j];
+			// 			if(cmd[i]->cmd_parameter[j][0] == '>' && cmd[i]->cmd_parameter[j][1] == '>')
+			// 				cmd[i]->outfile[k]->mode = false;
+			// 			else if (cmd[i]->cmd_parameter[j][0] == '>')
+			// 				cmd[i]->outfile[k]->mode = true;
+			// 			k++;
+			// 			cmd[i]->outfile[k] = malloc(sizeof(t_outfile));
+			// 			cmd[i]->outfile[k]->file = NULL;
+			// 		}
+			// 		if(cmd[i]->cmd_parameter[j] == NULL){
+			// 			break;
+			// 		}
+			// 	}
+			// }
 			j++;
         }
         i++;
@@ -543,7 +574,18 @@ t_command **rmplir_strct(char **splt, t_global_info *g_info)
 	k = 0;
 	i = 0;
 	j = 0;
-	// display each pipe rederction
+	// display each pipe rederction;'
+	while (cmd[i]->ther) {
+		printf("----OUT_FILE LIST-----\n");
+		j = 0;
+		if(cmd[i]->delemiter == NULL)
+			printf("****  NO OUT  >> *****\n");
+		else
+		 	while (cmd[i]->delemiter[j] != NULL) {
+				printf("%s\n",cmd[i]->delemiter[j++]);
+			}
+		i++;
+	}
 	// while (cmd[i]->ther) {
 	// 	printf("----OUT_FILE LIST-----\n");
 	// 	if(cmd[i]->outfile == NULL)
