@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/08 16:42:02 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/17 19:31:48 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/19 21:37:15 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,27 +36,6 @@ int next_dollar_pos(char *str, int pos)
 		pos++;
 	}
 	return (pos);
-}
-
-char *quote_trim(char *str, char c)
-{
-	int i;
-	char **split_space;
-	char *string_trim;
-	char *tmp;
-
-	i = 0;
-	string_trim = malloc(sizeof(char));
-	string_trim[0] = 0;
-	if (!str)
-		return (NULL);
-	split_space = ft_split(str, c);
-	while(split_space[i])
-	{
-		string_trim = ft_strjoin(string_trim, split_space[i]);
-		i++;
-	}
-	return (string_trim);
 }
 
 char *expand_var(char *string, t_global_info *g_info)
@@ -120,6 +99,270 @@ char *expand_var(char *string, t_global_info *g_info)
 	return (expand_string);
 }
 
+
+t_expand *ft_expand(char *string)
+{
+	t_expand *head;
+	char *substr;
+	int j;
+	int pos;
+	int i;
+
+	i = 0;
+	j = 0;
+	head = NULL;
+	while(string[i])
+	{
+		if (string[i] == '\"')
+		{
+			pos = i;
+			i++;
+			while(string[i] != '\"' && string[i])
+				i++;
+			if (string[i] == '\"')
+				i++;
+			substr = ft_substr(string, pos, i - pos);
+			head = add_new_node(substr, j, head);
+			j++;
+		}
+		else if (string[i] == '\'')
+		{
+			pos = i;
+			i++;
+			while(string[i] != '\'' && string[i])
+				i++;
+			if (string[i] == '\'')
+				i++;
+			substr = ft_substr(string, pos, i - pos);
+			head = add_new_node(substr, j, head);
+			j++;
+		}
+		else
+		{
+			pos = i;
+			while(string[i] != '\"' && string[i] != '\'' && string[i])
+				i++;
+			substr = ft_substr(string, pos, i - pos);
+			head = add_new_node(substr, j, head);
+			j++;
+		}
+	}
+	return (head);
+}
+
+void print(t_expand *head)
+{
+	t_expand *node;
+
+	node = head;
+	while(node)
+	{
+		printf("%d : --%s--\n", node->index, node->value);
+		node = node->next;
+	}
+}
+
+void num_list(t_expand *head)
+{
+	t_expand *node;
+	int i;
+
+	node = head;
+	i = 0;
+	while(node)
+	{
+		node->index = i;
+		i++;
+		node = node->next;
+	}
+}
+// void trim_list(t_expand *head)
+// {
+// 	t_expand *node;
+
+// 	node = head;
+// 	while(node)
+// 	{
+// 		node->value = ft_strtrim(node->value, "\'");
+// 		node = node->next;
+// 	}
+// }
+
+t_expand *expand_linked_list(t_expand *head, t_global_info *g_info)
+{
+	t_expand *new_node;
+	t_expand *new_node_head;
+	t_expand *node;
+	char **split;
+	int i;
+	int len;
+	t_expand *node_splited;
+	
+	node = head;
+	new_node = NULL;
+	new_node_head = new_node;
+	node_splited = NULL;
+	// if (node->value[0] == '\'' || node->value[0] == '\"')
+	// {
+	// 	if (node->value[0] == '\"')
+	// 	{
+			// node->value = ft_strtrim(node->value, "\'\"");
+			// node->value = expand_var(node->value, g_info);
+			// new_node = add_new_node(node->value, node->index, new_node);
+			// new_node_head = new_node;
+	// 	}
+	// 	else
+	// 	{
+	// 		node->value = ft_strtrim(node->value, "\'\"");
+	// 		new_node = add_new_node(node->value, node->index, new_node);
+	// 		new_node_head = new_node;
+	// 	}
+	// 	num_list(new_node);
+	// }
+	if (node->value[0] != '\'' && node->value[0] != '\"')
+	{
+		node->value = expand_var(node->value, g_info);
+		split = ft_split(node->value, ' ');
+		i = 0;
+		while(split[i])
+		{
+			new_node = add_new_node(split[i], i, new_node);
+			i++;
+		}
+		new_node_head = new_node;
+	}
+	node = node->next;
+	while(node)
+	{
+		if (node->value[0] == '\'' || node->value[0] == '\"')
+		{
+			if (node->value[0] == '\"')
+			{
+				node->value = ft_strtrim(node->value, "\'\"");
+				node->value = expand_var(node->value, g_info);
+				if (new_node)
+				{
+					while(new_node->next)
+							new_node = new_node->next;
+					new_node->value = ft_strjoin(new_node->value, node->value);
+				}
+				else
+				{
+					node->value = expand_var(node->value, g_info);
+					new_node = add_new_node(node->value, node->index, new_node);
+					new_node_head = new_node;
+				}
+					
+			}
+			else
+			{
+				node->value = ft_strtrim(node->value, "\'\"");
+				if (new_node)
+				{
+					while(new_node->next)
+						new_node = new_node->next;
+					new_node->value = ft_strjoin(new_node->value, node->value);
+				}
+				else
+				{
+					node->value = expand_var(node->value, g_info);
+					new_node = add_new_node(node->value, node->index, new_node);
+					new_node_head = new_node;
+				}
+			}
+			num_list(new_node);
+		}
+		else
+		{
+			node->value = expand_var(node->value, g_info);
+			split = ft_split(node->value, ' ');
+			if (ft_strlen2d(split) > 0)
+			{
+				i = 0;
+				while(split[i])
+				{
+					node_splited = add_new_node(split[i], i, node_splited);
+					i++;
+				}
+				while(new_node->next)
+					new_node = new_node->next;
+				len = ft_strlen(new_node->value) - 1;
+				if (new_node->value[len] != ' ' && new_node->value[len] != '\t'
+					&& node->value[0] != ' ' && node->value[0] != '\t')
+				{
+					new_node->value = ft_strjoin(new_node->value, node_splited->value);
+					node_splited = delete_node(node_splited, node_splited->index);
+				}
+				while(node_splited)
+				{
+					new_node = add_new_node(node_splited->value, node_splited->index, new_node);
+					node_splited = node_splited->next;
+				}
+				num_list(new_node);
+			}
+			else
+			{
+				if (ft_strlen(node->value) > 0)
+					new_node = add_new_node(ft_strdup(""), 0, new_node);
+				else
+					new_node = add_new_node(ft_strdup(""), 0, new_node);
+				num_list(new_node);
+			}
+		}
+		node = node->next;
+	}
+	num_list(new_node_head);
+	return (new_node_head);
+}
+int lst_size(t_expand *head)
+{
+	int i;
+	t_expand *node;
+
+	node = head;
+	i = 0;
+	while(node)
+	{
+		i++;
+		node = node->next;
+	}
+	return (i);
+}
+
+t_expand *delete_empty(t_expand *head)
+{
+	t_expand *node;
+
+	node = head;
+	while(node)
+	{
+		if (ft_strlen(node->value) == 0)
+			head = delete_node(head, node->index);
+		node = node->next;
+	}
+	return (head);
+}
+
+char **convert_linked_array(t_expand *head)
+{
+	char **array_conv;
+	t_expand *node;
+	int i;
+
+	array_conv = malloc(sizeof(char *) * (lst_size(head) + 1));
+	node = head;
+	i = 0;
+	if (!array_conv)
+		return (NULL);
+	while(node)
+	{
+		array_conv[i] = ft_strdup(node->value);
+		i++;
+		node = node->next;
+	}
+	array_conv[i] = NULL;
+	return (array_conv);
+}
 char **ft_strjoin2d(char **s1, char **s2)
 {
 	int i;
@@ -145,281 +388,28 @@ char **ft_strjoin2d(char **s1, char **s2)
 	new_array[i] = NULL;
 	return (new_array);
 }
-char **strjoin2d_string(char **s1, char *s2)
-{
-	int i;
-	int j;
-	char **new_array;
-	
-	i = 0;
-	j = 0;
-	new_array = malloc(sizeof(char *) * (ft_strlen2d(s1) + 2));
-	if (!new_array)
-		return (NULL);
-	while(s1[i] && s1)
-	{
-		new_array[i] = ft_strdup(s1[i]);
-		i++;
-	}
-	new_array[i] = ft_strdup(s2);
-	i++;
-	new_array[i] = NULL;
-	return (new_array);
-}
-
-
-char *ft_expand(char *string, t_global_info *g_info)
-{
-	int i;
-	int j;
-	char *expand;
-	char **new_cmd_param;
-	char *tmp;
-	char *expand_without_q;
-	char **quote;
-	char *expand_double_q;
-	int last_el;
-	int pos;
-
-	i = 0;
-	new_cmd_param = malloc(sizeof(char *));
-	if (!new_cmd_param)
-		return (NULL);
-	new_cmd_param[0] = NULL;
-	expand= malloc(sizeof(char));
-	expand[0] = 0;
-	while(string[i])
-	{
-		if (string[i] == '\"')
-		{
-			i++;
-			pos = i;
-			while(string[i] != '\"' && string[i])
-				i++;
-			if (string[i] == '\"')
-				i++;
-			tmp = ft_substr(string, pos, i - pos - 1);
-			expand_double_q = expand_var(tmp, g_info);
-			expand = ft_strjoin(expand, "\"");
-			expand = ft_strjoin(expand, expand_double_q);
-			expand = ft_strjoin(expand, "\"");
-		}
-		else if (string[i] == '\'')
-		{
-			i++;
-			pos = i;
-			while(string[i] != '\'' && string[i])
-				i++;
-			if (string[i] == '\'')
-				i++;
-			expand_double_q = ft_substr(string, pos, i - pos - 1);
-			expand = ft_strjoin(expand, "\'");
-			expand = ft_strjoin(expand, expand_double_q);
-			expand = ft_strjoin(expand, "\'");
-		}
-		else
-		{
-			pos = i;
-			while(string[i] != '\"' && string[i] != '\'' && string[i])
-				i++;
-			tmp = ft_substr(string, pos, i - pos);
-			expand_without_q = expand_var(tmp, g_info);
-			expand = ft_strjoin(expand, expand_without_q);
-		}
-	}
-	return (expand);
-}
-
-int split_expander_len(char *expand_all)
-{
-	int i;
-	int count;
-	char c;
-	i = 0;
-	count = 0;
-	while (expand_all[i] == ' ')
-		i++;
-	while(expand_all[i])
-	{
-		if (expand_all[i] == '\"')
-		{
-			i++;
-			while(expand_all[i] != '\"' && expand_all[i])
-				i++;
-			count++;
-			i++;
-		}
-		else if (expand_all[i] == '\'')
-		{
-			i++;
-			while(expand_all[i] != '\'' && expand_all[i])
-				i++;
-			count++;
-			i++;
-		}
-		else
-		{
-			while(expand_all[i] != ' ' && expand_all[i])
-			{
-				if (expand_all[i] == '\"' || expand_all[i] == '\'')
-				{
-					c = expand_all[i];
-					i++;
-					while (expand_all[i] != c)
-						i++;
-				}
-				i++;
-			}
-			count++;
-		}
-		while (expand_all[i] == ' ')
-			i++;
-	}
-	return(count);
-}
-
-
-int	ft_len(char *s, char c, int p)
-{
-	int	len;
-	char save;
-
-	len = 0;
-	
-	if (c == ' ')
-	{
-		while (s[p] != c && s[p] != '\0')
-		{
-			if (s[p] == '\"' || s[p] == '\'')
-			{
-				save = s[p];
-				len++;
-				p++;
-				while (s[p] != save && s[p])
-				{
-					len++;
-					p++;
-				}
-			}
-			len++;
-			p++;
-		}
-	}
-	else
-	{
-		while (s[p] != c && s[p] != '\0')
-		{
-			len++;
-			p++;
-			if(s[p] == c && (s[p + 1] == ' ' || !s[p + 1]))
-				break;
-			else
-			{
-				while(s[p] == c)
-				{
-					len++;
-					p++;
-				}
-			}
-		}
-		
-	}
-	return (len);
-}
-
-
-char **split_expander(char *expand_all)
-{
-	int nb_word;
-	char **split_exp;
-	int len;
-	int j;
-	int i;
-	
-	i = 0;
-	j = 0;
-	nb_word = split_expander_len(expand_all);
-	split_exp = malloc(sizeof(char *) * (nb_word + 1));
-	if (!split_exp)
-		return (NULL);
-	while(expand_all[i] == ' ')
-		i++;
-	while(expand_all[i])
-	{
-		while(expand_all[i] == ' ')
-			i++;
-		if (expand_all[i])
-		{	
-			if (expand_all[i] == '\"')
-			{
-				i++;
-				len = ft_len(expand_all, '\"', i);
-				if (len != 0)
-				{
-					split_exp[j] = ft_substr(expand_all, i, len);
-					j++;
-				}
-				i += len;
-			}
-			else if (expand_all[i] == '\'')
-			{
-				i++;
-				len = ft_len(expand_all, '\'', i);
-				if (len != 0)
-				{
-					split_exp[j] = ft_substr(expand_all, i, len);
-					j++;
-				}
-				i += len;
-			}
-			else
-			{
-				len = ft_len(expand_all, ' ', i);
-				if (len != 0)
-				{
-					split_exp[j] = ft_substr(expand_all, i, len);
-					j++;
-				}
-				i += len;
-			}
-			i++;
-		}
-	}
-	while(j < nb_word + 1)
-	{
-		split_exp[j] = NULL;
-		j++;
-	}
-	return(split_exp);
-}
 
 char **expand_all_param(t_command *cmd, t_global_info *g_info)
 {
 	int i;
 	char **expanded_param;
-	char *expand_all;
-	char *exp;
+	char **head_array;
+	t_expand *head;
 
+	head = NULL;
 	i = 0;
-	expand_all = malloc(sizeof(char));
-	expand_all[0] = 0;
+	expanded_param = malloc(sizeof(char *));
+	expanded_param[0] = NULL;
 	while(cmd->cmd_parameter[i])
 	{
-		exp = ft_expand(cmd->cmd_parameter[i], g_info);
-		exp = ft_strjoin(exp, " ");
-		expand_all = ft_strjoin(expand_all, exp);
+		head = ft_expand(cmd->cmd_parameter[i]);
+		head = expand_linked_list(head, g_info);
+		head = delete_empty(head);
+		head_array = convert_linked_array(head);
+		expanded_param = ft_strjoin2d(expanded_param, head_array);
 		i++;
 	}
-	expanded_param = split_expander(expand_all);
-	i = 0;
-	while (expanded_param[i])
-	{
-		expanded_param[i] = quote_trim(expanded_param[i], '\"');
-		expanded_param[i] = quote_trim(expanded_param[i], '\'');
-		i++;
-	}	
 	cmd->cmd = ft_strdup(expanded_param[0]);
-	ft_free2d(cmd->cmd_parameter);
 	return(expanded_param);
 }
 
@@ -430,9 +420,25 @@ char **expand_all_param(t_command *cmd, t_global_info *g_info)
 // 	char *tmp;
 // 	g_info.environ = dup_env(env);
 // 	g_info.exit_code = 0;
-// 	string = ft_strdup(" a   b    c ");
+// 	string = ft_strdup("\"foobar\"$a\"bar\"");
 // 	printf("---------------  %s  -----------------\n", string);
-// 	tmp = space_trim(string);
-// 	printf("%s\n", tmp);
+// 	t_expand *head;
+// 	t_expand *node;
+
+// 	head = NULL;
+// 	head = ft_expand(string);
+// 	print(head);
+// 	head = expand_linked_list(head, &g_info);
+// 	print(head);
+// 	// head = delete_node(head, 1);
+// 	// head = delete_node(head, 0);
+// 	// head = delete_node(head, 3);
+// 	// node = head;
+// 	// while(node)
+// 	// {
+// 	// 	printf("%d : --%s--\n", node->index, node->value);
+// 	// 	node = node->next;
+// 	// }
+	
 // 	// free(tmp);
 // }

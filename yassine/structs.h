@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/30 14:28:30 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/17 19:51:22 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/19 21:20:21 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,12 @@
 #include <errno.h>
 #include <fcntl.h>
 
+typedef struct s_expand
+{
+	int index;
+	char *value;
+	struct s_expand *next;
+}	t_expand;
 typedef struct s_variable
 {
 	char *name;
@@ -73,13 +79,18 @@ typedef struct s_command
 
 char *ambiguous_redirect(char *file, t_global_info *g_info);
 char **expand_all_param(t_command *cmd, t_global_info *g_info);
-char **split_expander(char *expand_all);
-int	ft_len(char *s, char c, int p);
-int split_expander_len(char *expand_all);
-char *ft_expand(char *string, t_global_info *g_info);
-char **strjoin2d_string(char **s1, char *s2);
+t_expand *ft_expand(char *string);
 char **ft_strjoin2d(char **s1, char **s2);
 char *expand_var(char *string, t_global_info *g_info);
-char *quote_trim(char *str, char c);
 int search_in_env(t_env *env, char *string);
+
+
+t_expand *delete_node(t_expand *head, int index);
+t_expand *add_new_node(char *value, int index, t_expand *head);
+
+char **convert_linked_array(t_expand *head);
+t_expand *delete_empty(t_expand *head);
+int lst_size(t_expand *head);
+t_expand *expand_linked_list(t_expand *head, t_global_info *g_info);
+void num_list(t_expand *head);
 #endif
