@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/08 16:42:02 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/19 21:37:15 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/20 18:05:24 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -193,6 +193,8 @@ t_expand *expand_linked_list(t_expand *head, t_global_info *g_info)
 	t_expand *new_node;
 	t_expand *new_node_head;
 	t_expand *node;
+	char *prev;
+	char *prev_q;
 	char **split;
 	int i;
 	int len;
@@ -202,32 +204,43 @@ t_expand *expand_linked_list(t_expand *head, t_global_info *g_info)
 	new_node = NULL;
 	new_node_head = new_node;
 	node_splited = NULL;
-	// if (node->value[0] == '\'' || node->value[0] == '\"')
-	// {
-	// 	if (node->value[0] == '\"')
-	// 	{
-			// node->value = ft_strtrim(node->value, "\'\"");
-			// node->value = expand_var(node->value, g_info);
-			// new_node = add_new_node(node->value, node->index, new_node);
-			// new_node_head = new_node;
-	// 	}
-	// 	else
-	// 	{
-	// 		node->value = ft_strtrim(node->value, "\'\"");
-	// 		new_node = add_new_node(node->value, node->index, new_node);
-	// 		new_node_head = new_node;
-	// 	}
-	// 	num_list(new_node);
-	// }
-	if (node->value[0] != '\'' && node->value[0] != '\"')
+	prev = ft_strdup("");
+	if (node->value[0] == '\'' || node->value[0] == '\"')
 	{
+		if (node->value[0] == '\"')
+		{
+			node->value = ft_strtrim(node->value, "\'\"");
+			node->value = expand_var(node->value, g_info);
+			new_node = add_new_node(node->value, node->index, new_node);
+			new_node_head = new_node;
+		}
+		else
+		{
+			node->value = ft_strtrim(node->value, "\'\"");
+			new_node = add_new_node(node->value, node->index, new_node);
+			new_node_head = new_node;
+		}
+		num_list(new_node);
+	}
+	else
+	{
+		// printf("1 :--%s--\n", node->value);
 		node->value = expand_var(node->value, g_info);
+		prev = ft_strdup(node->value);
 		split = ft_split(node->value, ' ');
 		i = 0;
-		while(split[i])
+		if (ft_strlen2d(split) > 0)
 		{
-			new_node = add_new_node(split[i], i, new_node);
-			i++;
+			while(split[i])
+			{
+				new_node = add_new_node(split[i], i, new_node);
+				i++;
+			}
+		}
+		else
+		{
+			new_node = add_new_node(ft_strdup(""), 0, new_node);
+			num_list(new_node);
 		}
 		new_node_head = new_node;
 	}
@@ -240,41 +253,44 @@ t_expand *expand_linked_list(t_expand *head, t_global_info *g_info)
 			{
 				node->value = ft_strtrim(node->value, "\'\"");
 				node->value = expand_var(node->value, g_info);
-				if (new_node)
+				while(new_node->next)
+						new_node = new_node->next;
+				len = ft_strlen(prev);
+					// printf("2: --%s--\n", node->value);
+				if (len > 0)
 				{
-					while(new_node->next)
-							new_node = new_node->next;
-					new_node->value = ft_strjoin(new_node->value, node->value);
+					if (prev[len - 1] == ' ' || prev[len - 1] == '\t')
+						new_node = add_new_node(node->value, node->index, new_node);
+					else
+						new_node->value = ft_strjoin(new_node->value, node->value);
 				}
 				else
-				{
-					node->value = expand_var(node->value, g_info);
-					new_node = add_new_node(node->value, node->index, new_node);
-					new_node_head = new_node;
-				}
-					
+					new_node->value = ft_strjoin(new_node->value, node->value);
+				prev_q = ft_strdup("");
 			}
 			else
 			{
 				node->value = ft_strtrim(node->value, "\'\"");
-				if (new_node)
-				{
-					while(new_node->next)
+				while(new_node->next)
 						new_node = new_node->next;
-					new_node->value = ft_strjoin(new_node->value, node->value);
+				len = ft_strlen(prev);
+				if (len > 0)
+				{
+					if (prev[len - 1] == ' ' || prev[len - 1] == '\t')
+						new_node = add_new_node(node->value, node->index, new_node);
+					else
+						new_node->value = ft_strjoin(new_node->value, node->value);
 				}
 				else
-				{
-					node->value = expand_var(node->value, g_info);
-					new_node = add_new_node(node->value, node->index, new_node);
-					new_node_head = new_node;
-				}
+					new_node->value = ft_strjoin(new_node->value, node->value);
+				prev_q = ft_strdup("");
 			}
 			num_list(new_node);
 		}
 		else
 		{
 			node->value = expand_var(node->value, g_info);
+			prev = ft_strdup(node->value);
 			split = ft_split(node->value, ' ');
 			if (ft_strlen2d(split) > 0)
 			{
@@ -286,12 +302,15 @@ t_expand *expand_linked_list(t_expand *head, t_global_info *g_info)
 				}
 				while(new_node->next)
 					new_node = new_node->next;
-				len = ft_strlen(new_node->value) - 1;
-				if (new_node->value[len] != ' ' && new_node->value[len] != '\t'
-					&& node->value[0] != ' ' && node->value[0] != '\t')
+				len = ft_strlen(prev_q);
+				if (len > 0)
 				{
-					new_node->value = ft_strjoin(new_node->value, node_splited->value);
-					node_splited = delete_node(node_splited, node_splited->index);
+					if (prev_q[len - 1] != ' ' && prev_q[len - 1] != '\t'
+						&& node->value[0] != ' ' && node->value[0] != '\t')
+					{
+						new_node->value = ft_strjoin(new_node->value, node_splited->value);
+						node_splited = delete_node(node_splited, node_splited->index);
+					}
 				}
 				while(node_splited)
 				{
@@ -304,14 +323,13 @@ t_expand *expand_linked_list(t_expand *head, t_global_info *g_info)
 			{
 				if (ft_strlen(node->value) > 0)
 					new_node = add_new_node(ft_strdup(""), 0, new_node);
-				else
-					new_node = add_new_node(ft_strdup(""), 0, new_node);
 				num_list(new_node);
 			}
 		}
 		node = node->next;
 	}
 	num_list(new_node_head);
+	// print(new_node_head);
 	return (new_node_head);
 }
 int lst_size(t_expand *head)
@@ -409,7 +427,8 @@ char **expand_all_param(t_command *cmd, t_global_info *g_info)
 		expanded_param = ft_strjoin2d(expanded_param, head_array);
 		i++;
 	}
-	cmd->cmd = ft_strdup(expanded_param[0]);
+	if (cmd->cmd)
+		cmd->cmd = ft_strdup(expanded_param[0]);
 	return(expanded_param);
 }
 

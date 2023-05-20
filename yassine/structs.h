@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/30 14:28:30 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/19 21:20:21 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/20 12:05:21 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,4 +93,6 @@ t_expand *delete_empty(t_expand *head);
 int lst_size(t_expand *head);
 t_expand *expand_linked_list(t_expand *head, t_global_info *g_info);
 void num_list(t_expand *head);
+
+void print(t_expand *head);
 #endif

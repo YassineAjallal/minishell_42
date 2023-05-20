@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/12 16:38:13 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/19 21:18:19 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/20 14:36:15 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,31 +146,32 @@ char *ambiguous_redirect(char *file, t_global_info *g_info)
 {
 	int i;
 	char **head_array;
+	int old_lst;
+	int new_lst;
+	int len;
 	t_expand *head;
 	
 	head = ft_expand(file);
+	old_lst = lst_size(head);
 	head = expand_linked_list(head, g_info);
+	new_lst = lst_size(head);
 	head = delete_empty(head);
 	head_array = convert_linked_array(head);
 	i = 0;
-	// i = 0;
-	// while(split_file[i])
-	// {
-	// 	// printf("--%s--\n", split_file[i]);
-	// 	i++;
-	// }
-	// printf("\n\n");
-	// i = 0;
-	// while(new_file[i])
-	// {
-	// 	// printf("--%s--\n", new_file[i]);
-	// 	i++;
-	// }
+	len = ft_strlen(file) - 1;
 	if (ft_strlen2d(head_array) == 0)
-	{
-		ft_putstr_fd("minishell: ambiguous redirect\n", 2);
-		g_info->exit_code = 1;
-		return (0);
+	{	
+		if (new_lst == old_lst)
+		{
+			if (ft_strchr(file, '$'))
+			{
+				ft_putstr_fd("minishell: ambiguous redirect\n", 2);
+				g_info->exit_code = 1;
+				return (0);
+			}
+		}
+		g_info->exit_code = 0;
+		return (ft_strdup(""));
 	}
 	else if (ft_strlen2d(head_array) > 1)
 	{
@@ -178,6 +179,8 @@ char *ambiguous_redirect(char *file, t_global_info *g_info)
 		g_info->exit_code = 1;
 		return (0);
 	}
+	// print(head);
+	// printf("------------------\n");
 	g_info->exit_code = 0;
 	return (head_array[0]);
 }

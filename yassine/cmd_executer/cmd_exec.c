@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 21:13:03 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/17 19:57:38 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/20 21:14:54 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,32 +136,51 @@ int herdoc_mode(t_command *cmd)
 	char *heredoc_input;
 	int l_delemiter;
 	int heredoc_pipe[2];
+	t_expand *head;
+	char **head_array;
+	int i;
 	
 	if (cmd->herdoc == true)
-	{		
+	{	
+		i = 0;
+		while(cmd->delemiter[i])
+		{
+			head = ft_expand(cmd->delemiter[i]);
+			head = expand_linked_list(head, cmd->g_info);
+			head = delete_empty(head);
+			head_array = convert_linked_array(head);
+			i++;
+		}
+		cmd->delemiter = head_array;
 		l_delemiter = ft_strlen2d(cmd->delemiter) - 1;
-		if (pipe(heredoc_pipe) < 0)
+		i = 0;
+		while(cmd->delemiter[i])
 		{
-			ft_perror(2, "pipe error", cmd->delemiter[l_delemiter]);
-			cmd->g_info->exit_code = 1;
-			return (0);
-		}
-		while(1)
-		{
-			heredoc_input = readline("herdoc> ");
-			if (ft_strcmp(cmd->delemiter[l_delemiter], heredoc_input) == 0)
-				break;
-			else
+			if (pipe(heredoc_pipe) < 0)
 			{
-				write(heredoc_pipe[1], heredoc_input, ft_strlen(heredoc_input));
-				write(heredoc_pipe[1], "\n", 1);
+				ft_perror(2, "pipe error", cmd->delemiter[i]);
+				cmd->g_info->exit_code = 1;
+				return (0);
 			}
+			while(1)
+			{
+				heredoc_input = readline("herdoc> ");
+				if (ft_strcmp(cmd->delemiter[i], heredoc_input) == 0)
+					break;
+				else
+				{
+					write(heredoc_pipe[1], heredoc_input, ft_strlen(heredoc_input));
+					write(heredoc_pipe[1], "\n", 1);
+				}
+			}
+			dup2(heredoc_pipe[0], STDIN_FILENO);
+			close(heredoc_pipe[0]);
+			dup2(cmd->herdoc_stdout, STDOUT_FILENO);
+			close(heredoc_pipe[1]);
+			i++;
 		}
-		dup2(heredoc_pipe[0], STDIN_FILENO);
-		close(heredoc_pipe[0]);
-		dup2(cmd->herdoc_stdout, STDOUT_FILENO);
-		close(heredoc_pipe[1]);
 	}
+	cmd->g_info->exit_code = 0;
 	return (1);
 }
 void search_built_in(t_command *cmd)
@@ -229,6 +248,7 @@ int exec_built_in(t_command *cmd)
 }
 void cmd_exec(t_command *cmd)
 {
+	
 	search_built_in(cmd);
 	if (cmd->built_in == false)
 	{
@@ -238,7 +258,7 @@ void cmd_exec(t_command *cmd)
 			exit(cmd->g_info->exit_code);
 		if(!herdoc_mode(cmd))
 			exit(cmd->g_info->exit_code);
-		else if(cmd_validation(cmd))
+		if(cmd_validation(cmd))
 			execve(cmd->command_path, cmd->cmd_parameter, cmd->g_info->env_array);
 		else
 			exit(cmd->g_info->exit_code);

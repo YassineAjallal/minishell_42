@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/30 13:57:21 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/17 09:44:03 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/20 18:01:56 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,6 +117,7 @@ int pipes(t_command **cmds, t_global_info *g_info)
 		while (++i < g_info->nb_pipe + 1)
 			waitpid(pids[i], &status, 0);
 		g_info->exit_code = WEXITSTATUS(status);
+		// printf("exit code : %d\n", g_info->exit_code);
 	}
 	return (0);
 }
