@@ -1,4 +1,4 @@
-#include "libft.h"
+#include "libft/libft.h"
 #include <readline/history.h>
 #include <readline/readline.h>
 #include <stdio.h>
@@ -121,8 +121,8 @@ void	run_echo(char *str)
 	}
 	if(comma)
 		perror("dqouate");
-	if (tru == 0)
-		printf("\n");
+	
+	
 }
 
 void run_pwd(char *str)

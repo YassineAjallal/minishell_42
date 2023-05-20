@@ -393,8 +393,16 @@ t_command **rmplir_strct(char **splt, t_global_info *g_info)
 				break;
 			}
         }
+		char *ss =rem_quots(cmd[i]->cmd);
 		if(cmd[i]->cmd[0] == '<' || cmd[i]->cmd[0] == '>')
+		{
 			cmd[i]->cmd = NULL;
+		}
+		if(ss[0] == '\0')
+		{
+			cmd[i]->cmd = ft_strdup("");
+		}
+		// printf("%s\n",cmd[i]->cmd);
         i++;
     }
 	// hena ghadi nbda n9alb 3la wax kayn redirect o dakxi fi kola pipe
@@ -469,40 +477,6 @@ t_command **rmplir_strct(char **splt, t_global_info *g_info)
 						break;
 					}
 				}
-			// 	cmd[i]->redirect_in = 1;
-			// 	if (cmd[i]->cmd_parameter[j + 2] != NULL && cmd[i]->cmd_parameter[j + 2][0] == '<') {
-			// 		cnt = 0;
-			// 		k = j;
-			// 		while (cmd[i]->cmd_parameter[k] != NULL && cmd[i]->cmd_parameter[k][0] == '<') {
-			// 			cnt++;
-			// 			k += 2;
-			// 		}
-			// 		cmd[i]->infile = malloc((cnt + 1) * sizeof(char *));
-			// 		k = 0;
-			// 		while (cmd[i]->cmd_parameter[j] != NULL && cmd[i]->cmd_parameter[j][0] == '<') {
-			// 			cmd[i]->infile[k] = cmd[i]->cmd_parameter[j + 1];
-			// 			k++;
-			// 			j += 2;
-			// 		}
-			// 		cmd[i]->infile[k] = NULL;
-			// 		if(cmd[i]->cmd_parameter[j] == NULL){
-			// 			break;
-			// 		}
-			// 		k = 0;
-			// 	}
-			// 	else {
-			// 		k = 0;
-			// 		j += 1;
-			// 		cmd[i]->infile = malloc(2 * sizeof(char *));
-			// 		if(cmd[i]->cmd_parameter[j])
-			// 		{
-			// 			cmd[i]->infile[k++] = cmd[i]->cmd_parameter[j];
-			// 			cmd[i]->infile[k] = NULL;
-			// 		}
-			// 		if(cmd[i]->cmd_parameter[j] == NULL){
-			// 			break;
-			// 		}
-			// 	}
 			}
             else if(cmd[i]->cmd_parameter[j][0] == '>')
 			{
@@ -518,9 +492,9 @@ t_command **rmplir_strct(char **splt, t_global_info *g_info)
 						cmd[i]->outfile[0] = malloc(1 * sizeof(t_outfile));
 						cmd[i]->outfile[1] = malloc(1 * sizeof(t_outfile));
 						if(cmd[i]->cmd_parameter[j - 1][0] == '>' && cmd[i]->cmd_parameter[j - 1][1] == '>')
-							cmd[i]->outfile[0]->mode = false;
-						else if(cmd[i]->cmd_parameter[j - 1][0] == '>')
-							cmd[i]->outfile[0]->mode = true;
+							cmd[i]->outfile[k]->mode = false;
+						else if (cmd[i]->cmd_parameter[j - 1][0] == '>')
+							cmd[i]->outfile[k]->mode = true;
 						cmd[i]->outfile[0]->file = cmd[i]->cmd_parameter[j];
 						cmd[i]->outfile[1] = NULL;
 						
@@ -539,55 +513,6 @@ t_command **rmplir_strct(char **splt, t_global_info *g_info)
 						break;
 					}
 				}
-			// 	cmd[i]->redirect_out = 1;
-			// 	if (cmd[i]->cmd_parameter[j + 2] != NULL && cmd[i]->cmd_parameter[j + 2][0] == '>') {
-			// 		cnt = 0;
-			// 		k = j;
-			// 		while (cmd[i]->cmd_parameter[k] != NULL && cmd[i]->cmd_parameter[k][0] == '>') {
-			// 			cnt++;
-			// 			k += 2;
-			// 		}
-			// 		cmd[i]->outfile = malloc((cnt + 1) * sizeof(t_outfile *));
-			// 		k = 0;
-			// 		while (cmd[i]->cmd_parameter[j] != NULL && cmd[i]->cmd_parameter[j][0] == '>') 
-			// 		{
-			// 			cmd[i]->outfile[k] = malloc(sizeof(t_outfile));
-			// 			cmd[i]->outfile[k]->file = cmd[i]->cmd_parameter[j + 1];
-			// 			if(cmd[i]->cmd_parameter[j][0] == '>' && cmd[i]->cmd_parameter[j][1] == '>')
-			// 				cmd[i]->outfile[k]->mode = false;
-			// 			else if (cmd[i]->cmd_parameter[j][0] == '>')
-			// 				cmd[i]->outfile[k]->mode = true;
-			// 			k++;
-			// 			j += 2;
-			// 		}
-			// 		cmd[i]->outfile[k] = malloc(sizeof(t_outfile));
-			// 		cmd[i]->outfile[k]->file = NULL;
-			// 		if(cmd[i]->cmd_parameter[j] == NULL){
-			// 			break;
-			// 		}
-			// 		k = 0;
-			// 	}
-			// 	else {
-					
-			// 		k = 0;
-			// 		j += 1;
-			// 		cmd[i]->outfile = malloc(2 * sizeof(t_outfile *));
-			// 		if(cmd[i]->cmd_parameter[j])
-			// 		{
-			// 			cmd[i]->outfile[k] = malloc(sizeof(t_outfile));
-			// 			cmd[i]->outfile[k]->file = cmd[i]->cmd_parameter[j];
-			// 			if(cmd[i]->cmd_parameter[j][0] == '>' && cmd[i]->cmd_parameter[j][1] == '>')
-			// 				cmd[i]->outfile[k]->mode = false;
-			// 			else if (cmd[i]->cmd_parameter[j][0] == '>')
-			// 				cmd[i]->outfile[k]->mode = true;
-			// 			k++;
-			// 			cmd[i]->outfile[k] = malloc(sizeof(t_outfile));
-			// 			cmd[i]->outfile[k]->file = NULL;
-			// 		}
-			// 		if(cmd[i]->cmd_parameter[j] == NULL){
-			// 			break;
-			// 		}
-			// 	}
 			}
 			j++;
         }
@@ -597,92 +522,49 @@ t_command **rmplir_strct(char **splt, t_global_info *g_info)
 	i = 0;
 	j = 0;
 	// display each pipe rederction;'
-	while (cmd[i]->ther) {
-		printf("----herdoc LIST-----\n");
-		j = 0;
-		if(cmd[i]->delemiter == NULL)
-			printf("****  NO OUT  >> *****\n");
-		else
-		 	while (cmd[i]->delemiter[j] != NULL) {
-				printf("%s\n",cmd[i]->delemiter[j++]);
-			}
-		i++;
-	}
-	i = 0;
-	j = 0;
-	while (cmd[i]->ther) {
-		printf("----IN_FILE LIST-----\n");
-		j = 0;
-		if(cmd[i]->infile == NULL)
-			printf("****  NO IN  >> *****\n");
-		else
-		 	while (cmd[i]->infile[j] != NULL) {
-				printf("%s\n",cmd[i]->infile[j++]);
-			}
-		i++;
-	}
-	i = 0;
-	j = 0;
-	while (cmd[i]->ther) {
-		printf("----IN_FILE LIST-----\n");
-		j = 0;
-		if(cmd[i]->outfile == NULL)
-			printf("****  NO IN  >> *****\n");
-		else
-		 	while (cmd[i]->outfile[j] != NULL) {
-				if (cmd[i]->outfile[j]->mode == true) {
-					printf("mode :1\t|");
-				}
-				else {
-					printf("mode :2\t|");
-				}
-				printf("%s\n",cmd[i]->outfile[j++]->file);
-			}
-		i++;
-	}
 	// while (cmd[i]->ther) {
-	// 	printf("----OUT_FILE LIST-----\n");
-	// 	if(cmd[i]->outfile == NULL)
+	// 	printf("----herdoc LIST-----\n");
+	// 	j = 0;
+	// 	if(cmd[i]->delemiter == NULL)
 	// 		printf("****  NO OUT  >> *****\n");
 	// 	else
-	// 	{
-	// 		k = 0;
-	// 		while (cmd[i]->outfile[k]) {
-	// 			printf("out ->>%d \t %d |file::%s\n",i,cmd[i]->redirect_out,cmd[i]->outfile[k++]);
+	// 	 	while (cmd[i]->delemiter[j] != NULL) {
+	// 			printf("%s\n",cmd[i]->delemiter[j++]);
 	// 		}
-
-	// 	}
-	// 	if(cmd[i]->infile == NULL)
-	// 		printf("****  NO IN << *****\n");
-	// 	else
-	// 	{
-	// 		k = 0;
-	// 		while (cmd[i]->infile[k]) {
-	// 			printf("in -<<%d \t %d |file::%s\n",i,cmd[i]->redirect_in,cmd[i]->infile[k++]);
-	// 		}
-	// 	}
-	// 	if(cmd[i]->delemiter == NULL)
-	// 		printf("****  NO IN << *****\n");
-	// 	else
-	// 	{
-	// 		k = 0;
-	// 		while (cmd[i]->delemiter[k]) {
-	// 			printf("in -<<%d \t %d |file::%s\n",i,cmd[i]->redirect_append,cmd[i]->delemiter[k++]);
-	// 		}
-	// 	}
-	// 	if(cmd[i]->herdoc_stdout == NULL)
-	// 		printf("****  NO IN << *****\n");
-	// 	else
-	// 	{
-	// 		k = 0;
-	// 		while (cmd[i]->herdoc_stdout[k]) {
-	// 			printf("in -<<%d \t %d |file::%s\n",i,cmd[i]->herdoc,cmd[i]->herdoc_stdout[k++]);
-	// 		}
-	// 	}
-	// 	printf("--------\n");
 	// 	i++;
 	// }
-
+	// i = 0;
+	// j = 0;
+	// while (cmd[i]->ther) {
+	// 	printf("----IN_FILE LIST-----\n");
+	// 	j = 0;
+	// 	if(cmd[i]->infile == NULL)
+	// 		printf("****  NO IN  >> *****\n");
+	// 	else
+	// 	 	while (cmd[i]->infile[j] != NULL) {
+	// 			printf("%s\n",cmd[i]->infile[j++]);
+	// 		}
+	// 	i++;
+	// }
+	// i = 0;
+	// j = 0;
+	// while (cmd[i]->ther) {
+	// 	printf("----IN_FILE LIST-----\n");
+	// 	j = 0;
+	// 	if(cmd[i]->outfile == NULL)
+	// 		printf("****  NO IN  >> *****\n");
+	// 	else
+	// 	 	while (cmd[i]->outfile[j] != NULL) {
+	// 			if (cmd[i]->outfile[j]->mode == true) {
+	// 				printf("mode :TRUE  >\t|");
+	// 			}
+	// 			else {
+	// 				printf("mode :FALSE  >>\t|");
+	// 			}
+	// 			printf("%s\n",cmd[i]->outfile[j++]->file);
+	// 		}
+	// 	i++;
+	// }
 	t_command ** cmd_rtr;
 	i = 0;
 	j = 0;
@@ -741,10 +623,10 @@ int error_redirect(char **splt)
 	int i = 0;
 	int j = 0;
 	while (splt[i] != NULL) {
-		printf("{{%s}}\n",splt[i]);
+		// printf("{{%s}}\n",splt[i]);
 		if(splt[i][0] == '<' || splt[i][0] == '>')
 		{
-			printf("$$  %s  $$\n",splt[i + 1]);
+			// printf("$$  %s  $$\n",splt[i + 1]);
 			if(splt[i + 1] == NULL)
 				return 0;
 			if(splt[i + 1][0] == '<' || splt[i + 1][0] == '>')
@@ -820,6 +702,7 @@ int main(int ac,char **av,char **env)
 			{
 				if(syntx_error_a(splt,&g_info) && syntx_error_b(splt,&g_info))
 				{
+					
 					cma = rmplir_strct(splt, &g_info);
 					free_split(splt);
 					free_last(cma);

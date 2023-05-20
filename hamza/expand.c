@@ -6,7 +6,7 @@
 /*   By: hkasbaou <hkasbaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/08 16:42:02 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/18 18:53:11 by hkasbaou         ###   ########.fr       */
+/*   Updated: 2023/05/20 23:29:34 by hkasbaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -209,13 +209,14 @@ t_outfile **ft_strjoin_out(t_outfile **s1, char *s2,char *mode)
 	{
 		new_array[i] = malloc(1 * sizeof(t_outfile));
 		new_array[i]->file = s1[i]->file;
+		new_array[i]->mode = s1[i]->mode;
 		i++;
 	}
 	new_array[i] = malloc(1 * sizeof(t_outfile));
 	new_array[i]->file = s2;
-	if(mode[1] != '\0' && (mode[0] == '>' && mode[1] == '>'))
+	if((mode[0] == '>' && mode[1] == '>'))
 		new_array[i]->mode = false;
-	if(mode[0] == '>')
+	else if (mode[0] == '>' )
 		new_array[i]->mode = true;
 	i++;
 	new_array[i] = NULL;
@@ -293,7 +294,8 @@ char **ft_strjoin_2d(char **s1, char *s2)
 
 char *rem_quots(char *splt)
 {
-	char *str = "";
+	char *tmp;
+	char *str = ft_strdup("");
 	char qts;
 	int i = 0;
 	int j = 0;
@@ -316,7 +318,9 @@ char *rem_quots(char *splt)
 		}
 		if(splt[i] != '"' && splt[i] != '\'' && splt[i] != '\0')
 		{
-			str = ft_strjoin_char(str, splt[i]);
+			tmp = ft_strjoin_char(str, splt[i]);
+			// free(str);
+			str=tmp;
 		}
 		i++;
 	}
@@ -326,6 +330,7 @@ char *rem_quots(char *splt)
 int check_empty(char *str)
 {
 	int i = 0;
+	
 	char *s = rem_quots(str);
 	if(s[0] == '\0')
 	{
@@ -374,5 +379,6 @@ int syntx_error_a(char **splt, t_global_info *g_info)
 		}
 		i++;
 	}
+	
 	return 1;
 }
