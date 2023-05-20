@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_exec.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: hkasbaou <hkasbaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 21:13:03 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/20 21:14:54 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/21 00:35:17 by hkasbaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ int stdout_redirect(t_command *cmd)
 	if (cmd->redirect_out == true)
 	{
 		i = 0;
-		while (cmd->outfile[i]->file)
+		while (cmd->outfile[i])
 		{
 			cmd->outfile[i]->file = ambiguous_redirect(cmd->outfile[i]->file, cmd->g_info);
 			if (!cmd->outfile[i]->file)
