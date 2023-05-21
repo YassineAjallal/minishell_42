@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/30 14:28:30 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/20 12:05:21 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/21 12:53:30 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ typedef struct s_global_info
 	int		exit_code;
 	int		nb_pipe;
 	int		old_stdout;
+	int		old_stdin;
 }	t_global_info;
 
 typedef struct s_outfile

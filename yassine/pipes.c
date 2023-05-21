@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/30 13:57:21 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/20 18:01:56 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/21 20:20:03 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,9 +75,11 @@ int pipes(t_command **cmds, t_global_info *g_info)
 	if (cmds[0]->built_in == true && g_info->nb_pipe == 0)
 	{
 		g_info->old_stdout = dup(STDOUT_FILENO);
+		g_info->old_stdin = dup(STDIN_FILENO);
 		cmds[0]->cmd_parameter = expand_all_param(cmds[0], g_info);
 		exec_built_in(cmds[0]);
 		dup2(g_info->old_stdout, STDOUT_FILENO);
+		dup2(g_info->old_stdin, STDIN_FILENO);
 	}
 	else
 	{	
@@ -97,27 +99,32 @@ int pipes(t_command **cmds, t_global_info *g_info)
 			pid = fork();
 			if (pid == 0)
 			{
-				dup2(dup_stdin, STDIN_FILENO);
 				if (cmds[i]->herdoc == false)
 				{
+					dup2(dup_stdin, STDIN_FILENO);
 					dup2(dup_stdout, STDOUT_FILENO);
 					close_pipes(pipe_arr, g_info->nb_pipe);
 				}
 				else
-					cmds[i]->herdoc_stdout = dup_stdout;
+						cmds[i]->herdoc_stdout = dup_stdout;
 				cmd_exec(cmds[i]);
 			}
 			else
-				pids[i] = pid;
-			if (cmds[i]->herdoc == true)
-				wait(NULL);
+			{
+				if (cmds[i]->herdoc == true)
+				{
+					waitpid(pid, &status, 0);
+					g_info->exit_code = WEXITSTATUS(status);
+				}
+				else
+					pids[i] = pid;
+			}
 		}
 		close_pipes(pipe_arr, g_info->nb_pipe);
 		i = -1;
 		while (++i < g_info->nb_pipe + 1)
 			waitpid(pids[i], &status, 0);
 		g_info->exit_code = WEXITSTATUS(status);
-		// printf("exit code : %d\n", g_info->exit_code);
 	}
 	return (0);
 }

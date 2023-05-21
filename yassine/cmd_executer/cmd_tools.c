@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/25 17:41:51 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/20 21:16:41 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/21 20:12:45 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,10 +69,7 @@ char *cmd_path(t_command *cmd)
 	if (ft_strchr(cmd->cmd, '/'))
 	{
 		if (!ft_checkf(cmd->cmd))
-		{
-			cmd->g_info->exit_code = 127;
 			return (NULL);
-		}
 		return (cmd->cmd);
 	}
 	path_var = check_path_var(cmd->g_info->env_array);
@@ -92,12 +89,11 @@ char *cmd_path(t_command *cmd)
 
 int cmd_validation(t_command *cmd)
 {
-	if (!cmd->cmd)
-	{
-		// ft_putstr_fd("minishell: command not found\n", 2);
-		cmd->g_info->exit_code = 0;
-		return (0);
-	}
+	// if (!cmd->cmd)
+	// {
+	// 	cmd->g_info->exit_code = 127;
+	// 	return (0);
+	// }
 	cmd->command_path = cmd_path(cmd);
 	if (!cmd->command_path)
 	{

@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/10 15:30:22 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/16 19:43:13 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/21 11:25:19 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void ft_echo(t_command *cmd)
 	nl_print = 0;
 	
 	if (ft_strlen2d(cmd->cmd_parameter) == 1)
-		printf("\n");
+		ft_putchar_fd('\n', 1);
 	else
 	{
 		while(just_n(cmd->cmd_parameter[i]))

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_exec.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hkasbaou <hkasbaou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 21:13:03 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/21 00:35:17 by hkasbaou         ###   ########.fr       */
+/*   Updated: 2023/05/21 20:22:00 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int stdin_redirect(t_command *cmd)
 		}
 		if (dup2(stdin_fd, STDIN_FILENO) < 0)
 		{
-			ft_perror(2, "redirect error", cmd->infile[i - 1]);
+			ft_putstr_fd("minishell: redirect error\n", 2);
 			cmd->g_info->exit_code = 1;
 			return (0);
 		}
@@ -112,7 +112,7 @@ int stdout_redirect(t_command *cmd)
 			
 			if (stdout_fd < 0)
 			{
-				ft_perror(2, "minishell : %s: opening error\n", cmd->outfile[i]->file);
+				ft_putstr_fd("minishell: open error\n", 2);
 				cmd->g_info->exit_code = 1;
 				return (0);
 			}	
@@ -120,64 +120,75 @@ int stdout_redirect(t_command *cmd)
 		}
 		if (dup2(stdout_fd, STDOUT_FILENO) < 0)
 		{
-			ft_perror(2, "redirect error", cmd->outfile[i - 1]->file);
+			ft_putstr_fd("minishell: redirect error\n", 2);
 			cmd->g_info->exit_code = 1;
 			return (0);
 
 		}
-		close(stdout_fd);
 	}
 	return (1);
 }
 
 int herdoc_mode(t_command *cmd)
 {
-
 	char *heredoc_input;
-	int l_delemiter;
 	int heredoc_pipe[2];
-	t_expand *head;
-	char **head_array;
 	int i;
-	
+
 	if (cmd->herdoc == true)
 	{	
 		i = 0;
 		while(cmd->delemiter[i])
 		{
-			head = ft_expand(cmd->delemiter[i]);
-			head = expand_linked_list(head, cmd->g_info);
-			head = delete_empty(head);
-			head_array = convert_linked_array(head);
-			i++;
-		}
-		cmd->delemiter = head_array;
-		l_delemiter = ft_strlen2d(cmd->delemiter) - 1;
-		i = 0;
-		while(cmd->delemiter[i])
-		{
+			cmd->delemiter[i] = ft_strtrim(cmd->delemiter[i], "\'\"");
 			if (pipe(heredoc_pipe) < 0)
 			{
-				ft_perror(2, "pipe error", cmd->delemiter[i]);
+				ft_putstr_fd("minishell: pipe error\n", 2);
 				cmd->g_info->exit_code = 1;
 				return (0);
 			}
 			while(1)
 			{
-				heredoc_input = readline("herdoc> ");
-				if (ft_strcmp(cmd->delemiter[i], heredoc_input) == 0)
+				heredoc_input = readline("> ");
+				if (!heredoc_input)
+				{
+					cmd->g_info->exit_code = 0;
 					break;
+				}
+				else if (!ft_strcmp(cmd->delemiter[i], heredoc_input))
+				{
+					cmd->g_info->exit_code = 0;
+					break;
+				}
 				else
 				{
 					write(heredoc_pipe[1], heredoc_input, ft_strlen(heredoc_input));
 					write(heredoc_pipe[1], "\n", 1);
 				}
 			}
-			dup2(heredoc_pipe[0], STDIN_FILENO);
+			if (!cmd->delemiter[i + 1])
+			{
+				if(dup2(heredoc_pipe[0], STDIN_FILENO) < 0)
+				{
+					ft_putstr_fd("minishell: redirect error\n", 2);
+					cmd->g_info->exit_code = 1;
+					return (0);
+				}
+			}
 			close(heredoc_pipe[0]);
-			dup2(cmd->herdoc_stdout, STDOUT_FILENO);
 			close(heredoc_pipe[1]);
 			i++;
+		}
+		// printf("--%d--\n", cmd->herdoc_stdout);
+		if (cmd->herdoc_stdout > 1)
+		{
+			if(dup2(cmd->herdoc_stdout, STDOUT_FILENO) < 0)
+			{
+				ft_putstr_fd("minishell: redirect error\n", 2);
+				cmd->g_info->exit_code = 1;
+				return (0);
+			}
+			close(cmd->herdoc_stdout);
 		}
 	}
 	cmd->g_info->exit_code = 0;
@@ -267,7 +278,5 @@ void cmd_exec(t_command *cmd)
 	{
 		if (!exec_built_in(cmd))
 			exit(EXIT_FAILURE);
-		else
-			exit(EXIT_SUCCESS);
 	}
 }
