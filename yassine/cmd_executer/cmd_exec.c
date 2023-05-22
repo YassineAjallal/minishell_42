@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 21:13:03 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/22 10:19:09 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/22 10:46:15 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,13 +133,17 @@ int herdoc_mode(t_command *cmd)
 {
 	char *heredoc_input;
 	int heredoc_pipe[2];
+	int is_expanded;
 	int i;
 
 	if (cmd->herdoc == true)
 	{	
 		i = 0;
+		is_expanded = 0;
 		while(cmd->delemiter[i])
 		{
+			if (!ft_strchr("\"\'", cmd->delemiter[i][0]))
+				is_expanded = 1;
 			cmd->delemiter[i] = ft_strtrim(cmd->delemiter[i], "\'\"");
 			if (pipe(heredoc_pipe) < 0)
 			{
@@ -162,6 +166,8 @@ int herdoc_mode(t_command *cmd)
 				}
 				else
 				{
+					if (is_expanded == 1)
+						heredoc_input = expand_var(heredoc_input, cmd->g_info);
 					write(heredoc_pipe[1], heredoc_input, ft_strlen(heredoc_input));
 					write(heredoc_pipe[1], "\n", 1);
 				}
@@ -179,7 +185,6 @@ int herdoc_mode(t_command *cmd)
 			close(heredoc_pipe[1]);
 			i++;
 		}
-		// printf("--%d--\n", cmd->herdoc_stdout);
 		if (cmd->herdoc_stdout > 1)
 		{
 			if(dup2(cmd->herdoc_stdout, STDOUT_FILENO) < 0)
@@ -258,7 +263,6 @@ int exec_built_in(t_command *cmd)
 }
 void cmd_exec(t_command *cmd)
 {
-	
 	search_built_in(cmd);
 	if (cmd->built_in == false)
 	{

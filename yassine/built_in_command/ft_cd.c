@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/02 22:18:08 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/16 19:42:56 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/22 12:47:39 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,17 @@ int ft_cd(t_command *cmd)
 {
 	char *new_path;
 	char **home;
+	char *buffer;
 	int home_pos;
+	t_variable pwd_var;
 	int i;
 	
 	i = 0;
+
+	buffer = NULL;
+	pwd_var.name = ft_strdup("OLDPWD");
+	pwd_var.value = getcwd(buffer, 0);
+	export_normal_var(pwd_var, cmd->g_info);
 	if (ft_strlen2d(cmd->cmd_parameter) >= 2)
 	{		
 		if (cmd->cmd_parameter[1][0] == '~')
@@ -56,6 +63,9 @@ int ft_cd(t_command *cmd)
 			return (0);
 		}
 	}
+	pwd_var.name = ft_strdup("PWD");
+	pwd_var.value = getcwd(buffer, 0);
+	export_normal_var(pwd_var, cmd->g_info);
 	cmd->g_info->exit_code = 0;
 	return (1);
 }

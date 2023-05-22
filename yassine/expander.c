@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/08 16:42:02 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/20 18:05:24 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/22 12:41:14 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -224,7 +224,6 @@ t_expand *expand_linked_list(t_expand *head, t_global_info *g_info)
 	}
 	else
 	{
-		// printf("1 :--%s--\n", node->value);
 		node->value = expand_var(node->value, g_info);
 		prev = ft_strdup(node->value);
 		split = ft_split(node->value, ' ');
@@ -244,6 +243,7 @@ t_expand *expand_linked_list(t_expand *head, t_global_info *g_info)
 		}
 		new_node_head = new_node;
 	}
+	
 	node = node->next;
 	while(node)
 	{
@@ -256,7 +256,6 @@ t_expand *expand_linked_list(t_expand *head, t_global_info *g_info)
 				while(new_node->next)
 						new_node = new_node->next;
 				len = ft_strlen(prev);
-					// printf("2: --%s--\n", node->value);
 				if (len > 0)
 				{
 					if (prev[len - 1] == ' ' || prev[len - 1] == '\t')
@@ -294,6 +293,7 @@ t_expand *expand_linked_list(t_expand *head, t_global_info *g_info)
 			split = ft_split(node->value, ' ');
 			if (ft_strlen2d(split) > 0)
 			{
+				node_splited = NULL;
 				i = 0;
 				while(split[i])
 				{
@@ -302,15 +302,11 @@ t_expand *expand_linked_list(t_expand *head, t_global_info *g_info)
 				}
 				while(new_node->next)
 					new_node = new_node->next;
-				len = ft_strlen(prev_q);
-				if (len > 0)
+				if (prev_q[0] != ' ' && prev_q[0] != '\t'
+					&& node->value[0] != ' ' && node->value[0] != '\t')
 				{
-					if (prev_q[len - 1] != ' ' && prev_q[len - 1] != '\t'
-						&& node->value[0] != ' ' && node->value[0] != '\t')
-					{
-						new_node->value = ft_strjoin(new_node->value, node_splited->value);
-						node_splited = delete_node(node_splited, node_splited->index);
-					}
+					new_node->value = ft_strjoin(new_node->value, node_splited->value);
+					node_splited = delete_node(node_splited, node_splited->index);
 				}
 				while(node_splited)
 				{
@@ -428,7 +424,16 @@ char **expand_all_param(t_command *cmd, t_global_info *g_info)
 		i++;
 	}
 	if (cmd->cmd)
+	{
 		cmd->cmd = ft_strdup(expanded_param[0]);
+		i = 0;
+		while(cmd->cmd[i])
+		{
+			cmd->cmd[i] = ft_tolower(cmd->cmd[i]);
+			i++;
+		}
+		// printf("cmd : --%s--\n", cmd->cmd);
+	}
 	return(expanded_param);
 }
 
