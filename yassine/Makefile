@@ -18,8 +18,6 @@ $(NAME): $(OBJ)
 	@make -C ./built_in_command
 	@make -C ./cmd_executer
 	@$(CC) $(CFLAGS) -o $(NAME) $(OBJ) $(LIB_PATH) $(BUILT_IN_PATH) $(CMD_EXEC_PATH)
-
-
 clean:
 	@rm -f $(OBJ)
 	@make clean -C ./libft

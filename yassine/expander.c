@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/08 16:42:02 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/22 15:24:01 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/22 19:56:23 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -193,12 +193,12 @@ t_expand *expand_linked_list(t_expand *head, t_global_info *g_info)
 	t_expand *new_node;
 	t_expand *new_node_head;
 	t_expand *node;
+	t_expand *node_splited;
 	char *prev;
 	char *prev_q;
 	char **split;
 	int i;
 	int len;
-	t_expand *node_splited;
 	
 	node = head;
 	new_node = NULL;
@@ -325,9 +325,9 @@ t_expand *expand_linked_list(t_expand *head, t_global_info *g_info)
 		node = node->next;
 	}
 	num_list(new_node_head);
-	// print(new_node_head);
 	return (new_node_head);
 }
+
 int lst_size(t_expand *head)
 {
 	int i;

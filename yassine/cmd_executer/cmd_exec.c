@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 21:13:03 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/22 17:47:30 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/22 21:45:10 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,17 @@ char *quote_trim(char *str, char c)
 	return (string_trim);
 }
 
+int search_heredoc(t_file **file, int i)
+{
+	while(file[i])
+	{
+		if (file[i]->mode == false)
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
 int stdin_redirect(t_command *cmd)
 {
 	int i;
@@ -42,43 +53,13 @@ int stdin_redirect(t_command *cmd)
 	int is_expanded;
 
 	is_expanded = 0;
+	stdin_fd = -1;
 	if (cmd->redirect_in == true)
 	{
 		i = 0;
 		while(cmd->infile[i])
 		{
-			if (cmd->infile[i]->mode == true)
-			{
-				cmd->infile[i]->file = ambiguous_redirect(cmd->infile[i]->file, cmd->g_info);
-				if(!cmd->infile[i]->file)
-					return (0);
-				if (!ft_checkf(cmd->infile[i]->file))
-				{
-					cmd->g_info->exit_code = 1;
-					return (0);
-				}
-				if (!ft_checkr(cmd->infile[i]->file))
-				{
-					cmd->g_info->exit_code = 1;
-					return (0);
-				}
-				stdin_fd = open(cmd->infile[i]->file, O_RDONLY);
-				if (stdin_fd < 0)
-				{
-					printf("here\n");
-					ft_putstr_fd("minishell: No such file or directory\n", 2);
-					cmd->g_info->exit_code = 1;
-					return (0);
-				}
-				if (dup2(stdin_fd, STDIN_FILENO) < 0)
-				{
-					ft_putstr_fd("minishell: redirect error\n", 2);
-					cmd->g_info->exit_code = 1;
-					return (0);
-				}
-				close(stdin_fd);
-			}
-			else if (cmd->infile[i]->mode == false)
+			if (cmd->infile[i]->mode == false)
 			{
 				if (!ft_strchr(cmd->infile[i]->file, '\'') && !ft_strchr(cmd->infile[i]->file, '\"'))
 					is_expanded = 1;
@@ -88,7 +69,8 @@ int stdin_redirect(t_command *cmd)
 				{
 					ft_putstr_fd("minishell: pipe error\n", 2);
 					cmd->g_info->exit_code = 1;
-					return (0);
+					if (!cmd->infile[i + 1])
+						return (0);
 				}
 				while(1)
 				{
@@ -132,6 +114,41 @@ int stdin_redirect(t_command *cmd)
 					}
 					close(cmd->herdoc_stdout);
 				}
+			}
+			i++;
+		}
+		i = 0;
+		while (cmd->infile[i])
+		{
+			if (cmd->infile[i]->mode == true)
+			{
+				cmd->infile[i]->file = ambiguous_redirect(cmd->infile[i]->file, cmd->g_info);
+				if(!cmd->infile[i]->file)
+					return (0);
+				if (!ft_checkf(cmd->infile[i]->file))
+				{
+					cmd->g_info->exit_code = 1;
+					return (0);
+				}
+				if (!ft_checkr(cmd->infile[i]->file))
+				{
+					cmd->g_info->exit_code = 1;
+					return (0);
+				}
+				stdin_fd = open(cmd->infile[i]->file, O_RDONLY);
+				if (stdin_fd < 0)
+				{
+					ft_putstr_fd("minishell: No such file or directory\n", 2);
+					cmd->g_info->exit_code = 1;
+					return (0);
+				}
+				if (dup2(stdin_fd, STDIN_FILENO) < 0)
+				{
+					ft_putstr_fd("minishell: redirect error\n", 2);
+					cmd->g_info->exit_code = 1;
+					return (0);
+				}
+				close(stdin_fd);
 			}
 			i++;
 		}

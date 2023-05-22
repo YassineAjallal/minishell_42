@@ -1,28 +1,4 @@
 #include "minishell.h"
-#include <stdio.h>
-
-// enum s_cases 
-// {
-// 	quotes,
-// 	redirects,
-// };
-
-typedef struct s_v
-{
-	int i;
-	int j;
-	char qts;
-	int k;
-}		t_v;
-// int ft_strlen2d(char **str)
-// {
-// 	int i;
-
-// 	i = 0;
-// 	while(str[i])
-// 		i++;
-// 	return (i);
-// }
 
 char **ft_strjoin_2d(char **s1, char *s2)
 {
@@ -172,7 +148,6 @@ char **lexer(char *str, t_global_info *g_info)
 				 	quote =-1;
 				line[j++] = str[i++];
 				while ((quote == 1 || quote == 2) && str[i] != '\0') {
-					// printf("%c\t",str[i]);
 					if(str[i] == '"' && quote == 1)
 					{
 						quote = -1;
@@ -188,9 +163,7 @@ char **lexer(char *str, t_global_info *g_info)
 				line[j++] = str[i++];
 				if(str[i] == ' ' || str[i] == '>' || str[i] == '\0' || str[i - 1] == '\0')
 					break;
-				// printf("|%c|\t",str[i]);
 			}
-			// printf("%d\n",quote);
 			if(quote != -1)
 			{
 				ft_putstr_fd("minishell: unexpected EOF while looking for matching\n", 2);
@@ -291,7 +264,6 @@ t_command **rmplir_strct(char **splt, t_global_info *g_info)
 		cmd[i] = malloc(sizeof(t_command));
 		i++;
 	}
-	// hene 3amert cmd.cmd bi axmen command kayna fkola pipe
 	i = 0;
 	k = 0;
 	j = 0;
@@ -309,7 +281,6 @@ t_command **rmplir_strct(char **splt, t_global_info *g_info)
 		i++;
 	}
 	cmd[whr]->ther = 0;
-	//hena ghir 3mart kola pipe bi 0 fi > < >>
 	i = 0;
 	while (cmd[i]->ther != 0) {
 		cmd[i]->redirect_in = 0;
@@ -327,7 +298,6 @@ t_command **rmplir_strct(char **splt, t_global_info *g_info)
 	j = 0;
 	whr = 0;
 	stop = 0;
-	// hene fi lowl hsebt xhal kayn mn argument fkola pipe
 	while (splt[i] != NULL) {
         k = i;
         cnt = 0;
@@ -345,7 +315,6 @@ t_command **rmplir_strct(char **splt, t_global_info *g_info)
         i++;
         whr++;
     }
-	// hene bdit kan3amr fiha
     i = 0;
     j = 0;
     whr = 0;
@@ -368,8 +337,6 @@ t_command **rmplir_strct(char **splt, t_global_info *g_info)
 
 	i = 0;
     j = 0;
-	// hena printit mora ma3amrt struct bi argument dyla kola pipe
-	// 
 	i = 0;
 	j = 0;
 	while(cmd[i]->ther)
@@ -401,17 +368,11 @@ t_command **rmplir_strct(char **splt, t_global_info *g_info)
 		{
 			cmd[i]->cmd = ft_strdup("");
 		}
-		// printf("%s\n",cmd[i]->cmd);
         i++;
     }
-	// hena ghadi nbda n9alb 3la wax kayn redirect o dakxi fi kola pipe
 
 	i = 0;
 	j = 0;
-	// while (cmd[i]->ther) {
-	// 	printf("%s\n",cmd[i]->cmd);
-	// 	i++;
-	// }
 	while(cmd[i]->ther)
     {
         j = 0;
@@ -502,49 +463,6 @@ t_command **rmplir_strct(char **splt, t_global_info *g_info)
 	k = 0;
 	i = 0;
 	j = 0;
-	// display each pipe rederction
-	// while (cmd[i]->ther) {
-	// 	printf("----OUT_FILE LIST-----\n");
-	// 	if(cmd[i]->outfile == NULL)
-	// 		printf("****  NO OUT  >> *****\n");
-	// 	else
-	// 	{
-	// 		k = 0;
-	// 		while (cmd[i]->outfile[k]) {
-	// 			printf("out ->>%d \t %d |file::%s\n",i,cmd[i]->redirect_out,cmd[i]->outfile[k++]);
-	// 		}
-
-	// 	}
-	// 	if(cmd[i]->infile == NULL)
-	// 		printf("****  NO IN << *****\n");
-	// 	else
-	// 	{
-	// 		k = 0;
-	// 		while (cmd[i]->infile[k]) {
-	// 			printf("in -<<%d \t %d |file::%s\n",i,cmd[i]->redirect_in,cmd[i]->infile[k++]);
-	// 		}
-	// 	}
-	// 	if(cmd[i]->delemiter == NULL)
-	// 		printf("****  NO IN << *****\n");
-	// 	else
-	// 	{
-	// 		k = 0;
-	// 		while (cmd[i]->delemiter[k]) {
-	// 			printf("in -<<%d \t %d |file::%s\n",i,cmd[i]->redirect_append,cmd[i]->delemiter[k++]);
-	// 		}
-	// 	}
-	// 	if(cmd[i]->herdoc_stdout == NULL)
-	// 		printf("****  NO IN << *****\n");
-	// 	else
-	// 	{
-	// 		k = 0;
-	// 		while (cmd[i]->herdoc_stdout[k]) {
-	// 			printf("in -<<%d \t %d |file::%s\n",i,cmd[i]->herdoc,cmd[i]->herdoc_stdout[k++]);
-	// 		}
-	// 	}
-	// 	printf("--------\n");
-	// 	i++;
-	// }
 
 	t_command ** cmd_rtr;
 	i = 0;
@@ -554,21 +472,18 @@ t_command **rmplir_strct(char **splt, t_global_info *g_info)
 		while (cmd[i]->cmd_parameter[j] != NULL) {
 			if(((cmd[i]->cmd_parameter[j][0] == '>' && cmd[i]->cmd_parameter[j][1] == '>') || (cmd[i]->cmd_parameter[j][0] == '<' && cmd[i]->cmd_parameter[j][1] == '<')) && cmd[i]->cmd_parameter[j + 1] != NULL )
 			{
-				// printf("**  in  **\n");
 				cmd[i]->cmd_parameter[j] = "";
 				cmd[i]->cmd_parameter[j + 1] = "";
 				j++;
 			}
 			if((cmd[i]->cmd_parameter[j][0] == '>' || cmd[i]->cmd_parameter[j][0] == '<') && cmd[i]->cmd_parameter[j + 1] != NULL)
 			{
-				// printf("|   IN  |\n");
 				cmd[i]->cmd_parameter[j] = "";
 				cmd[i]->cmd_parameter[j + 1] = "";
 				j++;
 			}
 			j++;
 		}
-		// printf("------------\n");
 		i++;
 	}
 	i = 0;
@@ -595,26 +510,3 @@ int error_redirect(char **splt)
 	}
 	return 1;
 }
-
-// int main(int ac,char **av,char **env)
-// {
-// 	char	*str;
-// 	int		i;
-// 	char **splt;
-// 	t_global_info g_info;
-// 	i = 0;
-// 	g_info.env_array = env;
-// 	while (1)
-// 	{
-// 		str = readline("Shell->");
-// 		add_history(str);
-//         splt = lexer(str,env);
-// 		if(splt != NULL)
-// 			if(!syntx_error_a(splt) || !syntx_error_b(splt))
-// 				return 0;;
-// 		if (splt != NULL) {
-// 			rmplir_strct(splt, &g_info);
-// 		}
-// 		str = NULL;
-// 	}
-// }
