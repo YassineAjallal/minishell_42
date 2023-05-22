@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/30 13:57:21 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/21 20:20:03 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/22 10:20:21 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,7 @@ int pipes(t_command **cmds, t_global_info *g_info)
 	int		dup_stdin;
 	int		dup_stdout;
 	int 	status;
+	int 	status1;
 	int j;
 
 	i = -1;
@@ -111,13 +112,12 @@ int pipes(t_command **cmds, t_global_info *g_info)
 			}
 			else
 			{
+				pids[i] = pid;
 				if (cmds[i]->herdoc == true)
 				{
 					waitpid(pid, &status, 0);
 					g_info->exit_code = WEXITSTATUS(status);
 				}
-				else
-					pids[i] = pid;
 			}
 		}
 		close_pipes(pipe_arr, g_info->nb_pipe);
