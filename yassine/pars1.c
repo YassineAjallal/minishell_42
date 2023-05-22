@@ -45,7 +45,7 @@ char **ft_strjoin_2d(char **s1, char *s2)
 	new_array[i] = NULL;
 	return (new_array);
 }
-int ft_strlen_out(t_outfile **str)
+int ft_strlen_out(t_file **str)
 {
 	int i;
 
@@ -54,29 +54,57 @@ int ft_strlen_out(t_outfile **str)
 		i++;
 	return (i);
 }
-t_outfile **ft_strjoin_out(t_outfile **s1, char *s2,char *mode)
+t_file **ft_strjoin_out(t_file **s1, char *s2,char *mode)
 {
 	int i;
 	int j;
-	t_outfile **new_array;
+	t_file **new_array;
 	
 	i = 0;
 	j = 0;
-	new_array = malloc(sizeof(t_outfile *) * (ft_strlen_out(s1) + 2));
+	new_array = malloc(sizeof(t_file *) * (ft_strlen_out(s1) + 2));
 	if (!new_array)
 		return (NULL);
 	while(s1[i] && s1)
 	{
-		new_array[i] = malloc(1 * sizeof(t_outfile));
+		new_array[i] = malloc(1 * sizeof(t_file));
 		new_array[i]->file = s1[i]->file;
 		new_array[i]->mode = s1[i]->mode;
 		i++;
 	}
-	new_array[i] = malloc(1 * sizeof(t_outfile));
+	new_array[i] = malloc(1 * sizeof(t_file));
 	new_array[i]->file = s2;
 	if((mode[0] == '>' && mode[1] == '>'))
 		new_array[i]->mode = false;
 	else if (mode[0] == '>' )
+		new_array[i]->mode = true;
+	i++;
+	new_array[i] = NULL;
+	return (new_array);
+}
+t_file **ft_strjoin_in(t_file **s1, char *s2,char *mode)
+{
+	int i;
+	int j;
+	t_file **new_array;
+	
+	i = 0;
+	j = 0;
+	new_array = malloc(sizeof(t_file *) * (ft_strlen_out(s1) + 2));
+	if (!new_array)
+		return (NULL);
+	while(s1[i] && s1)
+	{
+		new_array[i] = malloc(1 * sizeof(t_file));
+		new_array[i]->file = s1[i]->file;
+		new_array[i]->mode = s1[i]->mode;
+		i++;
+	}
+	new_array[i] = malloc(1 * sizeof(t_file));
+	new_array[i]->file = s2;
+	if((mode[0] == '<' && mode[1] == '<'))
+		new_array[i]->mode = false;
+	else if (mode[0] == '<' )
 		new_array[i]->mode = true;
 	i++;
 	new_array[i] = NULL;
@@ -423,8 +451,16 @@ t_command **rmplir_strct(char **splt, t_global_info *g_info)
 				break;
 			}
         }
+		char *ss =rem_quots(cmd[i]->cmd);
 		if(cmd[i]->cmd[0] == '<' || cmd[i]->cmd[0] == '>')
+		{
 			cmd[i]->cmd = NULL;
+		}
+		if(ss[0] == '\0')
+		{
+			cmd[i]->cmd = ft_strdup("");
+		}
+		// printf("%s\n",cmd[i]->cmd);
         i++;
     }
 	// hena ghadi nbda n9alb 3la wax kayn redirect o dakxi fi kola pipe
@@ -441,36 +477,7 @@ t_command **rmplir_strct(char **splt, t_global_info *g_info)
         while(cmd[i]->cmd_parameter[j] != NULL)
         {
 			k = 0;
-			if(cmd[i]->cmd_parameter[j][0] == '<' && cmd[i]->cmd_parameter[j][1] == '<')
-			{
-				if(cmd[i]->herdoc == 0)
-				{
-					cmd[i]->herdoc = 1;
-					k = 0;
-					cnt = 1;
-					j += 1;
-					cmd[i]->delemiter = malloc(2 * sizeof(char *));
-					if(cmd[i]->cmd_parameter[j])
-					{
-						cmd[i]->delemiter[0] = cmd[i]->cmd_parameter[j];
-						cmd[i]->delemiter[1] = NULL;
-					}
-					if(cmd[i]->cmd_parameter[j] == NULL){
-						break;
-					}
-				}
-				else {
-					if(cmd[i]->cmd_parameter[j + 1])
-					{
-						j++;
-						cmd[i]->delemiter = ft_strjoin_2d(cmd[i]->delemiter, cmd[i]->cmd_parameter[j]);
-					}
-					if(cmd[i]->cmd_parameter[j] == NULL){
-						break;
-					}
-				}
-			}
-			else if(cmd[i]->cmd_parameter[j][0] == '<')
+			if(cmd[i]->cmd_parameter[j][0] == '<')
 			{
 				if(cmd[i]->redirect_in == 0)
 				{
@@ -478,11 +485,21 @@ t_command **rmplir_strct(char **splt, t_global_info *g_info)
 					k = 0;
 					cnt = 1;
 					j += 1;
-					cmd[i]->infile = malloc(2 * sizeof(char *));
+					cmd[i]->infile = malloc(2 * sizeof(t_file *));
 					if(cmd[i]->cmd_parameter[j])
 					{
-						cmd[i]->infile[0] = cmd[i]->cmd_parameter[j];
+						cmd[i]->infile[0] = malloc(1 * sizeof(t_file));
+						cmd[i]->infile[1] = malloc(1 * sizeof(t_file));
+						if(cmd[i]->cmd_parameter[j - 1][0] == '<' && cmd[i]->cmd_parameter[j - 1][1] == '<')
+						{
+							cmd[i]->herdoc = true;
+							cmd[i]->infile[k]->mode = false;
+						}
+						else
+							cmd[i]->infile[k]->mode = true;
+						cmd[i]->infile[0]->file = cmd[i]->cmd_parameter[j];
 						cmd[i]->infile[1] = NULL;
+						
 					}
 					if(cmd[i]->cmd_parameter[j] == NULL){
 						break;
@@ -491,8 +508,9 @@ t_command **rmplir_strct(char **splt, t_global_info *g_info)
 				else {
 					if(cmd[i]->cmd_parameter[j + 1])
 					{
+						
 						j++;
-						cmd[i]->infile = ft_strjoin_2d(cmd[i]->infile, cmd[i]->cmd_parameter[j]);
+						cmd[i]->infile = ft_strjoin_in(cmd[i]->infile, cmd[i]->cmd_parameter[j],cmd[i]->cmd_parameter[j - 1]);
 					}
 					if(cmd[i]->cmd_parameter[j] == NULL){
 						break;
@@ -507,14 +525,14 @@ t_command **rmplir_strct(char **splt, t_global_info *g_info)
 					k = 0;
 					cnt = 1;
 					j += 1;
-					cmd[i]->outfile = malloc(2 * sizeof(t_outfile *));
+					cmd[i]->outfile = malloc(2 * sizeof(t_file *));
 					if(cmd[i]->cmd_parameter[j])
 					{
-						cmd[i]->outfile[0] = malloc(1 * sizeof(t_outfile));
-						cmd[i]->outfile[1] = malloc(1 * sizeof(t_outfile));
+						cmd[i]->outfile[0] = malloc(1 * sizeof(t_file));
+						cmd[i]->outfile[1] = malloc(1 * sizeof(t_file));
 						if(cmd[i]->cmd_parameter[j - 1][0] == '>' && cmd[i]->cmd_parameter[j - 1][1] == '>')
 							cmd[i]->outfile[k]->mode = false;
-						else if (cmd[i]->cmd_parameter[j - 1][0] == '>')
+						else
 							cmd[i]->outfile[k]->mode = true;
 						cmd[i]->outfile[0]->file = cmd[i]->cmd_parameter[j];
 						cmd[i]->outfile[1] = NULL;

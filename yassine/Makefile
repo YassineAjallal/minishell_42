@@ -1,6 +1,6 @@
 .PHONY: clean all re fclean
 CC = gcc
-CFLAGS = -lreadline   -Wall -Wextra -Werror
+CFLAGS = -lreadline -Wall -Wextra -Werror
 NAME = minishell
 SRC = pipes.c pars1.c expander.c parsing.c ambiguous.c linked_list.c
 LIB_PATH = ./libft/libft.a

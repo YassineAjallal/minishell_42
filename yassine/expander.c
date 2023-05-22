@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/08 16:42:02 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/22 12:41:14 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/22 15:24:01 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -425,7 +425,12 @@ char **expand_all_param(t_command *cmd, t_global_info *g_info)
 	}
 	if (cmd->cmd)
 	{
-		cmd->cmd = ft_strdup(expanded_param[0]);
+		if (ft_strlen(cmd->cmd) > 0)
+			cmd->cmd = ft_strdup(expanded_param[0]);
+		else if (!cmd->cmd)
+			cmd->cmd = NULL;
+		else
+			cmd->cmd = ft_strdup("");
 		i = 0;
 		while(cmd->cmd[i])
 		{
