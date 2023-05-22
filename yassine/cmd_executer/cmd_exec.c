@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 21:13:03 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/22 17:00:41 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/22 17:47:30 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -212,91 +212,22 @@ int stdout_redirect(t_command *cmd)
 	return (1);
 }
 
-// int herdoc_mode(t_command *cmd)
-// {
-// 	char *heredoc_input;
-// 	int heredoc_pipe[2];
-// 	int is_expanded;
-// 	int i;
-
-// 	if (cmd->herdoc == true)
-// 	{	
-// 		i = 0;
-// 		is_expanded = 0;
-// 		while(cmd->delemiter[i])
-// 		{
-// 			if (!ft_strchr("\"\'", cmd->delemiter[i][0]))
-// 				is_expanded = 1;
-// 			cmd->delemiter[i] = ft_strtrim(cmd->delemiter[i], "\'\"");
-// 			if (pipe(heredoc_pipe) < 0)
-// 			{
-// 				ft_putstr_fd("minishell: pipe error\n", 2);
-// 				cmd->g_info->exit_code = 1;
-// 				return (0);
-// 			}
-// 			while(1)
-// 			{
-// 				heredoc_input = readline("> ");
-// 				if (!heredoc_input)
-// 				{
-// 					cmd->g_info->exit_code = 0;
-// 					break;
-// 				}
-// 				else if (!ft_strcmp(cmd->delemiter[i], heredoc_input))
-// 				{
-// 					cmd->g_info->exit_code = 0;
-// 					break;
-// 				}
-// 				else
-// 				{
-// 					if (is_expanded == 1)
-// 						heredoc_input = expand_var(heredoc_input, cmd->g_info);
-// 					write(heredoc_pipe[1], heredoc_input, ft_strlen(heredoc_input));
-// 					write(heredoc_pipe[1], "\n", 1);
-// 				}
-// 			}
-// 			if (!cmd->delemiter[i + 1])
-// 			{
-// 				if(dup2(heredoc_pipe[0], STDIN_FILENO) < 0)
-// 				{
-// 					ft_putstr_fd("minishell: redirect error\n", 2);
-// 					cmd->g_info->exit_code = 1;
-// 					return (0);
-// 				}
-// 			}
-// 			close(heredoc_pipe[0]);
-// 			close(heredoc_pipe[1]);
-// 			i++;
-// 		}
-// 		if (cmd->herdoc_stdout > 1)
-// 		{
-// 			if(dup2(cmd->herdoc_stdout, STDOUT_FILENO) < 0)
-// 			{
-// 				ft_putstr_fd("minishell: redirect error\n", 2);
-// 				cmd->g_info->exit_code = 1;
-// 				return (0);
-// 			}
-// 			close(cmd->herdoc_stdout);
-// 		}
-// 	}
-// 	return (1);
-// }
 void search_built_in(t_command *cmd)
 {
 	char **all_built_in;
 	int i;
 
 	i = 0;
+	if (!cmd->cmd)
+	{
+		cmd->built_in = false;
+		cmd->g_info->exit_code = 0;
+	}
 	if (cmd->cmd)
 	{
 		all_built_in = ft_split("echo cd pwd export unset env exit", ' ');
 		while (all_built_in[i])
 		{
-			if (!cmd->cmd)
-			{
-				cmd->built_in = false;
-				cmd->g_info->exit_code = 0;
-			}
 			if (!ft_strcmp(cmd->cmd, all_built_in[i]))
 			{
 				cmd->built_in = true;
@@ -315,8 +246,6 @@ int exec_built_in(t_command *cmd)
 		return (0);
 	if(!stdout_redirect(cmd))
 		return (0);
-	// if(!herdoc_mode(cmd))
-	// 	return (0);
 	if(!ft_strcmp(cmd->cmd, "pwd"))
 		ft_pwd(cmd);
 	else if (!ft_strcmp(cmd->cmd, "env"))
@@ -353,8 +282,6 @@ void cmd_exec(t_command *cmd)
 			exit(cmd->g_info->exit_code);
 		if(!stdout_redirect(cmd))
 			exit(cmd->g_info->exit_code);
-		// if(!herdoc_mode(cmd))
-		// 	exit(cmd->g_info->exit_code);
 		if(cmd_validation(cmd))
 			execve(cmd->command_path, cmd->cmd_parameter, cmd->g_info->env_array);
 		else

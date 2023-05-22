@@ -210,65 +210,6 @@ char **lexer(char *str, t_global_info *g_info)
 	return splt;
 }
 
-// void parser(char **splt,char **env)
-// {
-// 	int i = 0;
-// 	int expr_ok;
-// 	int j = 0;
-// 	int k = 0;
-// 	int l = 0;
-// 	int m = 0;
-// 	int cma ;
-// 	int p = 0;
-// 	char *find;
-// 	char *str;
-// 	while (splt[i] != NULL) {
-// 		j = 0;
-// 		cma = 1;
-// 		if(splt[i][0] == '\'')
-// 			cma = 0;
-// 		while (splt[i][j]) {
-// 			k = j;
-// 			expr_ok = 1;
-// 			if(cma != 0)
-// 			{
-// 				if(splt[i][j] == '$')
-// 				{
-// 					str = NULL;
-// 					find = NULL;
-// 					k++;
-// 					while (ft_isalpha(splt[i][k]) && splt[i][k] != '\0') {
-// 						k++;
-// 					}
-// 					k--;
-// 					str = ft_substr(splt[i],j + 1,k - 1);
-// 					str = ft_strjoin(str, "=");
-// 					l = 0;
-// 					while (env[l]) {
-// 						if((find = ft_strnstr(env[l], str,ft_strlen(env[l]))))
-// 						{
-// 							expr_ok =0;
-// 							p = 0;
-// 							while (find[p] != '=') {
-// 								p++;
-// 							}
-// 							p++;
-// 							find = ft_substr(find, p, ft_strlen(find));
-// 						}
-// 					l++;
-
-// 					}
-// 				}
-// 			}
-// 			j = k;
-// 			if(expr_ok == 1)
-// 				printf("%c",splt[i][j]);
-// 			j++;
-// 		}
-// 		i++;
-// 		printf("\n");
-// 	}
-// }
 t_command  **rmplr_double_str(t_command **cmd,t_global_info g_info,int size)
 {
 	int j = 0;
