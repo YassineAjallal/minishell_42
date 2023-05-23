@@ -6,15 +6,15 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 21:13:03 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/23 12:21:21 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/23 15:40:48 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cmd_executer.h"
 
-int stdin_redirect(t_command *cmd)
+int	stdin_redirect(t_command *cmd)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	if (cmd->redirect_in == true)
@@ -26,7 +26,7 @@ int stdin_redirect(t_command *cmd)
 		}
 		while (cmd->infile[i])
 		{
-			if(!redirect_in(cmd->infile[i], cmd->g_info))
+			if (!redirect_in(cmd->infile[i], cmd->g_info))
 			{
 				cmd->g_info->exit_code = 1;
 				return (0);
@@ -37,10 +37,10 @@ int stdin_redirect(t_command *cmd)
 	return (1);
 }
 
-int stdout_redirect(t_command *cmd)
+int	stdout_redirect(t_command *cmd)
 {
-	int stdout_fd;
-	int i;
+	int	stdout_fd;
+	int	i;
 
 	stdout_fd = -1;
 	if (cmd->redirect_out == true)
@@ -65,10 +65,10 @@ int stdout_redirect(t_command *cmd)
 	return (1);
 }
 
-void search_built_in(t_command *cmd)
+void	search_built_in(t_command *cmd)
 {
-	char **all_built_in;
-	int i;
+	char	**all_built_in;
+	int		i;
 
 	i = 0;
 	if (!cmd->cmd)
@@ -84,7 +84,7 @@ void search_built_in(t_command *cmd)
 			if (!ft_strcmp(cmd->cmd, all_built_in[i]))
 			{
 				cmd->built_in = true;
-				return;
+				return ;
 			}
 			else
 				cmd->built_in = false;
@@ -92,13 +92,14 @@ void search_built_in(t_command *cmd)
 		}
 	}
 }
-int exec_built_in(t_command *cmd)
+
+int	exec_built_in(t_command *cmd)
 {
-	if(!stdin_redirect(cmd))
+	if (!stdin_redirect(cmd))
 		return (0);
-	if(!stdout_redirect(cmd))
+	if (!stdout_redirect(cmd))
 		return (0);
-	if(!ft_strcmp(cmd->cmd, "pwd"))
+	if (!ft_strcmp(cmd->cmd, "pwd"))
 		ft_pwd(cmd);
 	else if (!ft_strcmp(cmd->cmd, "env"))
 		ft_env(cmd);
@@ -107,11 +108,11 @@ int exec_built_in(t_command *cmd)
 		if (!ft_cd(cmd))
 			return (0);
 	}
-	else if (!ft_strcmp(cmd->cmd , "echo"))
+	else if (!ft_strcmp(cmd->cmd, "echo"))
 		ft_echo(cmd);
-	else if (!ft_strcmp(cmd->cmd , "unset"))
+	else if (!ft_strcmp(cmd->cmd, "unset"))
 		ft_unset(cmd);
-	else if (!ft_strcmp(cmd->cmd , "export"))
+	else if (!ft_strcmp(cmd->cmd, "export"))
 	{
 		if (ft_strlen2d(cmd->cmd_parameter) == 1)
 			export_no_param(cmd);
@@ -126,17 +127,18 @@ int exec_built_in(t_command *cmd)
 	return (1);
 }
 
-void cmd_exec(t_command *cmd)
+void	cmd_exec(t_command *cmd)
 {
 	search_built_in(cmd);
 	if (cmd->built_in == false)
 	{
-		if(!stdin_redirect(cmd))
+		if (!stdin_redirect(cmd))
 			exit(cmd->g_info->exit_code);
-		if(!stdout_redirect(cmd))
+		if (!stdout_redirect(cmd))
 			exit(cmd->g_info->exit_code);
-		if(cmd_validation(cmd))
-			execve(cmd->command_path, cmd->cmd_parameter, cmd->g_info->env_array);
+		if (cmd_validation(cmd))
+			execve(cmd->command_path, cmd->cmd_parameter, \
+			cmd->g_info->env_array);
 		else
 			exit(cmd->g_info->exit_code);
 	}

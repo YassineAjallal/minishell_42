@@ -6,18 +6,18 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/25 17:41:51 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/23 12:22:07 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/23 15:44:21 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cmd_executer.h"
 
-int check_path_var(char **env)
+int	check_path_var(char **env)
 {
-	int		i;
+	int	i;
 
 	i = 0;
-	while(env[i])
+	while (env[i])
 	{
 		if (ft_strnstr(env[i], "PATH=", 5))
 			return (i);
@@ -26,12 +26,12 @@ int check_path_var(char **env)
 	return (-1);
 }
 
-char *search_command(char *path_var, char *cmd)
+char	*search_command(char *path_var, char *cmd)
 {
-	char *fpath;
-	char **vars_split;
-	char *addslash;
-	int i;
+	char	*fpath;
+	char	**vars_split;
+	char	*addslash;
+	int		i;
 
 	if (!path_var)
 		return (NULL);
@@ -55,11 +55,12 @@ char *search_command(char *path_var, char *cmd)
 	return (NULL);
 }
 
-char *cmd_path(t_command *cmd)
+char	*cmd_path(t_command *cmd)
 {
-	int path_var;
-	char *fpath;
-	int i;
+	int		path_var;
+	char	*fpath;
+	int		i;
+
 	i = 0;
 	if (ft_strlen(cmd->cmd) == 0)
 	{
@@ -87,7 +88,7 @@ char *cmd_path(t_command *cmd)
 	return (fpath);
 }
 
-int cmd_validation(t_command *cmd)
+int	cmd_validation(t_command *cmd)
 {
 	if (!cmd->cmd)
 	{

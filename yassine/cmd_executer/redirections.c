@@ -6,20 +6,20 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/23 11:08:16 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/23 12:10:07 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/23 15:47:58 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cmd_executer.h"
 
-int redirect_in(t_file *infile, t_global_info *g_info)
+int	redirect_in(t_file *infile, t_global_info *g_info)
 {
-	int stdin_fd;
+	int	stdin_fd;
 
 	if (infile->mode == true)
 	{
 		infile->file = ambiguous_redirect(infile->file, g_info);
-		if(!infile->file)
+		if (!infile->file)
 			return (0);
 		if (!ft_checkf(infile->file) || !ft_checkr(infile->file))
 			return (0);
@@ -39,7 +39,7 @@ int redirect_in(t_file *infile, t_global_info *g_info)
 	return (1);
 }
 
-int redirect_out(t_file *outfile, int *stdout_fd, t_global_info *g_info)
+int	redirect_out(t_file *outfile, int *stdout_fd, t_global_info *g_info)
 {
 	outfile->file = ambiguous_redirect(outfile->file, g_info);
 	if (!outfile->file)
@@ -60,23 +60,23 @@ int redirect_out(t_file *outfile, int *stdout_fd, t_global_info *g_info)
 	return (1);
 }
 
-void heredoc_readline(t_file *infile, t_global_info *g_info, int heredoc_pipe[2])
+void	h_readline(t_file *infile, t_global_info *g_info, int heredoc_pipe[2])
 {
-	char *heredoc_input;
-	int is_expanded;
-	
+	char	*heredoc_input;
+	int		is_expanded;
+
 	is_expanded = 0;
 	if (!ft_strchr(infile->file, '\'') && !ft_strchr(infile->file, '\"'))
 		is_expanded = 1;
 	infile->file = quote_trim(infile->file, '\"');
 	infile->file = quote_trim(infile->file, '\'');
-	while(1)
+	while (1)
 	{
 		heredoc_input = readline("> ");
 		if (!heredoc_input)
-			return;
+			return ;
 		else if (!ft_strcmp(infile->file, heredoc_input))
-			return;
+			return ;
 		else
 		{
 			if (is_expanded == 1)
@@ -86,14 +86,14 @@ void heredoc_readline(t_file *infile, t_global_info *g_info, int heredoc_pipe[2]
 		}
 		free(heredoc_input);
 	}
-	return;
+	return ;
 }
 
-int herdoc_input_redirect(t_file *infile, int heredoc_pipe[2], int herdoc_stdout)
+int	herdoc_input(t_file *infile, int heredoc_pipe[2], int herdoc_stdout)
 {
 	if (!infile)
 	{
-		if(dup2(heredoc_pipe[0], STDIN_FILENO) < 0)
+		if (dup2(heredoc_pipe[0], STDIN_FILENO) < 0)
 		{
 			ft_putstr_fd("minishell: redirect error\n", 2);
 			return (0);
@@ -103,7 +103,7 @@ int herdoc_input_redirect(t_file *infile, int heredoc_pipe[2], int herdoc_stdout
 	close(heredoc_pipe[1]);
 	if (herdoc_stdout > 1)
 	{
-		if(dup2(herdoc_stdout, STDOUT_FILENO) < 0)
+		if (dup2(herdoc_stdout, STDOUT_FILENO) < 0)
 		{
 			ft_putstr_fd("minishell: redirect error\n", 2);
 			return (0);
@@ -113,13 +113,13 @@ int herdoc_input_redirect(t_file *infile, int heredoc_pipe[2], int herdoc_stdout
 	return (1);
 }
 
-int redirect_herdoc(t_command *cmd)
+int	redirect_herdoc(t_command *cmd)
 {
-	int heredoc_pipe[2];
-	int i;
+	int	heredoc_pipe[2];
+	int	i;
 
 	i = 0;
-	while(cmd->infile[i])
+	while (cmd->infile[i])
 	{
 		if (cmd->infile[i]->mode == false)
 		{
@@ -129,8 +129,9 @@ int redirect_herdoc(t_command *cmd)
 				if (!cmd->infile[i + 1])
 					return (0);
 			}
-			heredoc_readline(cmd->infile[i], cmd->g_info, heredoc_pipe);
-			if (!herdoc_input_redirect(cmd->infile[i + 1], heredoc_pipe, cmd->herdoc_stdout))
+			h_readline(cmd->infile[i], cmd->g_info, heredoc_pipe);
+			if (!herdoc_input(cmd->infile[i + 1], \
+			heredoc_pipe, cmd->herdoc_stdout))
 				return (0);
 		}
 		i++;
