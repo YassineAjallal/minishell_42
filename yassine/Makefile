@@ -1,5 +1,5 @@
 .PHONY: clean all re fclean
-CC = gcc
+CC = cc
 CFLAGS = -lreadline -Wall -Wextra -Werror
 NAME = minishell
 SRC = pipes.c pars1.c expander.c parsing.c ambiguous.c linked_list.c

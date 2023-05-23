@@ -206,7 +206,6 @@ t_command  **rmplr_double_str(t_command **cmd,t_global_info g_info,int size)
 		cmd_rtr[i]->herdoc = cmd[i]->herdoc;
 		cmd_rtr[i]->infile = cmd[i]->infile;
 		cmd_rtr[i]->outfile = cmd[i]->outfile;
-		cmd_rtr[i]->delemiter = cmd[i]->delemiter;
 		cmd_rtr[i]->herdoc_stdout = cmd[i]->herdoc_stdout;
 		i++;
 	}
@@ -288,7 +287,6 @@ t_command **rmplir_strct(char **splt, t_global_info *g_info)
 		cmd[i]->herdoc = 0;
 		cmd[i]->infile = NULL;
 		cmd[i]->outfile = NULL;
-		cmd[i]->delemiter = NULL;
 		cmd[i]->herdoc_stdout = 0;
 		cmd[i]->g_info = g_info;
 		i++;

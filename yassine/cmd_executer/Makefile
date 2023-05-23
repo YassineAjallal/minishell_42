@@ -1,5 +1,5 @@
 .PHONY: clean all re fclean
-CC = gcc
+CC = cc
 CFLAGS = -Wall -Wextra -Werror
 NAME = cmd_executer.a
 SRC =  cmd_exec.c cmd_tools.c file_checker.c redirections.c tools.c

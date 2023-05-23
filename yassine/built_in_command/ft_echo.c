@@ -6,22 +6,22 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/10 15:30:22 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/21 11:25:19 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/23 18:15:08 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "built_in_command.h"
 
-int just_n(char *str)
+int	just_n(char *str)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	if (str[i] == '-')
 		i++;
 	else
 		return (0);
-	while(str[i])
+	while (str[i])
 	{
 		if (str[i] != 'n')
 			return (0);
@@ -29,23 +29,20 @@ int just_n(char *str)
 	}
 	return (1);
 }
-void ft_echo(t_command *cmd)
-{
-	int i;
-	int nl_print;
 
-	i = 1;
+void	ft_echo(t_command *cmd)
+{
+	int	i;
+	int	nl_print;
+
+	i = 0;
 	nl_print = 0;
-	
 	if (ft_strlen2d(cmd->cmd_parameter) == 1)
 		ft_putchar_fd('\n', 1);
 	else
 	{
-		while(just_n(cmd->cmd_parameter[i]))
-		{
+		while (just_n(cmd->cmd_parameter[++i]))
 			nl_print = 1;
-			i++;
-		}
 		while (cmd->cmd_parameter[i])
 		{
 			ft_putstr_fd(cmd->cmd_parameter[i], 1);
@@ -58,4 +55,3 @@ void ft_echo(t_command *cmd)
 	}
 	cmd->g_info->exit_code = 0;
 }
-

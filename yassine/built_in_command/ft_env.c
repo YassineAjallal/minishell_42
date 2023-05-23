@@ -6,28 +6,28 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 00:28:08 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/16 19:55:51 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/23 18:16:59 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "built_in_command.h"
 
-int get_until_equal(char *str)
+int	get_until_equal(char *str)
 {
-	int i;
+	int	i;
 
 	i = 0;
-	while(str[i] != '=')
+	while (str[i] != '=')
 		i++;
 	return (i);
 }
 
 /* duplicate the origin environment */
-t_env *dup_env(char **inherit_env)
+t_env	*dup_env(char **inherit_env)
 {
-	t_env *env;
-	int equal_pos;
-	int i;
+	t_env	*env;
+	int		equal_pos;
+	int		i;
 
 	i = 0;
 	env = malloc(sizeof(t_env));
@@ -37,21 +37,23 @@ t_env *dup_env(char **inherit_env)
 	env->variables = malloc(sizeof(t_variable) * (env->nb_variables));
 	if (!env->variables)
 		return (NULL);
-	while(i < env->nb_variables)
+	while (i < env->nb_variables)
 	{
 		equal_pos = get_until_equal(inherit_env[i]);
 		env->variables[i].name = ft_substr(inherit_env[i], 0, equal_pos);
-		env->variables[i].value = ft_substr(inherit_env[i], equal_pos + 1, ft_strlen(inherit_env[i]));
+		env->variables[i].value = ft_substr(inherit_env[i], equal_pos + 1, \
+		ft_strlen(inherit_env[i]));
 		i++;
 	}
 	return (env);
 }
+
 /* convert environ to 2d array */
-char **convert_env_array(t_env *env)
+char	**convert_env_array(t_env *env)
 {
-	char **env_array;
-	char *add_equal;
-	int i;
+	char	**env_array;
+	char	*add_equal;
+	int		i;
 
 	i = 0;
 	env_array = malloc(sizeof(char *) * (env->nb_variables + 1));
@@ -69,14 +71,15 @@ char **convert_env_array(t_env *env)
 }
 
 /* print environment variables */
-void ft_env(t_command *cmd)
+void	ft_env(t_command *cmd)
 {
-	int i;
+	int	i;
 
 	i = 0;
-	while(i < cmd->g_info->environ->nb_variables)
+	while (i < cmd->g_info->environ->nb_variables)
 	{
-		printf("%s=%s\n", cmd->g_info->environ->variables[i].name, cmd->g_info->environ->variables[i].value);
+		printf("%s=%s\n", cmd->g_info->environ->variables[i].name, \
+		cmd->g_info->environ->variables[i].value);
 		i++;
 	}
 	cmd->g_info->exit_code = 0;
