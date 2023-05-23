@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/17 00:11:58 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/02 15:39:46 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/23 19:36:06 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,5 +50,5 @@ void	ft_putnbr_fd(int n, int fd);
 size_t	ft_strlcat(char *dst, const char *src, size_t dstsize);
 char	*ft_itoa(int n);
 char	**ft_split(char const *s, char c);
-int ft_strcmp(char *s1, char *s2);
+int		ft_strcmp(char *s1, char *s2);
 #endif
