@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 00:28:08 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/23 18:16:59 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/23 19:20:18 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@ int	get_until_equal(char *str)
 	return (i);
 }
 
-/* duplicate the origin environment */
 t_env	*dup_env(char **inherit_env)
 {
 	t_env	*env;
@@ -48,7 +47,6 @@ t_env	*dup_env(char **inherit_env)
 	return (env);
 }
 
-/* convert environ to 2d array */
 char	**convert_env_array(t_env *env)
 {
 	char	**env_array;

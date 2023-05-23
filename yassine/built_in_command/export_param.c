@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 14:14:36 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/23 17:40:32 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/23 18:53:24 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,4 +122,3 @@ int	ft_export(t_command *cmd)
 		cmd->g_info->exit_code = 0;
 	return (error_count);
 }
-

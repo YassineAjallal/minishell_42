@@ -6,15 +6,15 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 21:29:26 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/22 12:46:58 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/23 18:27:55 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "built_in_command.h"
 
-void ft_pwd(t_command *cmd)
+void	ft_pwd(t_command *cmd)
 {
-	char *buffer;
+	char	*buffer;
 
 	buffer = NULL;
 	ft_putstr_fd(getcwd(buffer, 0), 1);
