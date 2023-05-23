@@ -2,7 +2,7 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror
 NAME = cmd_executer.a
-SRC =  cmd_exec.c cmd_tools.c file_checker.c
+SRC =  cmd_exec.c cmd_tools.c file_checker.c redirections.c tools.c
 HEADER = cmd_executer.h
 
 OBJ = $(SRC:.c=.o)

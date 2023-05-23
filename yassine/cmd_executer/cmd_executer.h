@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/25 17:42:02 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/13 11:51:25 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/23 12:20:54 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,4 +36,11 @@ int exec_built_in(t_command *cmd);
 void cmd_exec(t_command *cmd);
 
 void search_built_in(t_command *cmd);
+
+int redirect_in(t_file *infile, t_global_info *g_info);
+int redirect_herdoc(t_command *cmd);
+int redirect_out(t_file *outfile, int *stdout_fd, t_global_info *g_info);
+
+char *quote_trim(char *str, char c);
+int search_heredoc(t_file **file, int i);
 #endif
