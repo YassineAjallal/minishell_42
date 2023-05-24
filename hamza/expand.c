@@ -199,35 +199,7 @@ int ft_strlen_out(t_file **str)
 	return (i);
 }
 
-t_file **ft_strjoin_out(t_file **s1, char *s2,char *mode)
-{
-	int i;
-	int j;
-	t_file **new_array;
-	
-	i = 0;
-	j = 0;
-	new_array = malloc(sizeof(t_file *) * (ft_strlen_out(s1) + 2));
-	if (!new_array)
-		return (NULL);
-	while(s1[i] && s1)
-	{
-		new_array[i] = malloc(1 * sizeof(t_file));
-		new_array[i]->file = s1[i]->file;
-		new_array[i]->mode = s1[i]->mode;
-		i++;
-	}
-	new_array[i] = malloc(1 * sizeof(t_file));
-	new_array[i]->file = s2;
-	if((mode[0] == '>' && mode[1] == '>'))
-		new_array[i]->mode = false;
-	else if (mode[0] == '>' )
-		new_array[i]->mode = true;
-	i++;
-	// free(new_array[i]);
-	new_array[i] = NULL;
-	return (new_array);
-}
+
 int ft_strlen2d(char **str)
 {
 	int i;
@@ -394,6 +366,63 @@ int syntx_error_a(char **splt, t_global_info *g_info)
 	
 	return 1;
 }
+t_file **ft_strjoin_out(t_file **s1, char *s2,char *mode)
+{
+	int i;
+	int j;
+	t_file **new_array;
+	
+	i = 0;
+	j = 0;
+	new_array = malloc(sizeof(t_file *) * (ft_strlen_out(s1) + 2));
+	if (!new_array)
+		return (NULL);
+	while(s1[i] && s1)
+	{
+		new_array[i] = malloc(1 * sizeof(t_file));
+		new_array[i]->file = s1[i]->file;
+		new_array[i]->mode = s1[i]->mode;
+		i++;
+	}
+	new_array[i] = malloc(1 * sizeof(t_file));
+	new_array[i]->file = s2;
+	if((mode[0] == '>' && mode[1] == '>'))
+		new_array[i]->mode = false;
+	else if (mode[0] == '>' )
+		new_array[i]->mode = true;
+	i++;
+	new_array[i] = NULL;
+	return (new_array);
+}
+
+// t_file **ft_strjoin_in(t_file **s1, char *s2,char *mode)
+// {
+// 	int i;
+// 	int j;
+// 	t_file **new_array;
+	
+// 	i = 0;
+// 	j = 0;
+// 	new_array = malloc(sizeof(t_file *) * (ft_strlen_out(s1) + 2));
+// 	if (!new_array)
+// 		return (NULL);
+// 	while(s1[i] && s1)
+// 	{
+// 		new_array[i] = malloc(1 * sizeof(t_file));
+// 		new_array[i]->file = s1[i]->file;
+// 		new_array[i]->mode = s1[i]->mode;
+// 		i++;
+// 	}
+// 	new_array[i] = malloc(1 * sizeof(t_file));
+// 	new_array[i]->file = s2;
+// 	if((mode[0] == '<' && mode[1] == '<'))
+// 		new_array[i]->mode = false;
+// 	else if (mode[0] == '<' )
+// 		new_array[i]->mode = true;
+// 	i++;
+// 	new_array[i] = NULL;
+// 	return (new_array);
+// }
 
 t_file	**ft_strdup_file(t_file **s1)
 {

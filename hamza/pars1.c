@@ -5,12 +5,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// enum s_cases 
-// {
-// 	quotes,
-// 	redirects,
-// };
-
 typedef struct s_v
 {
 	int i;
@@ -19,37 +13,6 @@ typedef struct s_v
 	int k;
 }		t_v;
 
-// typedef struct s_prompt
-// {
-// 	t_mini	*cmds;
-// 	char	**envp;
-// }		t_prompt;
-
-// int is_skiped(char s)
-// {
-// 	if ((s != ' ' || s == '"' || s == '\'') && s != '\0')
-// 	{
-// 		return 1;
-// 	}
-// 	return 0;
-// }
-// while (1) {
-// 				quote = 1;
-// 				line[j++] = str[i++];
-// 				while (str[i] != '"' && str[i] != '\0') {
-// 					line[j++] = str[i++];
-// 					if(str[i] == '\'')	
-// 						quote = 2;
-// 				}
-// 				line[j++] = str[i++];
-// 				if(str[i] == ' ' || str[i] == '\0' || str[i] == '>' || str[i] == '<')
-// 				{
-// 					printf("STOP | %c|\n",str[i]);
-// 					break;
-// 				}
-// 				printf("-- %c --\n",str[i + 1]);
-// 				sleep(1);
-// 			}
 char **lexer(char *str, t_global_info *g_info)
 {
     int i = 0;
@@ -502,7 +465,7 @@ t_command **rmplir_strct(char **splt, t_global_info *g_info)
 					if(cmd[i]->cmd_parameter[j + 1])
 					{
 						
-						ll = ft_strjoin_out(cmd[i]->infile, cmd[i]->cmd_parameter[j],cmd[i]->cmd_parameter[j - 1]);
+						ll = ft_strjoin_in(cmd[i]->infile, cmd[i]->cmd_parameter[j],cmd[i]->cmd_parameter[j - 1]);
 						free_outfile(cmd[i]->infile);
 						cmd[i]->infile = ll;
 					}
@@ -736,6 +699,7 @@ void free_last(t_command **cmd)
 			{
 				free(cmd[i]->infile[j++]);
 			}
+			// free(cmd[i]->infile[j]);
 			free(cmd[i]->infile);
 		}
 		free(cmd[i]->cmd_parameter);
@@ -770,6 +734,7 @@ int main(int ac,char **av,char **env)
 	char **splt;
 	t_command **cmd;
 	i = 0;
+	// g_info.env_array = env;
 	while (1)
 	{
 		signal(SIGINT, handler);
