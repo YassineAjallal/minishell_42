@@ -1,6 +1,6 @@
 .PHONY: clean all re fclean
 CC = gcc
-CFLAGS = -lreadline  #-fsanitize=address -g #-Wall -Wextra -Werror
+CFLAGS = -lreadline  -fsanitize=address -g #-Wall -Wextra -Werror
 NAME = minishell
 REDLINE=$(shell brew  --prefix readline)
 SRC = pars1.c  expand.c #leaks_check.c

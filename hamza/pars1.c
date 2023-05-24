@@ -226,13 +226,14 @@ t_command  **rmplr_double_str(t_command **cmd,t_global_info g_info,int size)
 	while (cmd[i]->ther) {
 		cmd_rtr[i]->g_info = cmd[i]->g_info;
 		cmd_rtr[i]->ther = cmd[i]->ther;
-		cmd_rtr[i]->cmd = cmd[i]->cmd;
+		cmd_rtr[i]->cmd = ft_strdup(cmd[i]->cmd);
 		cmd_rtr[i]->redirect_in = cmd[i]->redirect_in;
 		cmd_rtr[i]->redirect_out = cmd[i]->redirect_out;
 		cmd_rtr[i]->herdoc = cmd[i]->herdoc;
 		cmd_rtr[i]->infile = cmd[i]->infile;
 		cmd_rtr[i]->outfile = cmd[i]->outfile;
-		cmd_rtr[i]->delemiter = cmd[i]->delemiter;
+		
+		// cmd_rtr[i]->delemiter = cmd[i]->delemiter;
 		cmd_rtr[i]->herdoc_stdout = cmd[i]->herdoc_stdout;
 		i++;
 	}
@@ -253,7 +254,7 @@ t_command  **rmplr_double_str(t_command **cmd,t_global_info g_info,int size)
 		cnt = 0;
 		while (cmd[i]->cmd_parameter[j] != NULL) {
 			if(cmd[i]->cmd_parameter[j][0] != '\0')
-				cmd_rtr[i]->cmd_parameter[cnt++] = cmd[i]->cmd_parameter[j];
+				cmd_rtr[i]->cmd_parameter[cnt++] = ft_strdup(cmd[i]->cmd_parameter[j]);
 			j++;
 		}
 		cmd_rtr[i]->cmd_parameter[cnt]= NULL;
@@ -266,9 +267,56 @@ t_command  **rmplr_double_str(t_command **cmd,t_global_info g_info,int size)
 
 
 
+
+t_file **ft_strjoin_in(t_file **s1, char *s2,char *mode)
+{
+	int i;
+	int j;
+	t_file **new_array;
+	
+	i = 0;
+	j = 0;
+	new_array = malloc(sizeof(t_file *) * (ft_strlen_out(s1) + 2));
+	if (!new_array)
+		return (NULL);
+	while(s1[i] && s1)
+	{
+		new_array[i] = malloc(1 * sizeof(t_file));
+		new_array[i]->file = s1[i]->file;
+		new_array[i]->mode = s1[i]->mode;
+		i++;
+	}
+	new_array[i] = malloc(1 * sizeof(t_file));
+	new_array[i]->file = s2;
+	if((mode[0] == '<' && mode[1] == '<'))
+		new_array[i]->mode = false;
+	else if (mode[0] == '<' )
+		new_array[i]->mode = true;
+	i++;
+	new_array[i] = NULL;
+	return (new_array);
+}
+void free_outfile(t_file **outfile) {
+	int i = 0;
+	int j = 0;
+    if (outfile && *outfile) {
+        while(outfile[i])
+		{
+			free(outfile[i++]);
+		}
+		free(outfile);
+    }
+}
+// void free_outfile(t_file **outfile) {
+//     if (outfile && *outfile) {
+//         free(*outfile);
+//         *outfile = NULL;
+//     }
+// }
 t_command **rmplir_strct(char **splt, t_global_info *g_info)
 {
 	t_command **cmd;
+	char *ss ;
 	int size = 0;
 	char *str;
 	int stop = 0;
@@ -318,7 +366,7 @@ t_command **rmplir_strct(char **splt, t_global_info *g_info)
 		cmd[i]->herdoc = 0;
 		cmd[i]->infile = NULL;
 		cmd[i]->outfile = NULL;
-		cmd[i]->delemiter = NULL;
+		// cmd[i]->delemiter = NULL;
 		cmd[i]->herdoc_stdout = 0;
 		cmd[i]->g_info = g_info;
 		i++;
@@ -393,7 +441,7 @@ t_command **rmplir_strct(char **splt, t_global_info *g_info)
 				break;
 			}
         }
-		char *ss =rem_quots(cmd[i]->cmd);
+		ss =rem_quots(cmd[i]->cmd);
 		if(cmd[i]->cmd[0] == '<' || cmd[i]->cmd[0] == '>')
 		{
 			cmd[i]->cmd = NULL;
@@ -402,7 +450,7 @@ t_command **rmplir_strct(char **splt, t_global_info *g_info)
 		{
 			cmd[i]->cmd = ft_strdup("");
 		}
-		// printf("%s\n",cmd[i]->cmd);
+		free(ss);
         i++;
     }
 	// hena ghadi nbda n9alb 3la wax kayn redirect o dakxi fi kola pipe
@@ -414,42 +462,14 @@ t_command **rmplir_strct(char **splt, t_global_info *g_info)
 	// 	i++;
 	// }
 	cnt = 0;
+	t_file **ll;
 	while(cmd[i]->ther)
     {
         j = 0;
         while(cmd[i]->cmd_parameter[j] != NULL)
         {
 			k = 0;
-			if(cmd[i]->cmd_parameter[j][0] == '<' && cmd[i]->cmd_parameter[j][1] == '<')
-			{
-				if(cmd[i]->herdoc == 0)
-				{
-					cmd[i]->herdoc = 1;
-					k = 0;
-					cnt = 1;
-					j += 1;
-					cmd[i]->delemiter = malloc(2 * sizeof(char *));
-					if(cmd[i]->cmd_parameter[j])
-					{
-						cmd[i]->delemiter[0] = cmd[i]->cmd_parameter[j];
-						cmd[i]->delemiter[1] = NULL;
-					}
-					if(cmd[i]->cmd_parameter[j] == NULL){
-						break;
-					}
-				}
-				else {
-					if(cmd[i]->cmd_parameter[j + 1])
-					{
-						j++;
-						cmd[i]->delemiter = ft_strjoin_2d(cmd[i]->delemiter, cmd[i]->cmd_parameter[j]);
-					}
-					if(cmd[i]->cmd_parameter[j] == NULL){
-						break;
-					}
-				}
-			}
-			else if(cmd[i]->cmd_parameter[j][0] == '<')
+			if(cmd[i]->cmd_parameter[j][0] == '<')
 			{
 				if(cmd[i]->redirect_in == 0)
 				{
@@ -457,11 +477,22 @@ t_command **rmplir_strct(char **splt, t_global_info *g_info)
 					k = 0;
 					cnt = 1;
 					j += 1;
-					cmd[i]->infile = malloc(2 * sizeof(char *));
+					cmd[i]->infile = malloc(2 * sizeof(t_file *));
 					if(cmd[i]->cmd_parameter[j])
 					{
-						cmd[i]->infile[0] = cmd[i]->cmd_parameter[j];
+						cmd[i]->infile[0] = malloc(1 * sizeof(t_file));
+						cmd[i]->infile[1] = malloc(1 * sizeof(t_file));
+						if(cmd[i]->cmd_parameter[j - 1][0] == '<' && cmd[i]->cmd_parameter[j - 1][1] == '<')
+						{
+							cmd[i]->herdoc = true;
+							cmd[i]->infile[k]->mode = false;
+						}
+						else
+							cmd[i]->infile[k]->mode = true;
+						cmd[i]->infile[0]->file = cmd[i]->cmd_parameter[j];
+						free(cmd[i]->infile[1]);
 						cmd[i]->infile[1] = NULL;
+						
 					}
 					if(cmd[i]->cmd_parameter[j] == NULL){
 						break;
@@ -470,8 +501,10 @@ t_command **rmplir_strct(char **splt, t_global_info *g_info)
 				else {
 					if(cmd[i]->cmd_parameter[j + 1])
 					{
-						j++;
-						cmd[i]->infile = ft_strjoin_2d(cmd[i]->infile, cmd[i]->cmd_parameter[j]);
+						
+						ll = ft_strjoin_out(cmd[i]->infile, cmd[i]->cmd_parameter[j],cmd[i]->cmd_parameter[j - 1]);
+						free_outfile(cmd[i]->infile);
+						cmd[i]->infile = ll;
 					}
 					if(cmd[i]->cmd_parameter[j] == NULL){
 						break;
@@ -486,16 +519,17 @@ t_command **rmplir_strct(char **splt, t_global_info *g_info)
 					k = 0;
 					cnt = 1;
 					j += 1;
-					cmd[i]->outfile = malloc(2 * sizeof(t_outfile *));
+					cmd[i]->outfile = malloc(2 * sizeof(t_file *));
 					if(cmd[i]->cmd_parameter[j])
 					{
-						cmd[i]->outfile[0] = malloc(1 * sizeof(t_outfile));
-						cmd[i]->outfile[1] = malloc(1 * sizeof(t_outfile));
+						cmd[i]->outfile[0] = malloc(1 * sizeof(t_file));
+						cmd[i]->outfile[1] = malloc(1 * sizeof(t_file));
 						if(cmd[i]->cmd_parameter[j - 1][0] == '>' && cmd[i]->cmd_parameter[j - 1][1] == '>')
 							cmd[i]->outfile[k]->mode = false;
-						else if (cmd[i]->cmd_parameter[j - 1][0] == '>')
+						else
 							cmd[i]->outfile[k]->mode = true;
 						cmd[i]->outfile[0]->file = cmd[i]->cmd_parameter[j];
+						free(cmd[i]->outfile[1]);
 						cmd[i]->outfile[1] = NULL;
 						
 					}
@@ -506,8 +540,12 @@ t_command **rmplir_strct(char **splt, t_global_info *g_info)
 				else {
 					if(cmd[i]->cmd_parameter[j + 1])
 					{
+						
 						j++;
-						cmd[i]->outfile = ft_strjoin_out(cmd[i]->outfile, cmd[i]->cmd_parameter[j],cmd[i]->cmd_parameter[j - 1]);
+
+						ll = ft_strjoin_out(cmd[i]->outfile, cmd[i]->cmd_parameter[j],cmd[i]->cmd_parameter[j - 1]);
+						free_outfile(cmd[i]->outfile);
+						cmd[i]->outfile = ll;
 					}
 					if(cmd[i]->cmd_parameter[j] == NULL){
 						break;
@@ -597,6 +635,28 @@ t_command **rmplir_strct(char **splt, t_global_info *g_info)
 	while(cmd[i]->ther)
 	{
 		free(cmd[i]->cmd_parameter);
+		// if(cmd[i]->outfile)
+		// {
+		// 	j = 0;
+		// 	while(cmd[i]->outfile[j]!= NULL)
+		// 	{
+		// 		free(cmd[i]->outfile[j++]);
+		// 	}
+		// 	printf("%d\n\n-------------\n",j);
+		// 	free(cmd[i]->outfile);
+		// }
+		// if(cmd[i]->infile)
+		// {
+		// 	j = 0;
+		// 	while(cmd[i]->infile[j]!= NULL)
+		// 	{
+		// 		free(cmd[i]->infile[j++]);
+		// 	}
+		// 	// free(cmd[i]->outfile[0]);
+		// 	printf("%d\n\n-------------\n",j);
+		// 	// free(cmd[i]->outfile[j]);
+		// 	free(cmd[i]->infile);
+		// }
 		free(cmd[i]);
 		i++;
 	}
@@ -651,9 +711,35 @@ void free_last(t_command **cmd)
 {
 	int i;
 	i = 0;
+	int j = 0;
+
 	while(cmd[i]->ther)
 	{
+		j = 0;
+		while(cmd[i]->cmd_parameter[j])
+		{
+			free(cmd[i]->cmd_parameter[j++]);
+		}
+		if(cmd[i]->outfile)
+		{
+			j = 0;
+			while(cmd[i]->outfile[j]!= NULL)
+			{
+				free(cmd[i]->outfile[j++]);
+			}
+			free(cmd[i]->outfile);
+		}
+		if(cmd[i]->infile)
+		{
+			j = 0;
+			while(cmd[i]->infile[j]!= NULL)
+			{
+				free(cmd[i]->infile[j++]);
+			}
+			free(cmd[i]->infile);
+		}
 		free(cmd[i]->cmd_parameter);
+		free(cmd[i]->cmd);
 		free(cmd[i++]);
 	}
 	free(cmd[i]);
@@ -682,9 +768,8 @@ int main(int ac,char **av,char **env)
 	char	*str;
 	int		i;
 	char **splt;
-	t_command **cma;
+	t_command **cmd;
 	i = 0;
-	// g_info.env_array = env;
 	while (1)
 	{
 		signal(SIGINT, handler);
@@ -703,10 +788,10 @@ int main(int ac,char **av,char **env)
 				if(syntx_error_a(splt,&g_info) && syntx_error_b(splt,&g_info))
 				{
 					
-					cma = rmplir_strct(splt, &g_info);
-					free_split(splt);
-					free_last(cma);
+					cmd = rmplir_strct(splt, &g_info);
+					free_last(cmd);
 				}
+				free_split(splt);
 			}
 			free(str);
 		}
