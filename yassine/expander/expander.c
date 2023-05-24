@@ -6,11 +6,11 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/08 16:42:02 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/22 19:56:23 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/24 15:49:03 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "expander.h"
 
 int search_in_env(t_env *env, char *string)
 {
@@ -25,79 +25,66 @@ int search_in_env(t_env *env, char *string)
 	return (-1);
 }
 
-int next_dollar_pos(char *str, int pos)
-{
-	while (str[pos] == '$')
-		pos++;
-	while (str[pos])
-	{
-		if (str[pos] == '$')
-			return (pos);
-		pos++;
-	}
-	return (pos);
-}
-
-char *expand_var(char *string, t_global_info *g_info)
-{
-	int i;
-	char **expand_split;
-	int var_index;
-	char *expand_string;
-	char *var_to_search;
-	int len;
-	char *rest;
-	char *tmp;
-	int j;
+// char *expand_var(char *string, t_global_info *g_info)
+// {
+// 	int i;
+// 	char **expand_split;
+// 	int var_index;
+// 	char *expand_string;
+// 	char *var_to_search;
+// 	int len;
+// 	char *rest;
+// 	char *tmp;
+// 	int j;
 	
-	i = 0;
-	expand_string = ft_strdup("");
-	expand_split = ft_split(string, '$');
-	len = ft_strlen(string);
-	if (ft_strlen(string) == 0)
-		return (expand_string);
-	if (string[0] != '$')
-	{
-		tmp = ft_strjoin(expand_string, expand_split[0]);
-		free(expand_string);
-		expand_string = tmp;
-		i++;
-	}
-	while(expand_split[i])
-	{
-		j = 0;
-		if (ft_isalpha(expand_split[i][j]) || expand_split[i][j] == '_')
-		{
-			while(ft_isalnum(expand_split[i][j]) || expand_split[i][j] == '_')
-				j++;
-			var_to_search = ft_substr(expand_split[i], 0, j);
-		}
-		else
-		{
-			var_to_search = ft_substr(expand_split[i], 0, 1);
-			j++;
-		}
-		var_index = search_in_env(g_info->environ, var_to_search);
-		if (!ft_strcmp(var_to_search, "?"))
-			tmp = ft_strjoin(expand_string, ft_itoa(g_info->exit_code));
-		else if (var_index == -1)
-			tmp = ft_strjoin(expand_string, "");
-		else
-			tmp = ft_strjoin(expand_string, g_info->environ->variables[var_index].value);
-		free(expand_string);
-		expand_string = tmp;
-		rest = ft_substr(expand_split[i], j, ft_strlen(expand_split[i]) - j);
-		tmp = ft_strjoin(expand_string, rest);
-		free(expand_string);
-		expand_string = tmp;
-		i++;
-	}
-	if (string[len - 1] == '$' && string[len - 2] != '$')
-	{
-		expand_string = ft_strjoin(expand_string, "$");
-	}
-	return (expand_string);
-}
+// 	i = 0;
+// 	expand_string = ft_strdup("");
+// 	expand_split = ft_split(string, '$');
+// 	len = ft_strlen(string);
+// 	if (ft_strlen(string) == 0)
+// 		return (expand_string);
+// 	if (string[0] != '$')
+// 	{
+// 		tmp = ft_strjoin(expand_string, expand_split[0]);
+// 		free(expand_string);
+// 		expand_string = tmp;
+// 		i++;
+// 	}
+// 	while(expand_split[i])
+// 	{
+// 		j = 0;
+// 		if (ft_isalpha(expand_split[i][j]) || expand_split[i][j] == '_')
+// 		{
+// 			while(ft_isalnum(expand_split[i][j]) || expand_split[i][j] == '_')
+// 				j++;
+// 			var_to_search = ft_substr(expand_split[i], 0, j);
+// 		}
+// 		else
+// 		{
+// 			var_to_search = ft_substr(expand_split[i], 0, 1);
+// 			j++;
+// 		}
+// 		var_index = search_in_env(g_info->environ, var_to_search);
+// 		if (!ft_strcmp(var_to_search, "?"))
+// 			tmp = ft_strjoin(expand_string, ft_itoa(g_info->exit_code));
+// 		else if (var_index == -1)
+// 			tmp = ft_strjoin(expand_string, "");
+// 		else
+// 			tmp = ft_strjoin(expand_string, g_info->environ->variables[var_index].value);
+// 		free(expand_string);
+// 		expand_string = tmp;
+// 		rest = ft_substr(expand_split[i], j, ft_strlen(expand_split[i]) - j);
+// 		tmp = ft_strjoin(expand_string, rest);
+// 		free(expand_string);
+// 		expand_string = tmp;
+// 		i++;
+// 	}
+// 	if (string[len - 1] == '$' && string[len - 2] != '$')
+// 	{
+// 		expand_string = ft_strjoin(expand_string, "$");
+// 	}
+// 	return (expand_string);
+// }
 
 
 t_expand *ft_expand(char *string)
@@ -162,31 +149,7 @@ void print(t_expand *head)
 	}
 }
 
-void num_list(t_expand *head)
-{
-	t_expand *node;
-	int i;
 
-	node = head;
-	i = 0;
-	while(node)
-	{
-		node->index = i;
-		i++;
-		node = node->next;
-	}
-}
-// void trim_list(t_expand *head)
-// {
-// 	t_expand *node;
-
-// 	node = head;
-// 	while(node)
-// 	{
-// 		node->value = ft_strtrim(node->value, "\'");
-// 		node = node->next;
-// 	}
-// }
 
 t_expand *expand_linked_list(t_expand *head, t_global_info *g_info)
 {
@@ -403,7 +366,7 @@ char **ft_strjoin2d(char **s1, char **s2)
 	return (new_array);
 }
 
-char **expand_all_param(t_command *cmd, t_global_info *g_info)
+char **expand_all_param(t_command *cmd)
 {
 	int i;
 	char **expanded_param;
@@ -417,7 +380,7 @@ char **expand_all_param(t_command *cmd, t_global_info *g_info)
 	while(cmd->cmd_parameter[i])
 	{
 		head = ft_expand(cmd->cmd_parameter[i]);
-		head = expand_linked_list(head, g_info);
+		head = expand_linked_list(head, cmd->g_info);
 		head = delete_empty(head);
 		head_array = convert_linked_array(head);
 		expanded_param = ft_strjoin2d(expanded_param, head_array);
@@ -437,7 +400,6 @@ char **expand_all_param(t_command *cmd, t_global_info *g_info)
 			cmd->cmd[i] = ft_tolower(cmd->cmd[i]);
 			i++;
 		}
-		// printf("cmd : --%s--\n", cmd->cmd);
 	}
 	return(expanded_param);
 }

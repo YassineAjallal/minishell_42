@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 21:29:26 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/23 18:27:55 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/24 12:14:10 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,9 @@ void	ft_pwd(t_command *cmd)
 	char	*buffer;
 
 	buffer = NULL;
-	ft_putstr_fd(getcwd(buffer, 0), 1);
+	buffer = getcwd(buffer, 0);
+	ft_putstr_fd(buffer, 1);
 	ft_putchar_fd('\n', 1);
+	free(buffer);
 	cmd->g_info->exit_code = 0;
 }

@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/30 13:57:21 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/24 10:19:09 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/24 12:02:16 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,23 +39,25 @@ void close_pipes(int pipes[1][2], int nb_pipe)
 	}
 }
 
-void ft_strtrim2d(char **param)
+void child_config(t_command *cmd, int dup_stdin, int dup_stdout, int pipes[][2])
 {
-	char *tmp;
-	int i;
-	
-	i = 0;
-	while(param[i])
+	if (cmd->herdoc == false)
 	{
-		tmp = ft_strtrim(param[i], " ");
-		if (ft_strlen(tmp) == 0)
-		{
-			free(tmp);
-			tmp = ft_strdup(" ");
-		}
-		free(param[i]);
-		param[i] = tmp;
-		i++;
+		dup2(dup_stdin, STDIN_FILENO);
+		dup2(dup_stdout, STDOUT_FILENO);
+		close_pipes(pipes, cmd->g_info->nb_pipe);
+	}
+	else
+			cmd->herdoc_stdout = dup_stdout;
+	cmd_exec(cmd);
+}
+
+void parent_config(t_command *cmd, int *status, int pid)
+{
+	if (cmd->herdoc == true)
+	{
+		waitpid(pid, status, 0);
+		cmd->g_info->exit_code = WEXITSTATUS(status);
 	}
 }
 
@@ -77,7 +79,7 @@ int pipes(t_command **cmds, t_global_info *g_info)
 	{
 		g_info->old_stdout = dup(STDOUT_FILENO);
 		g_info->old_stdin = dup(STDIN_FILENO);
-		cmds[0]->cmd_parameter = expand_all_param(cmds[0], g_info);
+		cmds[0]->cmd_parameter = expand_all_param(cmds[0]);
 		exec_built_in(cmds[0]);
 		dup2(g_info->old_stdout, STDOUT_FILENO);
 		dup2(g_info->old_stdin, STDIN_FILENO);
@@ -90,7 +92,7 @@ int pipes(t_command **cmds, t_global_info *g_info)
 		dup_stdout = pipe_arr[i][1];
 		while(++i < g_info->nb_pipe + 1)
 		{
-			cmds[i]->cmd_parameter = expand_all_param(cmds[i], g_info);
+			cmds[i]->cmd_parameter = expand_all_param(cmds[i]);
 			if (i != 0)
 				dup_stdin = pipe_arr[i - 1][0];
 			if (i == g_info->nb_pipe)
@@ -99,25 +101,16 @@ int pipes(t_command **cmds, t_global_info *g_info)
 				dup_stdout = pipe_arr[i][1];
 			pid = fork();
 			if (pid == 0)
+				child_config(cmds[i], dup_stdin, dup_stdout, pipe_arr);
+			else if (pid > 0)
 			{
-				if (cmds[i]->herdoc == false)
-				{
-					dup2(dup_stdin, STDIN_FILENO);
-					dup2(dup_stdout, STDOUT_FILENO);
-					close_pipes(pipe_arr, g_info->nb_pipe);
-				}
-				else
-						cmds[i]->herdoc_stdout = dup_stdout;
-				cmd_exec(cmds[i]);
+				pids[i] = pid;
+				parent_config(cmds[i], &status, pid);
 			}
 			else
 			{
-				pids[i] = pid;
-				if (cmds[i]->herdoc == true)
-				{
-					waitpid(pid, &status, 0);
-					g_info->exit_code = WEXITSTATUS(status);
-				}
+				ft_putstr_fd("minishell: fork error\n", 2);
+				return (0);
 			}
 		}
 		close_pipes(pipe_arr, g_info->nb_pipe);
@@ -126,53 +119,5 @@ int pipes(t_command **cmds, t_global_info *g_info)
 			waitpid(pids[i], &status, 0);
 		g_info->exit_code = WEXITSTATUS(status);
 	}
-	return (0);
+	return (1);
 }
-
-int main(int ac, char **av, char **env)
-{
-	if (ac > 1)
-		return (0);
-	if (av[1])
-		return (0);
-	int i;
-	char *input;
-	char *tmp;
-	char **split;
-	t_command **cmd;
-	t_global_info *g_info;
-	cmd = malloc(sizeof(t_command *));
-	cmd[0] = malloc(sizeof(t_command));
-	g_info = malloc(sizeof(t_global_info));
-	g_info->environ = dup_env(env);
-	g_info->export_env = dup_env(env);
-	g_info->exit_code = 0;
-	g_info->env_array = convert_env_array(g_info->environ);
-	g_info->nb_pipe = 2;
-	while(1)
-	{
-		input = readline("\e[1;36m➜  \e[1;33mminishell \e[1;32m✗ \e[0;00m");
-		if(!input)
-			exit(g_info->exit_code);
-		input = ft_strtrim(input, " ");
-		if (ft_strlen(input) != 0)
-		{
-			add_history(input);
-			split = lexer(input, g_info);
-			if(split != NULL)
-			{
-				if(syntx_error_a(split, g_info) && syntx_error_b(split, g_info))
-				{
-					cmd = rmplir_strct(split, g_info);
-					pipes(cmd, g_info);				
-				}
-			}
-		}
-		else
-			g_info->exit_code = 0;
-	}
-}
-
-// ls | sleep 5 | echo y
-// cat << yajallal | wc -l | ls
-// readline("\e[1;36m➜  \e[1;33mminishell \e[1;32m✗ \e[0;00m");

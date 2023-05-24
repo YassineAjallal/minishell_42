@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/30 14:28:30 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/23 16:04:49 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/24 15:50:18 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ typedef struct s_command
 
 
 char *ambiguous_redirect(char *file, t_global_info *g_info);
-char **expand_all_param(t_command *cmd, t_global_info *g_info);
+char **expand_all_param(t_command *cmd);
 t_expand *ft_expand(char *string);
 char **ft_strjoin2d(char **s1, char **s2);
 char *expand_var(char *string, t_global_info *g_info);

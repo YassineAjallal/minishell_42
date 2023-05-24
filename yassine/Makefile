@@ -2,10 +2,11 @@
 CC = cc
 CFLAGS = -lreadline -Wall -Wextra -Werror
 NAME = minishell
-SRC = pipes.c pars1.c expander.c parsing.c ambiguous.c linked_list.c
+SRC = minishell.c pipes.c pars1.c parsing.c ambiguous.c linked_list.c
 LIB_PATH = ./libft/libft.a
 BUILT_IN_PATH = ./built_in_command/built_in_command.a
 CMD_EXEC_PATH = ./cmd_executer/cmd_executer.a
+EXPANDER_PATH = ./expander/expander.a
 OBJ = $(SRC:.c=.o)
 
 %.o: %.c
@@ -17,17 +18,20 @@ $(NAME): $(OBJ)
 	@make -C ./libft
 	@make -C ./built_in_command
 	@make -C ./cmd_executer
-	@$(CC) $(CFLAGS) -o $(NAME) $(OBJ) $(LIB_PATH) $(BUILT_IN_PATH) $(CMD_EXEC_PATH)
+	@make -C ./expander
+	@$(CC) $(CFLAGS) -o $(NAME) $(OBJ) $(LIB_PATH) $(BUILT_IN_PATH) $(CMD_EXEC_PATH) $(EXPANDER_PATH)
 clean:
 	@rm -f $(OBJ)
 	@make clean -C ./libft
 	@make clean -C ./built_in_command
 	@make clean -C ./cmd_executer
+	@make clean -C ./expander
 
 fclean: clean
 	@rm -f $(NAME)
 	@make fclean -C ./libft
 	@make fclean -C ./built_in_command
 	@make fclean -C ./cmd_executer
+	@make fclean -C ./expander
 
 re: fclean all

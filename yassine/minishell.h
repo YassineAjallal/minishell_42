@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/26 15:53:09 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/17 10:28:53 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/24 15:50:26 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 #include "./cmd_executer/cmd_executer.h"
 #include "./built_in_command/built_in_command.h"
+#include "./expander/expander.h"
 #include "structs.h"
 
 char **lexer(char *str, t_global_info *g_info);
@@ -32,6 +33,8 @@ int check_empty(char *str);
 int syntx_error_a(char **splt, t_global_info *g_info);
 char *rem_quots(char *splt);
 char	*ft_strjoin_char(char const *s1, char s2);
+
+int pipes(t_command **cmds, t_global_info *g_info);
 
 
 #endif
