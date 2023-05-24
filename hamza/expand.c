@@ -184,44 +184,22 @@ char **expand_splt(char **splt,t_global_info g_info)
 }
 
 // ================================
-int ft_strlen_out(t_outfile **str)
+int ft_strlen_out(t_file **str)
 {
 	int i;
 
 	i = 0;
+	if(str == NULL)
+		return (0);
 	while(str[i])
+	{
+		// printf("%s",str[i]->file);
 		i++;
+	}
 	return (i);
 }
 
-t_outfile **ft_strjoin_out(t_outfile **s1, char *s2,char *mode)
-{
-	int i;
-	int j;
-	t_outfile **new_array;
-	
-	i = 0;
-	j = 0;
-	new_array = malloc(sizeof(t_outfile *) * (ft_strlen_out(s1) + 2));
-	if (!new_array)
-		return (NULL);
-	while(s1[i] && s1)
-	{
-		new_array[i] = malloc(1 * sizeof(t_outfile));
-		new_array[i]->file = s1[i]->file;
-		new_array[i]->mode = s1[i]->mode;
-		i++;
-	}
-	new_array[i] = malloc(1 * sizeof(t_outfile));
-	new_array[i]->file = s2;
-	if((mode[0] == '>' && mode[1] == '>'))
-		new_array[i]->mode = false;
-	else if (mode[0] == '>' )
-		new_array[i]->mode = true;
-	i++;
-	new_array[i] = NULL;
-	return (new_array);
-}
+
 int ft_strlen2d(char **str)
 {
 	int i;
@@ -302,25 +280,31 @@ char *rem_quots(char *splt)
 	while (splt[i]) {
 		if(splt[i] == '\'')
 		{
+			printf("HHHH2\n");
 			i++;
 			while (splt[i] && splt[i] != '\'') {	
-				str = ft_strjoin_char(str, splt[i]);
+				tmp = ft_strjoin_char(str, splt[i]);
+            	free(str);
+            	str = tmp;
 				i++;
 			}
 		}
 		if(splt[i] == '"')
 		{
+			printf("HHHH1\n");
 			i++;
 			while (splt[i] && splt[i] != '"') {	
-				str = ft_strjoin_char(str, splt[i]);
+				tmp = ft_strjoin_char(str, splt[i]);
+            	free(str);
+            	str = tmp;
 				i++;
 			}
 		}
 		if(splt[i] != '"' && splt[i] != '\'' && splt[i] != '\0')
 		{
 			tmp = ft_strjoin_char(str, splt[i]);
-			// free(str);
-			str=tmp;
+            free(str);
+            str = tmp;
 		}
 		i++;
 	}
@@ -334,11 +318,11 @@ int check_empty(char *str)
 	char *s = rem_quots(str);
 	if(s[0] == '\0')
 	{
-		s = NULL;
+		// s = NULL;
 		free(s);
 		return 0;
 	}
-	s = NULL;
+	// s = NULL;
 	free(s);
 	return 1;
 }
@@ -381,4 +365,85 @@ int syntx_error_a(char **splt, t_global_info *g_info)
 	}
 	
 	return 1;
+}
+t_file **ft_strjoin_out(t_file **s1, char *s2,char *mode)
+{
+	int i;
+	int j;
+	t_file **new_array;
+	
+	i = 0;
+	j = 0;
+	new_array = malloc(sizeof(t_file *) * (ft_strlen_out(s1) + 2));
+	if (!new_array)
+		return (NULL);
+	while(s1[i] && s1)
+	{
+		new_array[i] = malloc(1 * sizeof(t_file));
+		new_array[i]->file = s1[i]->file;
+		new_array[i]->mode = s1[i]->mode;
+		i++;
+	}
+	new_array[i] = malloc(1 * sizeof(t_file));
+	new_array[i]->file = s2;
+	if((mode[0] == '>' && mode[1] == '>'))
+		new_array[i]->mode = false;
+	else if (mode[0] == '>' )
+		new_array[i]->mode = true;
+	i++;
+	new_array[i] = NULL;
+	return (new_array);
+}
+
+// t_file **ft_strjoin_in(t_file **s1, char *s2,char *mode)
+// {
+// 	int i;
+// 	int j;
+// 	t_file **new_array;
+	
+// 	i = 0;
+// 	j = 0;
+// 	new_array = malloc(sizeof(t_file *) * (ft_strlen_out(s1) + 2));
+// 	if (!new_array)
+// 		return (NULL);
+// 	while(s1[i] && s1)
+// 	{
+// 		new_array[i] = malloc(1 * sizeof(t_file));
+// 		new_array[i]->file = s1[i]->file;
+// 		new_array[i]->mode = s1[i]->mode;
+// 		i++;
+// 	}
+// 	new_array[i] = malloc(1 * sizeof(t_file));
+// 	new_array[i]->file = s2;
+// 	if((mode[0] == '<' && mode[1] == '<'))
+// 		new_array[i]->mode = false;
+// 	else if (mode[0] == '<' )
+// 		new_array[i]->mode = true;
+// 	i++;
+// 	new_array[i] = NULL;
+// 	return (new_array);
+// }
+
+t_file	**ft_strdup_file(t_file **s1)
+{
+	size_t	i;
+	t_file	**s;
+
+	
+	if(ft_strlen_out(s1) == 0)
+	{
+		return NULL;
+	}
+	s = ft_calloc(ft_strlen_out(s1) + 1, sizeof(t_file *));
+	if (!s)
+		return (NULL);
+	i = 0;
+	while (s1[i])
+	{
+		s[i] =  malloc(1 * sizeof(t_file));
+		s[i] = s1[i];
+		i++;
+	}
+	s[i] = NULL;
+	return (s);
 }
