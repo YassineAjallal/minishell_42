@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/19 12:37:24 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/24 15:15:06 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/24 19:53:02 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ t_expand	*delete_node(t_expand *head, int index)
 	}
 	return (head);
 }
+
 void	num_list(t_expand *head)
 {
 	t_expand	*node;
@@ -76,4 +77,33 @@ void	num_list(t_expand *head)
 		i++;
 		node = node->next;
 	}
+}
+
+int	lst_size(t_expand *head)
+{
+	int			i;
+	t_expand	*node;
+
+	node = head;
+	i = 0;
+	while (node)
+	{
+		i++;
+		node = node->next;
+	}
+	return (i);
+}
+
+t_expand	*delete_empty(t_expand *head)
+{
+	t_expand	*node;
+
+	node = head;
+	while (node)
+	{
+		if (ft_strlen(node->value) == 0)
+			head = delete_node(head, node->index);
+		node = node->next;
+	}
+	return (head);
 }
