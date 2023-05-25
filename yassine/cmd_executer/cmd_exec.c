@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 21:13:03 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/23 15:40:48 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/25 21:11:30 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,7 @@ void	search_built_in(t_command *cmd)
 		cmd->built_in = false;
 		cmd->g_info->exit_code = 0;
 	}
+	all_built_in = NULL;
 	if (cmd->cmd)
 	{
 		all_built_in = ft_split("echo cd pwd export unset env exit", ' ');
@@ -84,12 +85,14 @@ void	search_built_in(t_command *cmd)
 			if (!ft_strcmp(cmd->cmd, all_built_in[i]))
 			{
 				cmd->built_in = true;
+				ft_free2d(all_built_in);
 				return ;
 			}
 			else
 				cmd->built_in = false;
 			i++;
 		}
+		ft_free2d(all_built_in);
 	}
 }
 

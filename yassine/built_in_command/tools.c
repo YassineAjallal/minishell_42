@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/06 00:28:19 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/23 18:55:02 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/25 21:08:02 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ void	ft_free2d(char **str)
 	i = 0;
 	while (str[i])
 		free(str[i++]);
-	free(str);
+	if (str)
+		free(str);
 	str = NULL;
 }
