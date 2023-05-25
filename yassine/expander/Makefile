@@ -2,7 +2,7 @@
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
 NAME = expander.a
-SRC = expander.c expand_var.c expand_tools.c expand_lst.c
+SRC = expander.c expand_var.c expand_tools.c expand_lst.c expand_no_quote.c expand_quote.c
 HEADER = expander.h
 
 OBJ = $(SRC:.c=.o)

@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 15:17:01 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/24 19:39:22 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/25 10:53:50 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,5 +27,11 @@ char **convert_linked_array(t_expand *head);
 char **ft_strjoin2d(char **s1, char **s2);
 
 char *to_lower(char *command);
+
+t_expand *init_node_no_quote(t_expand *node, t_expand *new_node);
+t_expand *expand_linked_no_quote(t_expand *node, t_expand *new_node, char *prev_q);
+
+t_expand *init_node_quote(t_expand *node, t_expand *new_node, t_global_info *g_info);
+t_expand *expand_linked_quote(t_expand *node, t_expand *new_node, t_global_info *g_info, char *prev);
 
 #endif

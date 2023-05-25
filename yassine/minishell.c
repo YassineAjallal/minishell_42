@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/26 15:27:57 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/24 20:05:18 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/24 20:16:49 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,3 +70,5 @@ int	main(int ac, char **av, char **env)
 			g_info->exit_code = 0;
 	}
 }
+
+// handle $$
