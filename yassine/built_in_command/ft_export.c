@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 04:45:32 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/23 19:14:32 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/27 15:42:04 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,18 +45,18 @@ void	fill_list(t_env *env, t_variable *new_vars)
 	i = 0;
 	while (i < env->nb_variables)
 	{
-		new_vars[i].name = ft_strdup(env->variables[i].name);
+		new_vars[i].name = env_strdup(env->variables[i].name);
 		free(env->variables[i].name);
 		if (!env->variables[i].value)
 			new_vars[i].value = NULL;
 		else if (ft_strlen(env->variables[i].value) == 0)
 		{
-			new_vars[i].value = ft_strdup("");
+			new_vars[i].value = env_strdup("");
 			free(env->variables[i].value);
 		}	
 		else
 		{	
-			new_vars[i].value = ft_strdup(env->variables[i].value);
+			new_vars[i].value = env_strdup(env->variables[i].value);
 			free(env->variables[i].value);
 		}
 		i++;
@@ -73,11 +73,11 @@ int	fill_var_list(t_variable new_var, t_env *env)
 	if (!new_vars)
 		return (0);
 	fill_list(env, new_vars);
-	new_vars[i].name = ft_strdup(new_var.name);
+	new_vars[i].name = env_strdup(new_var.name);
 	if (!new_var.value)
 		new_vars[i].value = NULL;
 	else
-		new_vars[i].value = ft_strdup(new_var.value);
+		new_vars[i].value = env_strdup(new_var.value);
 	env->nb_variables++;
 	free(env->variables);
 	env->variables = new_vars;
@@ -95,9 +95,9 @@ int	replace_variable(t_variable new_var, t_env *env)
 		if (!new_var.value)
 			env->variables[existed].value = NULL;
 		else if (ft_strlen(new_var.value) == 0)
-			env->variables[existed].value = ft_strdup("");
+			env->variables[existed].value = env_strdup("");
 		else
-			env->variables[existed].value = ft_strdup(new_var.value);
+			env->variables[existed].value = env_strdup(new_var.value);
 		return (1);
 	}
 	return (0);
@@ -109,7 +109,7 @@ int	export_normal_var(t_variable new_var, t_global_info *g_info)
 
 	tmp = ft_strtrim(new_var.value, "\"\'");
 	free(new_var.value);
-	new_var.value = tmp;
+	new_var.value = env_strdup(tmp);
 	if (replace_variable(new_var, g_info->environ) && \
 	replace_variable(new_var, g_info->export_env))
 		return (1);

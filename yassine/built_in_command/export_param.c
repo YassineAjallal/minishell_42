@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 14:14:36 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/23 18:53:24 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/27 16:22:53 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ int	valid_name(char *name)
 	i = 0;
 	if (!ft_isalpha(name[i]) && name[i] != '_')
 		return (0);
+	i++;
 	while (name[i])
 	{
 		if (!ft_isalnum(name[i]))
@@ -48,12 +49,12 @@ t_global_info *g_info)
 	int	error_count;
 
 	error_count = 0;
-	if (valid_name(eq_split))
+	if (valid_name(eq_split) && param[0] != '=')
 	{
-		new_var.name = ft_strdup(eq_split);
+		new_var.name = env_strdup(eq_split);
 		if (ft_strchr(param, '='))
 		{
-			new_var.value = ft_strdup("");
+			new_var.value = env_strdup("");
 			export_normal_var(new_var, g_info);
 		}
 		else
@@ -77,12 +78,22 @@ t_global_info *g_info)
 	int	error_count;
 
 	error_count = 0;
-	if (valid_name(eq_split))
+	if (valid_name(eq_split) && param[0] != '=')
 	{		
 		equal_pos = get_until_equal(param);
-		new_var.name = ft_substr(param, 0, equal_pos);
-		new_var.value = ft_substr(param, equal_pos + 1, ft_strlen(param));
-		export_normal_var(new_var, g_info);
+		new_var.name = env_substr(param, 0, equal_pos);
+		if (!ft_strchr(param, '='))
+		{
+			new_var.value = NULL;
+			fill_var_list(new_var, g_info->export_env);
+		}
+		else
+		{
+			new_var.value = env_substr(param, equal_pos + 1, ft_strlen(param));
+			export_normal_var(new_var, g_info);
+		}
+		free(new_var.name);
+		free(new_var.value);
 	}
 	else
 	{
@@ -101,24 +112,29 @@ int	ft_export(t_command *cmd)
 
 	i = 1;
 	error_count = 0;
-	new_var.name = ft_strdup("");
-	new_var.value = ft_strdup("");
+	new_var.name = env_strdup("");
+	new_var.value = env_strdup("");
 	while (cmd->cmd_parameter[i])
 	{
 		equal_split = ft_split(cmd->cmd_parameter[i], '=');
-		if (ft_strlen2d(equal_split) == 1)
-			error_count += var_one_eq(equal_split[0], cmd->cmd_parameter[i], \
-			new_var, cmd->g_info);
-		else if (ft_strlen2d(equal_split) > 1)
+		// if (ft_strlen2d(equal_split) == 1)
+		// 	error_count += var_one_eq(equal_split[0], cmd->cmd_parameter[i], \
+		// 	new_var, cmd->g_info);
+		if (ft_strlen2d(equal_split) >= 1)
 			error_count += var_more_eq(equal_split[0], cmd->cmd_parameter[i], \
 			new_var, cmd->g_info);
 		else
+		{
+			ft_putstr_fd("minishell: not a valid identifier\n", 2);
 			error_count++;
+		}
 		i++;
 	}
 	if (error_count > 0)
 		cmd->g_info->exit_code = 1;
 	else
 		cmd->g_info->exit_code = 0;
+	free(new_var.name);
+	free(new_var.value);
 	return (error_count);
 }

@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/17 00:11:58 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/23 19:36:06 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/27 11:25:40 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include <stdlib.h>
 # include <unistd.h>
+#include "../ft_malloc/ft_malloc.h"
 
 int		ft_isalpha(int c);
 int		ft_isascii(int c);

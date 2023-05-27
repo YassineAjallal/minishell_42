@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/23 12:20:09 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/23 15:48:35 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/27 11:14:02 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ char	*quote_trim(char *str, char c)
 	char	*string_trim;
 
 	i = 0;
-	string_trim = malloc(sizeof(char));
+	string_trim = ft_malloc(sizeof(char), 1);
 	string_trim[0] = 0;
 	if (!str)
 		return (NULL);

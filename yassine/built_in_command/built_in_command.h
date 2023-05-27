@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 21:43:56 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/23 19:26:27 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/27 16:07:12 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,5 +70,8 @@ int		ft_unset(t_command *cmd);
 int		ft_strlen2d(char **str);
 char	*multiple_join(char **path, int length);
 void	ft_free2d(char **str);
-
+char	*env_substr(char *s, unsigned int start, size_t len);
+void	*env_calloc(size_t count, size_t size);
+char	*env_strdup(const char *s1);
+char	*env_strjoin(char const *s1, char const *s2);
 #endif

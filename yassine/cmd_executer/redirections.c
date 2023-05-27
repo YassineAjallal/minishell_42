@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/23 11:08:16 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/23 15:47:58 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/27 11:20:44 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,6 @@ void	h_readline(t_file *infile, t_global_info *g_info, int heredoc_pipe[2])
 			write(heredoc_pipe[1], heredoc_input, ft_strlen(heredoc_input));
 			write(heredoc_pipe[1], "\n", 1);
 		}
-		free(heredoc_input);
 	}
 	return ;
 }

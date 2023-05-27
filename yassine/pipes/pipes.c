@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/30 13:57:21 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/25 17:05:24 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/27 15:30:33 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,15 @@
 
 void	one_built_in(t_command *cmd, t_global_info *g_info)
 {
+	char **tmp;
 	g_info->old_stdout = dup(STDOUT_FILENO);
 	g_info->old_stdin = dup(STDIN_FILENO);
-	cmd->cmd_parameter = expand_all_param(cmd);
-	exec_built_in(cmd);
+	tmp = expand_all_param(cmd);
+	cmd->cmd_parameter = tmp;
+	exec_built_in(cmd, g_info);
 	dup2(g_info->old_stdout, STDOUT_FILENO);
 	dup2(g_info->old_stdin, STDIN_FILENO);
+	ft_malloc(0, 0);
 }
 
 int	*cmds_run(int (*pipe_arr)[2], t_command **cmds, \
@@ -58,10 +61,10 @@ int	pipes(t_command **cmds, t_global_info *g_info)
 		one_built_in(cmds[0], g_info);
 	else
 	{	
-		pipe_arr = malloc(sizeof(int *) * g_info->nb_pipe);
+		pipe_arr = ft_malloc(sizeof(int *) * g_info->nb_pipe, 1);
 		if (!pipe_arr)
 			return (0);
-		pids = malloc(sizeof(int) * (g_info->nb_pipe + 1));
+		pids = ft_malloc(sizeof(int) * (g_info->nb_pipe + 1), 1);
 		if (!pids)
 			return (0);
 		if (!init_pipe(g_info->nb_pipe, pipe_arr))

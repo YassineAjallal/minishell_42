@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/08 16:42:02 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/24 19:51:00 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/27 11:23:44 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ char	**expand_all_param(t_command *cmd)
 
 	head = NULL;
 	i = 0;
-	expanded_param = malloc(sizeof(char *));
+	expanded_param = ft_malloc(sizeof(char *), 1);
 	expanded_param[0] = NULL;
 	while (cmd->cmd_parameter[i])
 	{
@@ -90,10 +90,13 @@ char	**expand_all_param(t_command *cmd)
 	if (cmd->cmd)
 	{
 		if (ft_strlen(cmd->cmd) > 0)
+		{
 			cmd->cmd = ft_strdup(expanded_param[0]);
+		}
 		else if (cmd->cmd && ft_strlen(cmd->cmd) == 0)
+		{
 			cmd->cmd = ft_strdup("");
-		i = 0;
+		}
 		cmd->cmd = to_lower(cmd->cmd);
 	}
 	return (expanded_param);

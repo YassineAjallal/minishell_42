@@ -8,7 +8,7 @@ char **ft_strjoin_2d(char **s1, char *s2)
 	
 	i = 0;
 	j = 0;
-	new_array = malloc(sizeof(char *) * (ft_strlen2d(s1) + 2));
+	new_array = ft_malloc(sizeof(char *) * (ft_strlen2d(s1) + 2), 1);
 	if (!new_array)
 		return (NULL);
 	while(s1[i] && s1)
@@ -38,17 +38,17 @@ t_file **ft_strjoin_out(t_file **s1, char *s2,char *mode)
 	
 	i = 0;
 	j = 0;
-	new_array = malloc(sizeof(t_file *) * (ft_strlen_out(s1) + 2));
+	new_array = ft_malloc(sizeof(t_file *) * (ft_strlen_out(s1) + 2), 1);
 	if (!new_array)
 		return (NULL);
 	while(s1[i] && s1)
 	{
-		new_array[i] = malloc(1 * sizeof(t_file));
+		new_array[i] = ft_malloc(1 * sizeof(t_file), 1);
 		new_array[i]->file = s1[i]->file;
 		new_array[i]->mode = s1[i]->mode;
 		i++;
 	}
-	new_array[i] = malloc(1 * sizeof(t_file));
+	new_array[i] = ft_malloc(1 * sizeof(t_file), 1);
 	new_array[i]->file = s2;
 	if((mode[0] == '>' && mode[1] == '>'))
 		new_array[i]->mode = false;
@@ -66,17 +66,17 @@ t_file **ft_strjoin_in(t_file **s1, char *s2,char *mode)
 	
 	i = 0;
 	j = 0;
-	new_array = malloc(sizeof(t_file *) * (ft_strlen_out(s1) + 2));
+	new_array = ft_malloc(sizeof(t_file *) * (ft_strlen_out(s1) + 2), 1);
 	if (!new_array)
 		return (NULL);
 	while(s1[i] && s1)
 	{
-		new_array[i] = malloc(1 * sizeof(t_file));
+		new_array[i] = ft_malloc(1 * sizeof(t_file), 1);
 		new_array[i]->file = s1[i]->file;
 		new_array[i]->mode = s1[i]->mode;
 		i++;
 	}
-	new_array[i] = malloc(1 * sizeof(t_file));
+	new_array[i] = ft_malloc(1 * sizeof(t_file), 1);
 	new_array[i]->file = s2;
 	if((mode[0] == '<' && mode[1] == '<'))
 		new_array[i]->mode = false;
@@ -93,7 +93,7 @@ char **lexer(char *str, t_global_info *g_info)
 	int j = 0;
 	int k = 0;
 	int quote;
-	line = malloc(sizeof(char ) * (ft_strlen(str) * 2));
+	line = ft_malloc(sizeof(char ) * (ft_strlen(str) * 2), 1);
 	char **splt;
 	while (str[i]) {
 		quote = 0;
@@ -168,7 +168,6 @@ char **lexer(char *str, t_global_info *g_info)
 			{
 				ft_putstr_fd("minishell: unexpected EOF while looking for matching\n", 2);
 				g_info->exit_code = 2;
-				free(line);
 				return NULL;
 			}
 			line[j++] = '\n';
@@ -179,7 +178,6 @@ char **lexer(char *str, t_global_info *g_info)
 	}
 	line[j] = 0;
 	splt = ft_split(line, '\n');
-	free(line);
 	return splt;
 }
 
@@ -188,11 +186,11 @@ t_command  **rmplr_double_str(t_command **cmd,t_global_info g_info,int size)
 	int j = 0;
 	int i = 0;
 	t_command **cmd_rtr;
-	cmd_rtr = malloc((size) * sizeof(t_command *));
+	cmd_rtr = ft_malloc((size) * sizeof(t_command *), 1);
 	i = 0;
 	while (i < size)
 	{
-		cmd_rtr[i] = malloc(sizeof(t_command));
+		cmd_rtr[i] = ft_malloc(sizeof(t_command), 1);
 
 		i++;
 	}
@@ -221,7 +219,7 @@ t_command  **rmplr_double_str(t_command **cmd,t_global_info g_info,int size)
 				cnt++;
 			j++;
 		}
-		cmd_rtr[i]->cmd_parameter = malloc((cnt + 1) * sizeof(char *));
+		cmd_rtr[i]->cmd_parameter = ft_malloc((cnt + 1) * sizeof(char *), 1);
 		j = 0;
 		cnt = 0;
 		while (cmd[i]->cmd_parameter[j] != NULL) {
@@ -254,13 +252,13 @@ t_command **rmplir_strct(char **splt, t_global_info *g_info)
 			cnt++;
 		i++;
 	}
-	cmd = malloc((cnt + 2) * sizeof(t_command *));
+	cmd = ft_malloc((cnt + 2) * sizeof(t_command *), 1);
 	size = cnt + 2;
 	g_info->nb_pipe = cnt;
 	i = 0;
 	while (i < cnt + 2)
 	{
-		cmd[i] = malloc(sizeof(t_command));
+		cmd[i] = ft_malloc(sizeof(t_command), 1);
 		i++;
 	}
 	i = 0;
@@ -306,7 +304,7 @@ t_command **rmplir_strct(char **splt, t_global_info *g_info)
             if(splt[k] == NULL)
                 break;
         }
-        cmd[whr]->cmd_parameter = malloc(sizeof(char *) * (cnt + 1));
+        cmd[whr]->cmd_parameter = ft_malloc(sizeof(char *) * (cnt + 1), 1);
         i = k;
         if (splt[i] == NULL) 
             break;
@@ -385,11 +383,11 @@ t_command **rmplir_strct(char **splt, t_global_info *g_info)
 					k = 0;
 					cnt = 1;
 					j += 1;
-					cmd[i]->infile = malloc(2 * sizeof(t_file *));
+					cmd[i]->infile = ft_malloc(2 * sizeof(t_file *), 1);
 					if(cmd[i]->cmd_parameter[j])
 					{
-						cmd[i]->infile[0] = malloc(1 * sizeof(t_file));
-						cmd[i]->infile[1] = malloc(1 * sizeof(t_file));
+						cmd[i]->infile[0] = ft_malloc(1 * sizeof(t_file), 1);
+						cmd[i]->infile[1] = ft_malloc(1 * sizeof(t_file), 1);
 						if(cmd[i]->cmd_parameter[j - 1][0] == '<' && cmd[i]->cmd_parameter[j - 1][1] == '<')
 						{
 							cmd[i]->herdoc = true;
@@ -425,11 +423,11 @@ t_command **rmplir_strct(char **splt, t_global_info *g_info)
 					k = 0;
 					cnt = 1;
 					j += 1;
-					cmd[i]->outfile = malloc(2 * sizeof(t_file *));
+					cmd[i]->outfile = ft_malloc(2 * sizeof(t_file *), 1);
 					if(cmd[i]->cmd_parameter[j])
 					{
-						cmd[i]->outfile[0] = malloc(1 * sizeof(t_file));
-						cmd[i]->outfile[1] = malloc(1 * sizeof(t_file));
+						cmd[i]->outfile[0] = ft_malloc(1 * sizeof(t_file), 1);
+						cmd[i]->outfile[1] = ft_malloc(1 * sizeof(t_file), 1);
 						if(cmd[i]->cmd_parameter[j - 1][0] == '>' && cmd[i]->cmd_parameter[j - 1][1] == '>')
 							cmd[i]->outfile[k]->mode = false;
 						else

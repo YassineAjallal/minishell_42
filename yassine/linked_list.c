@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/19 12:37:24 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/24 19:53:02 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/27 11:18:00 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ t_expand	*add_new_node(char *value, int index, t_expand *head)
 	t_expand	*nodes;
 
 	nodes = head;
-	new_node = (t_expand *)malloc(sizeof(t_expand));
+	new_node = (t_expand *)ft_malloc(sizeof(t_expand), 1);
 	if (!new_node)
 		return (NULL);
 	new_node->value = value;
@@ -47,7 +47,6 @@ t_expand	*delete_node(t_expand *head, int index)
 	{
 		remove = head;
 		head = head->next;
-		free(remove);
 		return (head);
 	}
 	while (node->next)
@@ -56,7 +55,6 @@ t_expand	*delete_node(t_expand *head, int index)
 		{
 			remove = node->next;
 			node->next = node->next->next;
-			free(remove);
 		}
 		if (node->next)
 			node = node->next;

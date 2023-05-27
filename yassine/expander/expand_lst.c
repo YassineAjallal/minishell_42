@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 19:10:04 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/25 11:41:16 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/27 11:21:36 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,6 @@ t_expand	*expand_nodes(t_expand *node, t_expand *new_node, \
 t_global_info *g_info, char *prev)
 {
 	char	*prev_q;
-
 	while (node)
 	{
 		if (node->value[0] == '\'' || node->value[0] == '\"')

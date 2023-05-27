@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 00:28:08 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/23 19:20:18 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/27 16:12:49 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int	get_until_equal(char *str)
 	int	i;
 
 	i = 0;
-	while (str[i] != '=')
+	while (str[i] != '=' && str[i])
 		i++;
 	return (i);
 }
@@ -39,8 +39,8 @@ t_env	*dup_env(char **inherit_env)
 	while (i < env->nb_variables)
 	{
 		equal_pos = get_until_equal(inherit_env[i]);
-		env->variables[i].name = ft_substr(inherit_env[i], 0, equal_pos);
-		env->variables[i].value = ft_substr(inherit_env[i], equal_pos + 1, \
+		env->variables[i].name = env_substr(inherit_env[i], 0, equal_pos);
+		env->variables[i].value = env_substr(inherit_env[i], equal_pos + 1, \
 		ft_strlen(inherit_env[i]));
 		i++;
 	}
@@ -59,8 +59,8 @@ char	**convert_env_array(t_env *env)
 		return (NULL);
 	while (i < env->nb_variables)
 	{
-		add_equal = ft_strjoin(env->variables[i].name, "=");
-		env_array[i] = ft_strjoin(add_equal, env->variables[i].value);
+		add_equal = env_strjoin(env->variables[i].name, "=");
+		env_array[i] = env_strjoin(add_equal, env->variables[i].value);
 		free(add_equal);
 		i++;
 	}

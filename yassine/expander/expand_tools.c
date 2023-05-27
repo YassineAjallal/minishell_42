@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 19:11:07 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/24 19:51:54 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/27 11:15:05 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ char	**convert_linked_array(t_expand *head)
 	t_expand	*node;
 	int			i;
 
-	array_conv = malloc(sizeof(char *) * (lst_size(head) + 1));
+	array_conv = ft_malloc(sizeof(char *) * (lst_size(head) + 1), 1);
 	node = head;
 	i = 0;
 	if (!array_conv)
@@ -41,7 +41,7 @@ char	**ft_strjoin2d(char **s1, char **s2)
 
 	i = 0;
 	j = 0;
-	new = malloc(sizeof(char *) * (ft_strlen2d(s1) + ft_strlen2d(s2) + 1));
+	new = ft_malloc(sizeof(char *) * (ft_strlen2d(s1) + ft_strlen2d(s2) + 1), 1);
 	if (!new)
 		return (NULL);
 	while (s1[i])

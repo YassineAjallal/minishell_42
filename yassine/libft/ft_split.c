@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/11 00:30:53 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/16 15:13:42 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/27 11:16:24 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ char	**ft_split(char const *s, char c)
 
 	i = 0;
 	j = 0;
-	str = (char **)malloc((ft_nbword((char *)s, c) + 1) * sizeof(char *));
+	str = (char **)ft_malloc((ft_nbword((char *)s, c) + 1) * sizeof(char *), 1);
 	if (!str)
 		return (NULL);
 	while (s[i] != '\0')

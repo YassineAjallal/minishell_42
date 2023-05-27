@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/04 18:11:28 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/23 19:35:45 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/27 11:16:47 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	int		j;
 
 	i = 0;
-	str = (char *)malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
+	str = (char *)ft_malloc(ft_strlen(s1) + ft_strlen(s2) + 1, 1);
 	j = 0;
 	if (!str)
 		return (NULL);

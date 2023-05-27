@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 21:13:03 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/25 21:11:30 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/27 15:30:14 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,18 +85,16 @@ void	search_built_in(t_command *cmd)
 			if (!ft_strcmp(cmd->cmd, all_built_in[i]))
 			{
 				cmd->built_in = true;
-				ft_free2d(all_built_in);
 				return ;
 			}
 			else
 				cmd->built_in = false;
 			i++;
 		}
-		ft_free2d(all_built_in);
 	}
 }
 
-int	exec_built_in(t_command *cmd)
+int	exec_built_in(t_command *cmd, t_global_info *g_info)
 {
 	if (!stdin_redirect(cmd))
 		return (0);
@@ -125,31 +123,51 @@ int	exec_built_in(t_command *cmd)
 	else if (!ft_strcmp(cmd->cmd, "exit"))
 	{
 		if (ft_exit(cmd))
-			exit (cmd->g_info->exit_code);
+		{
+			ft_malloc(0, 0);
+			exit (g_info->exit_code);
+		}
 	}
 	return (1);
 }
 
-void	cmd_exec(t_command *cmd)
+void	cmd_exec(t_command *cmd, t_global_info *g_info)
 {
 	search_built_in(cmd);
 	if (cmd->built_in == false)
 	{
 		if (!stdin_redirect(cmd))
-			exit(cmd->g_info->exit_code);
+		{
+			ft_malloc(0, 0);
+			exit(g_info->exit_code);
+		}
 		if (!stdout_redirect(cmd))
-			exit(cmd->g_info->exit_code);
+		{
+			ft_malloc(0, 0);
+			exit(g_info->exit_code);
+		}
 		if (cmd_validation(cmd))
+		{
 			execve(cmd->command_path, cmd->cmd_parameter, \
 			cmd->g_info->env_array);
+		}
 		else
-			exit(cmd->g_info->exit_code);
+		{
+			ft_malloc(0, 0);
+			exit(g_info->exit_code);
+		}
 	}
 	else
 	{
-		if (!exec_built_in(cmd))
+		if (!exec_built_in(cmd, g_info))
+		{
+			ft_malloc(0, 0);
 			exit(EXIT_FAILURE);
+		}
 		else
+		{
+			ft_malloc(0, 0);
 			exit(EXIT_SUCCESS);
+		}
 	}
 }

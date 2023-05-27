@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/26 15:27:57 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/25 21:09:50 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/27 15:58:55 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,12 +49,11 @@ int	main(int ac, char **av, char **env)
 	char			*input;
 	char			**split;
 	t_command		**cmd;
+	char			*tmp;
 	t_global_info	*g_info;
 
 	if (ac > 1)
 		return (0);
-	cmd = malloc(sizeof(t_command *));
-	cmd[0] = malloc(sizeof(t_command));
 	g_info = init_g_info(env);
 	if (!g_info)
 		return (0);
@@ -63,9 +62,14 @@ int	main(int ac, char **av, char **env)
 		input = readline("\e[1;36m➜  \e[1;33mminishell \e[1;32m✗ \e[0;00m");
 		if (!input)
 			exit(g_info->exit_code);
-		input = ft_strtrim(input, " ");
+		tmp = ft_strtrim(input, " ");
+		free(input);
+		input = tmp;
 		if (ft_strlen(input) != 0)
+		{
+			
 			run_command(input, g_info, cmd);
+		}
 		else
 			g_info->exit_code = 0;
 		// system("leaks minishell");

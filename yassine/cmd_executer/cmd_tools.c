@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/25 17:41:51 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/23 15:44:21 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/27 12:14:16 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,15 +43,10 @@ char	*search_command(char *path_var, char *cmd)
 		fpath = ft_strjoin(addslash, cmd);
 		if (access(fpath, F_OK) == 0)
 		{
-			ft_free2d(vars_split);
-			free(addslash);
 			return (fpath);
 		}
-		free(fpath);
-		free(addslash);
 		i++;
 	}
-	ft_free2d(vars_split);
 	return (NULL);
 }
 

@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 15:18:08 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/24 16:48:03 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/27 11:23:06 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,8 @@ char	*expand_var(char *string, t_global_info *g_info)
 	}
 	if (string[ft_strlen(string) - 1] == '$' && \
 	string[ft_strlen(string) - 2] != '$')
+	{
 		expand_string = ft_strjoin(expand_string, "$");
+	}
 	return (expand_string);
 }

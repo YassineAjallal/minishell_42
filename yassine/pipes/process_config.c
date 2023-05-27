@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 16:25:35 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/25 17:06:36 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/27 12:23:13 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int dup_stdout, int (*pipes)[2])
 	}
 	else
 			cmd->herdoc_stdout = dup_stdout;
-	cmd_exec(cmd);
+	cmd_exec(cmd, cmd->g_info);
 }
 
 void	parent_config(t_command *cmd, int pid)
@@ -49,8 +49,10 @@ int	fork_config(t_command *cmd, int dup_stdin, \
 int dup_stdout, int (*pipe_arr)[2])
 {
 	int	pid;
+	char **tmp;
 
-	cmd->cmd_parameter = expand_all_param(cmd);
+	tmp = expand_all_param(cmd);
+	cmd->cmd_parameter = tmp;
 	pid = fork();
 	if (pid == 0)
 		child_config(cmd, dup_stdin, dup_stdout, pipe_arr);

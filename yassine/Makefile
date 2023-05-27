@@ -8,6 +8,7 @@ BUILT_IN_PATH = ./built_in_command/built_in_command.a
 CMD_EXEC_PATH = ./cmd_executer/cmd_executer.a
 EXPANDER_PATH = ./expander/expander.a
 PIPES_PATH = ./pipes/pipes.a
+MALLOC_PATH = ./ft_malloc/ft_malloc.a
 OBJ = $(SRC:.c=.o)
 
 %.o: %.c
@@ -21,7 +22,8 @@ $(NAME): $(OBJ)
 	@make -C ./cmd_executer
 	@make -C ./expander
 	@make -C ./pipes
-	@$(CC) $(CFLAGS) -o $(NAME) $(OBJ) $(LIB_PATH) $(BUILT_IN_PATH) $(CMD_EXEC_PATH) $(EXPANDER_PATH) $(PIPES_PATH)
+	@make -C ./ft_malloc
+	@$(CC) $(CFLAGS) -o $(NAME) $(OBJ) $(LIB_PATH) $(BUILT_IN_PATH) $(CMD_EXEC_PATH) $(EXPANDER_PATH) $(PIPES_PATH) $(MALLOC_PATH)
 clean:
 	@rm -f $(OBJ)
 	@make clean -C ./libft
@@ -29,6 +31,7 @@ clean:
 	@make clean -C ./cmd_executer
 	@make clean -C ./expander
 	@make clean -C ./pipes
+	@make clean -C ./ft_malloc
 
 fclean: clean
 	@rm -f $(NAME)
@@ -37,5 +40,6 @@ fclean: clean
 	@make fclean -C ./cmd_executer
 	@make fclean -C ./expander
 	@make fclean -C ./pipes
+	@make fclean -C ./ft_malloc
 
 re: fclean all

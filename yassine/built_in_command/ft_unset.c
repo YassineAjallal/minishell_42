@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/06 23:04:30 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/23 19:23:06 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/27 16:06:45 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,8 @@ void	delete_var(t_env *env, int var_pos)
 				free(env->variables[i].name);
 				free(env->variables[i].value);
 				pos = i + 1;
-				env->variables[i].name = ft_strdup(env->variables[pos].name);
-				env->variables[i].value = ft_strdup(env->variables[pos].value);
+				env->variables[i].name = env_strdup(env->variables[pos].name);
+				env->variables[i].value = env_strdup(env->variables[pos].value);
 				i++;
 			}
 			free(env->variables[i].name);
