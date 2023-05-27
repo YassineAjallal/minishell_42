@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 16:25:35 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/27 12:23:13 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/27 19:19:46 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,8 @@ void	wait_config(t_global_info *g_info, int pids[])
 int	fork_config(t_command *cmd, int dup_stdin, \
 int dup_stdout, int (*pipe_arr)[2])
 {
-	int	pid;
-	char **tmp;
+	int		pid;
+	char	**tmp;
 
 	tmp = expand_all_param(cmd);
 	cmd->cmd_parameter = tmp;

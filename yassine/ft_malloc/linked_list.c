@@ -6,21 +6,13 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 18:33:48 by yajallal          #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2023/05/26 19:43:14 by yajallal         ###   ########.fr       */
-=======
-/*   Updated: 2023/05/26 19:37:59 by yajallal         ###   ########.fr       */
->>>>>>> e5f8521e8c1ced501327ec9974d71c23fac40ee6
+/*   Updated: 2023/05/27 19:18:27 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_malloc.h"
 
-<<<<<<< HEAD
 t_malloc	*add_new_node_malloc(void *address, t_malloc *head)
-=======
-t_malloc	*add_new_node(void *address, t_malloc *head)
->>>>>>> e5f8521e8c1ced501327ec9974d71c23fac40ee6
 {
 	t_malloc	*new_node;
 	t_malloc	*nodes;
@@ -46,8 +38,7 @@ t_malloc	*delete_addr(t_malloc *head)
 {
 	t_malloc	*node;
 	t_malloc	*remove;
-
-	int i;
+	int			i;
 
 	i = 0;
 	node = head;
@@ -65,36 +56,3 @@ t_malloc	*delete_addr(t_malloc *head)
 	head = NULL;
 	return (head);
 }
-
-void print(t_malloc *head)
-{
-	t_malloc *node;
-	if (!head)
-	{
-		printf("list is empty\n");
-		return;
-	}
-	node = head;
-	while(node)
-	{
-		printf("address : %p\n", node->address);
-		node = node->next;
-	}
-}
-
-// t_malloc *free_nodes(t_malloc *head)
-// {
-// 	t_malloc *node;
-// 	t_malloc *remove;
-
-// 	node = head;
-// 	while(node)
-// 	{
-// 		remove = node;
-// 		node = node->next;
-// 		free(remove);
-// 		remove = NULL;
-// 	}
-// 	head = NULL;
-// 	return (head);
-// }

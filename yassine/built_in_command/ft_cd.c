@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/02 22:18:08 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/27 13:11:35 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/27 17:54:19 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,9 +57,7 @@ int	ft_cd(t_command *cmd)
 {
 	char		*buffer;
 	t_variable	pwd_var;
-	int			i;
 
-	i = 0;
 	buffer = NULL;
 	pwd_var.name = ft_strdup("OLDPWD");
 	pwd_var.value = getcwd(buffer, 0);

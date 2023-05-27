@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/04 21:43:56 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/27 16:07:12 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/27 18:30:40 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,7 @@ void	print_export_value(char *value);
 /*-----export_param.c-----*/
 int		already_exist(char *name, t_env *env);
 int		valid_name(char *name);
-int		var_one_eq(char *eq_split, char *param, \
-t_variable new_var, t_global_info *g_info);
-int		var_more_eq(char *eq_split, char *param, \
-t_variable new_var, t_global_info *g_info);
+int		var_more_eq(char *eq_split, char *param, t_global_info *g_info);
 int		ft_export(t_command *cmd);
 
 /*-----ft_cd.c-----*/
@@ -70,6 +67,8 @@ int		ft_unset(t_command *cmd);
 int		ft_strlen2d(char **str);
 char	*multiple_join(char **path, int length);
 void	ft_free2d(char **str);
+
+/*-----tools1.c-----*/
 char	*env_substr(char *s, unsigned int start, size_t len);
 void	*env_calloc(size_t count, size_t size);
 char	*env_strdup(const char *s1);

@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 14:14:36 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/27 16:22:53 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/27 19:02:49 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,48 +36,18 @@ int	valid_name(char *name)
 	i++;
 	while (name[i])
 	{
-		if (!ft_isalnum(name[i]))
+		if (!ft_isalnum(name[i]) && name[i] != '_')
 			return (0);
 		i++;
 	}
 	return (1);
 }
 
-int	var_one_eq(char *eq_split, char *param, t_variable new_var, \
-t_global_info *g_info)
+int	var_more_eq(char *eq_split, char *param, t_global_info *g_info)
 {
-	int	error_count;
+	int			equal_pos;
+	t_variable	new_var;
 
-	error_count = 0;
-	if (valid_name(eq_split) && param[0] != '=')
-	{
-		new_var.name = env_strdup(eq_split);
-		if (ft_strchr(param, '='))
-		{
-			new_var.value = env_strdup("");
-			export_normal_var(new_var, g_info);
-		}
-		else
-		{
-			new_var.value = NULL;
-			fill_var_list(new_var, g_info->export_env);
-		}
-	}
-	else
-	{
-		ft_putstr_fd("minishell: not a valid identifier\n", 2);
-		error_count++;
-	}
-	return (error_count);
-}
-
-int	var_more_eq(char *eq_split, char *param, t_variable new_var, \
-t_global_info *g_info)
-{
-	int	equal_pos;
-	int	error_count;
-
-	error_count = 0;
 	if (valid_name(eq_split) && param[0] != '=')
 	{		
 		equal_pos = get_until_equal(param);
@@ -96,45 +66,34 @@ t_global_info *g_info)
 		free(new_var.value);
 	}
 	else
-	{
-		ft_putstr_fd("minishell: not a valid identifier\n", 2);
-		error_count++;
-	}
-	return (error_count);
+		return (ft_putstr_fd("minishell: not a valid identifier\n", 2), 1);
+	return (0);
 }
 
 int	ft_export(t_command *cmd)
 {
 	char		**equal_split;
 	int			error_count;
-	t_variable	new_var;
 	int			i;
 
-	i = 1;
+	i = 0;
 	error_count = 0;
-	new_var.name = env_strdup("");
-	new_var.value = env_strdup("");
-	while (cmd->cmd_parameter[i])
+	while (cmd->cmd_parameter[++i])
 	{
 		equal_split = ft_split(cmd->cmd_parameter[i], '=');
-		// if (ft_strlen2d(equal_split) == 1)
-		// 	error_count += var_one_eq(equal_split[0], cmd->cmd_parameter[i], \
-		// 	new_var, cmd->g_info);
 		if (ft_strlen2d(equal_split) >= 1)
-			error_count += var_more_eq(equal_split[0], cmd->cmd_parameter[i], \
-			new_var, cmd->g_info);
+			error_count += var_more_eq(equal_split[0], \
+			cmd->cmd_parameter[i], cmd->g_info);
 		else
 		{
 			ft_putstr_fd("minishell: not a valid identifier\n", 2);
 			error_count++;
 		}
-		i++;
 	}
 	if (error_count > 0)
 		cmd->g_info->exit_code = 1;
 	else
 		cmd->g_info->exit_code = 0;
-	free(new_var.name);
-	free(new_var.value);
 	return (error_count);
+	// protect ft_malloc
 }

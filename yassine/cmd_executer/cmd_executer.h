@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/25 17:42:02 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/27 15:30:24 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/27 19:45:45 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,12 @@
 int		stdin_redirect(t_command *cmd);
 int		stdout_redirect(t_command *cmd);
 void	search_built_in(t_command *cmd);
-int	exec_built_in(t_command *cmd, t_global_info *g_info);
 void	cmd_exec(t_command *cmd, t_global_info *g_info);
+
+/*-----exec_built_in.c-----*/
+int		exec_built_in_p1(t_command *cmd);
+void	exec_built_in_p2(t_command *cmd, t_global_info *g_info);
+int		exec_built_in(t_command *cmd, t_global_info *g_info);
 
 /*-----cmd_tools.c-----*/
 int		check_path_var(char **env);

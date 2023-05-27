@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 21:13:03 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/27 15:30:14 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/27 19:46:51 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,69 +94,30 @@ void	search_built_in(t_command *cmd)
 	}
 }
 
-int	exec_built_in(t_command *cmd, t_global_info *g_info)
+void	exec_non_built_in(t_command *cmd, t_global_info *g_info)
 {
-	if (!stdin_redirect(cmd))
-		return (0);
-	if (!stdout_redirect(cmd))
-		return (0);
-	if (!ft_strcmp(cmd->cmd, "pwd"))
-		ft_pwd(cmd);
-	else if (!ft_strcmp(cmd->cmd, "env"))
-		ft_env(cmd);
-	else if (!ft_strcmp(cmd->cmd, "cd"))
+	if (!stdin_redirect(cmd) || !stdout_redirect(cmd))
 	{
-		if (!ft_cd(cmd))
-			return (0);
+		ft_malloc(0, 0);
+		exit(g_info->exit_code);
 	}
-	else if (!ft_strcmp(cmd->cmd, "echo"))
-		ft_echo(cmd);
-	else if (!ft_strcmp(cmd->cmd, "unset"))
-		ft_unset(cmd);
-	else if (!ft_strcmp(cmd->cmd, "export"))
+	if (cmd_validation(cmd))
 	{
-		if (ft_strlen2d(cmd->cmd_parameter) == 1)
-			export_no_param(cmd);
-		else
-			ft_export(cmd);
+		execve(cmd->command_path, cmd->cmd_parameter, \
+		cmd->g_info->env_array);
 	}
-	else if (!ft_strcmp(cmd->cmd, "exit"))
+	else
 	{
-		if (ft_exit(cmd))
-		{
-			ft_malloc(0, 0);
-			exit (g_info->exit_code);
-		}
+		ft_malloc(0, 0);
+		exit(g_info->exit_code);
 	}
-	return (1);
 }
 
 void	cmd_exec(t_command *cmd, t_global_info *g_info)
 {
 	search_built_in(cmd);
 	if (cmd->built_in == false)
-	{
-		if (!stdin_redirect(cmd))
-		{
-			ft_malloc(0, 0);
-			exit(g_info->exit_code);
-		}
-		if (!stdout_redirect(cmd))
-		{
-			ft_malloc(0, 0);
-			exit(g_info->exit_code);
-		}
-		if (cmd_validation(cmd))
-		{
-			execve(cmd->command_path, cmd->cmd_parameter, \
-			cmd->g_info->env_array);
-		}
-		else
-		{
-			ft_malloc(0, 0);
-			exit(g_info->exit_code);
-		}
-	}
+		exec_non_built_in(cmd, g_info);
 	else
 	{
 		if (!exec_built_in(cmd, g_info))

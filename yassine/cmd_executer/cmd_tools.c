@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/25 17:41:51 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/27 12:14:16 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/27 19:11:09 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,10 +58,7 @@ char	*cmd_path(t_command *cmd)
 
 	i = 0;
 	if (ft_strlen(cmd->cmd) == 0)
-	{
-		ft_putstr_fd("minishell: command not found\n", 2);
-		return (NULL);
-	}
+		return (ft_putstr_fd("minishell: command not found\n", 2), NULL);
 	if (ft_strchr(cmd->cmd, '/'))
 	{
 		if (!ft_checkf(cmd->cmd))
@@ -70,16 +67,10 @@ char	*cmd_path(t_command *cmd)
 	}
 	path_var = check_path_var(cmd->g_info->env_array);
 	if (path_var == -1)
-	{
-		ft_putstr_fd("minishell: No such file or directory\n", 2);
-		return (NULL);
-	}
+		return (ft_putstr_fd("minishell: No such file or directory\n", 2), NULL);
 	fpath = search_command(cmd->g_info->env_array[path_var], cmd->cmd);
 	if (!fpath)
-	{
-		ft_putstr_fd("minishell: command not found\n", 2);
-		return (NULL);
-	}
+		return (ft_putstr_fd("minishell: command not found\n", 2), NULL);
 	return (fpath);
 }
 

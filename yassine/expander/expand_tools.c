@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 19:11:07 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/27 11:15:05 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/27 19:15:07 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,8 @@ char	**ft_strjoin2d(char **s1, char **s2)
 
 	i = 0;
 	j = 0;
-	new = ft_malloc(sizeof(char *) * (ft_strlen2d(s1) + ft_strlen2d(s2) + 1), 1);
+	new = ft_malloc(sizeof(char *) * (ft_strlen2d(s1) + ft_strlen2d(s2) + 1), \
+	1);
 	if (!new)
 		return (NULL);
 	while (s1[i])

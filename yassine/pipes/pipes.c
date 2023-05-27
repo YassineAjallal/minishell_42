@@ -6,7 +6,7 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/30 13:57:21 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/27 15:30:33 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/27 19:19:26 by yajallal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,8 @@
 
 void	one_built_in(t_command *cmd, t_global_info *g_info)
 {
-	char **tmp;
+	char	**tmp;
+
 	g_info->old_stdout = dup(STDOUT_FILENO);
 	g_info->old_stdin = dup(STDIN_FILENO);
 	tmp = expand_all_param(cmd);
