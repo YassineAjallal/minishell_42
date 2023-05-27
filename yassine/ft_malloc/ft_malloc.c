@@ -6,7 +6,11 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 19:09:14 by yajallal          #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2023/05/27 19:16:35 by yajallal         ###   ########.fr       */
+=======
+/*   Updated: 2023/05/26 19:56:22 by yajallal         ###   ########.fr       */
+>>>>>>> 70e09aa5340cdf07290fe1e1d1aad6521db2032f
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,4 +32,8 @@ void	*ft_malloc(size_t size, int mode)
 	else if (mode == 0)
 		list_address = delete_addr(list_address);
 	return (NULL);
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 70e09aa5340cdf07290fe1e1d1aad6521db2032f
