@@ -6,21 +6,13 @@
 /*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 18:33:48 by yajallal          #+#    #+#             */
-<<<<<<< HEAD
 /*   Updated: 2023/05/26 19:43:14 by yajallal         ###   ########.fr       */
-=======
-/*   Updated: 2023/05/26 19:37:59 by yajallal         ###   ########.fr       */
->>>>>>> e5f8521e8c1ced501327ec9974d71c23fac40ee6
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_malloc.h"
 
-<<<<<<< HEAD
 t_malloc	*add_new_node_malloc(void *address, t_malloc *head)
-=======
-t_malloc	*add_new_node(void *address, t_malloc *head)
->>>>>>> e5f8521e8c1ced501327ec9974d71c23fac40ee6
 {
 	t_malloc	*new_node;
 	t_malloc	*nodes;
