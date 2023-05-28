@@ -6,7 +6,7 @@
 /*   By: hkasbaou <hkasbaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 22:52:31 by hkasbaou          #+#    #+#             */
-/*   Updated: 2023/05/28 16:49:02 by hkasbaou         ###   ########.fr       */
+/*   Updated: 2023/05/28 17:47:46 by hkasbaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ t_command	**initialize_dup_cmd(t_command **cmd_rtr, int size)
 	i = 0;
 	while (i < size)
 	{
-		cmd_rtr[i] = ft_malloc(sizeof(t_command),1);
+		cmd_rtr[i] = ft_malloc(sizeof(t_command), 1);
 		i++;
 	}
 	return (cmd_rtr);
@@ -60,11 +60,10 @@ void	dup_cmdrtr_prmtr(t_command **cmd_rtr, t_command **cmd)
 		v.j = -1;
 		v.cnt = 0;
 		while (cmd[v.i]->cmd_parameter[++v.j] != NULL)
-		{
 			if (cmd[v.i]->cmd_parameter[v.j][0] != '\0')
 				v.cnt++;
-		}
-		cmd_rtr[v.i]->cmd_parameter = ft_malloc((v.cnt + 1) * sizeof(char *), 1);
+		cmd_rtr[v.i]->cmd_parameter = ft_malloc((v.cnt + 1) * sizeof(char *),
+				1);
 		v.j = 0;
 		v.cnt = 0;
 		while (cmd[v.i]->cmd_parameter[v.j] != NULL)

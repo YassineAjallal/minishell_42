@@ -6,7 +6,7 @@
 /*   By: hkasbaou <hkasbaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 10:16:01 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/28 16:49:12 by hkasbaou         ###   ########.fr       */
+/*   Updated: 2023/05/28 17:45:06 by hkasbaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@ void	rtr_err_quots(t_global_info *g_info, char *line)
 {
 	ft_putstr_fd("minishell: unexpected EOF while looking for matching\n", 2);
 	g_info->exit_code = 2;
-	// free(line);
 }
 
 int	els_if(char *s, t_v *v, char *line, t_global_info *g_info)
@@ -72,7 +71,7 @@ char	**lexer(char *str, t_global_info *g_info)
 	v.j = 0;
 	v.k = 0;
 	v.quote = 0;
-	line = ft_malloc(sizeof(char) * (ft_strlen(str) * 2),1);
+	line = ft_malloc(sizeof(char) * (ft_strlen(str) * 2), 1);
 	while (str[v.i])
 	{
 		if (!els_if(str, &v, line, g_info))
@@ -80,7 +79,5 @@ char	**lexer(char *str, t_global_info *g_info)
 	}
 	line[v.j] = 0;
 	splt = ft_split(line, '\n');
-	// free(line);
 	return (splt);
 }
-

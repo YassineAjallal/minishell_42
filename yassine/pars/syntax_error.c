@@ -6,7 +6,7 @@
 /*   By: hkasbaou <hkasbaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 10:16:01 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/28 16:44:37 by hkasbaou         ###   ########.fr       */
+/*   Updated: 2023/05/28 17:38:18 by hkasbaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 void	free_str_rmplr_tmp(t_v *v, char *tmp, char *splt, int k)
 {
 	tmp = ft_strjoin_char(v->str, splt[v->i]);
-	// free(v->str);
 	v->str = tmp;
 	if (k == 1)
 		v->i++;

@@ -6,7 +6,7 @@
 /*   By: hkasbaou <hkasbaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 22:52:31 by hkasbaou          #+#    #+#             */
-/*   Updated: 2023/05/28 16:50:01 by hkasbaou         ###   ########.fr       */
+/*   Updated: 2023/05/28 17:39:21 by hkasbaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,11 @@ int	infile_frst_enter(t_command **cmd, t_v *v)
 	cmd[v->i]->redirect_in = 1;
 	v->k = 0;
 	v->j += 1;
-	cmd[v->i]->infile = ft_malloc(2 * sizeof(t_file *),1);
+	cmd[v->i]->infile = ft_malloc(2 * sizeof(t_file *), 1);
 	if (cmd[v->i]->cmd_parameter[v->j])
 	{
-		cmd[v->i]->infile[0] = ft_malloc(1 * sizeof(t_file),1);
-		cmd[v->i]->infile[1] = ft_malloc(1 * sizeof(t_file),1);
+		cmd[v->i]->infile[0] = ft_malloc(1 * sizeof(t_file), 1);
+		cmd[v->i]->infile[1] = ft_malloc(1 * sizeof(t_file), 1);
 		if (cmd[v->i]->cmd_parameter[v->j - 1][0] == '<'
 			&& cmd[v->i]->cmd_parameter[v->j - 1][1] == '<')
 		{
@@ -31,7 +31,6 @@ int	infile_frst_enter(t_command **cmd, t_v *v)
 		else
 			cmd[v->i]->infile[v->k]->mode = true;
 		cmd[v->i]->infile[0]->file = cmd[v->i]->cmd_parameter[v->j];
-		// free(cmd[v->i]->infile[1]);
 		cmd[v->i]->infile[1] = NULL;
 	}
 	if (cmd[v->i]->cmd_parameter[v->j] == NULL)
@@ -71,18 +70,17 @@ int	outfile_frst_enter(t_command **cmd, t_v *v)
 	cmd[v->i]->redirect_out = 1;
 	v->k = 0;
 	v->j += 1;
-	cmd[v->i]->outfile = ft_malloc(2 * sizeof(t_file *),1);
+	cmd[v->i]->outfile = ft_malloc(2 * sizeof(t_file *), 1);
 	if (cmd[v->i]->cmd_parameter[v->j])
 	{
-		cmd[v->i]->outfile[0] = ft_malloc(1 * sizeof(t_file),1);
-		cmd[v->i]->outfile[1] = ft_malloc(1 * sizeof(t_file),1);
+		cmd[v->i]->outfile[0] = ft_malloc(1 * sizeof(t_file), 1);
+		cmd[v->i]->outfile[1] = ft_malloc(1 * sizeof(t_file), 1);
 		if (cmd[v->i]->cmd_parameter[v->j - 1][0] == '>'
 			&& cmd[v->i]->cmd_parameter[v->j - 1][1] == '>')
 			cmd[v->i]->outfile[v->k]->mode = false;
 		else
 			cmd[v->i]->outfile[v->k]->mode = true;
 		cmd[v->i]->outfile[0]->file = cmd[v->i]->cmd_parameter[v->j];
-		// free(cmd[v->i]->outfile[1]);
 		cmd[v->i]->outfile[1] = NULL;
 	}
 	if (cmd[v->i]->cmd_parameter[v->j] == NULL)
