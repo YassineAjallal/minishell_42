@@ -6,7 +6,7 @@
 /*   By: hkasbaou <hkasbaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 22:52:31 by hkasbaou          #+#    #+#             */
-/*   Updated: 2023/05/27 21:24:55 by hkasbaou         ###   ########.fr       */
+/*   Updated: 2023/05/28 16:44:55 by hkasbaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ void	rmplr_cmd(t_command **cmd)
 			cmd[v.i]->cmd = NULL;
 		if (ss[0] == '\0')
 			cmd[v.i]->cmd = ft_strdup("");
-		free(ss);
+		// free(ss);
 		v.i++;
 	}
 }

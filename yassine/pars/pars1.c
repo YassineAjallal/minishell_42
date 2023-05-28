@@ -6,7 +6,7 @@
 /*   By: hkasbaou <hkasbaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 22:52:31 by hkasbaou          #+#    #+#             */
-/*   Updated: 2023/05/27 21:35:30 by hkasbaou         ###   ########.fr       */
+/*   Updated: 2023/05/28 16:51:23 by hkasbaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ void	mlc_cmd_paramt(t_command **cmd, char **splt)
 			if (splt[v.k] == NULL)
 				break ;
 		}
-		cmd[v.whr]->cmd_parameter = malloc(sizeof(char *) * (v.cnt + 1));
+		cmd[v.whr]->cmd_parameter = ft_malloc(sizeof(char *) * (v.cnt + 1),1);
 		v.i = v.k;
 		if (splt[v.i] == NULL)
 			break ;
@@ -69,17 +69,17 @@ void	mlc_cmd_paramt(t_command **cmd, char **splt)
 
 void	free_cmd(t_command **cmd)
 {
-	int	i;
+	// int	i;
 
-	i = 0;
-	while (cmd[i]->ther)
-	{
-		free(cmd[i]->cmd_parameter);
-		free(cmd[i]);
-		i++;
-	}
-	free(cmd[i]);
-	free(cmd);
+	// i = 0;
+	// while (cmd[i]->ther)
+	// {
+	// 	free(cmd[i]->cmd_parameter);
+	// 	free(cmd[i]);
+	// 	i++;
+	// }
+	// free(cmd[i]);
+	// free(cmd);
 }
 
 t_command	**alloc_cmd_nb_pipe(t_command **cmd, t_global_info *g_info, t_v *v,
@@ -94,7 +94,7 @@ t_command	**alloc_cmd_nb_pipe(t_command **cmd, t_global_info *g_info, t_v *v,
 			v->cnt++;
 		v->i++;
 	}
-	cmd = malloc((v->cnt + 2) * sizeof(t_command *));
+	cmd = ft_malloc((v->cnt + 2) * sizeof(t_command *),1);
 	v->size = v->cnt + 2;
 	g_info->nb_pipe = v->cnt;
 	return (cmd);
@@ -109,7 +109,7 @@ t_command	**rmplir_strct(char **splt, t_global_info *g_info)
 	cmd = alloc_cmd_nb_pipe(cmd, g_info, &v, splt);
 	v.i = 0;
 	while (v.i < v.cnt + 2)
-		cmd[v.i++] = malloc(sizeof(t_command));
+		cmd[v.i++] = ft_malloc(sizeof(t_command),1);
 	initialize_cmd(cmd, g_info, splt);
 	mlc_cmd_paramt(cmd, splt);
 	rmplr_parametr(cmd, splt);
@@ -117,7 +117,7 @@ t_command	**rmplir_strct(char **splt, t_global_info *g_info)
 	check_rederect(cmd);
 	dlt_herdoc_file(cmd);
 	cmd_rtr = rmplr_double_str(cmd, *g_info, v.size);
-	free_cmd(cmd);
+	// free_cmd(cmd);
 	return (cmd_rtr);
 }
 

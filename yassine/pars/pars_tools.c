@@ -6,7 +6,7 @@
 /*   By: hkasbaou <hkasbaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 10:16:01 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/27 21:12:28 by hkasbaou         ###   ########.fr       */
+/*   Updated: 2023/05/28 16:52:02 by hkasbaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ char	**ft_strjoin_2d(char **s1, char *s2)
 
 	i = 0;
 	j = 0;
-	new_array = malloc(sizeof(char *) * (ft_strlen2d(s1) + 2));
+	new_array = ft_malloc(sizeof(char *) * (ft_strlen2d(s1) + 2),1);
 	if (!new_array)
 		return (NULL);
 	while (s1[i] && s1)
@@ -72,17 +72,17 @@ t_file	**ft_strjoin_in(t_file **s1, char *s2, char *mode)
 
 	i = 0;
 	j = 0;
-	new_array = malloc(sizeof(t_file *) * (ft_strlen_out(s1) + 2));
+	new_array = ft_malloc(sizeof(t_file *) * (ft_strlen_out(s1) + 2),1);
 	if (!new_array)
 		return (NULL);
 	while (s1[i] && s1)
 	{
-		new_array[i] = malloc(1 * sizeof(t_file));
+		new_array[i] = ft_malloc(1 * sizeof(t_file),1);
 		new_array[i]->file = s1[i]->file;
 		new_array[i]->mode = s1[i]->mode;
 		i++;
 	}
-	new_array[i] = malloc(1 * sizeof(t_file));
+	new_array[i] = ft_malloc(1 * sizeof(t_file),1);
 	new_array[i]->file = s2;
 	if ((mode[0] == '<' && mode[1] == '<'))
 		new_array[i]->mode = false;
@@ -101,17 +101,17 @@ t_file	**ft_strjoin_out(t_file **s1, char *s2, char *mode)
 
 	i = 0;
 	j = 0;
-	new_array = malloc(sizeof(t_file *) * (ft_strlen_out(s1) + 2));
+	new_array = ft_malloc(sizeof(t_file *) * (ft_strlen_out(s1) + 2),1);
 	if (!new_array)
 		return (NULL);
 	while (s1[i] && s1)
 	{
-		new_array[i] = malloc(1 * sizeof(t_file));
+		new_array[i] = ft_malloc(1 * sizeof(t_file),1);
 		new_array[i]->file = s1[i]->file;
 		new_array[i]->mode = s1[i]->mode;
 		i++;
 	}
-	new_array[i] = malloc(1 * sizeof(t_file));
+	new_array[i] = ft_malloc(1 * sizeof(t_file),1);
 	new_array[i]->file = s2;
 	if ((mode[0] == '>' && mode[1] == '>'))
 		new_array[i]->mode = false;

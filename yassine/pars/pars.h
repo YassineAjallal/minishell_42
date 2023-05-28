@@ -6,7 +6,7 @@
 /*   By: hkasbaou <hkasbaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 10:16:01 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/27 21:26:18 by hkasbaou         ###   ########.fr       */
+/*   Updated: 2023/05/28 16:48:14 by hkasbaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 
 #include "../minishell.h"
 #include "../structs.h"
-
 int	syntx_error_a(char **splt, t_global_info *g_info);
 int	syntx_error_b(char **splt, t_global_info *g_info);
 int	error_redirect(char **splt);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   structs.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yajallal <yajallal@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: hkasbaou <hkasbaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/30 14:28:30 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/27 11:08:09 by yajallal         ###   ########.fr       */
+/*   Updated: 2023/05/28 16:58:32 by hkasbaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,18 @@ typedef struct s_env
 	int nb_variables;
 	t_variable *variables;
 }	t_env;
+
+typedef struct s_v
+{
+	int		i;
+	int		j;
+	int		k;
+	int		cnt;
+	int		size;
+	int		quote;
+	int		whr;
+	char	*str;
+}			t_v;
 
 typedef struct s_global_info
 {

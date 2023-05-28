@@ -6,7 +6,7 @@
 /*   By: hkasbaou <hkasbaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 10:16:01 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/27 21:17:32 by hkasbaou         ###   ########.fr       */
+/*   Updated: 2023/05/28 16:52:14 by hkasbaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ t_file	**ft_strdup_file(t_file **s1)
 	i = 0;
 	while (s1[i])
 	{
-		s[i] = malloc(1 * sizeof(t_file));
+		s[i] = ft_malloc(1 * sizeof(t_file),1);
 		s[i] = s1[i];
 		i++;
 	}
