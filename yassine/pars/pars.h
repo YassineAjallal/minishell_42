@@ -6,7 +6,7 @@
 /*   By: hkasbaou <hkasbaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 10:16:01 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/28 16:48:14 by hkasbaou         ###   ########.fr       */
+/*   Updated: 2023/05/28 23:18:17 by hkasbaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,5 +34,6 @@ void	rmplr_cmd(t_command **cmd);
 int	chk_cmd_is_first_or_aftrederect(t_command **cmd, t_v *v);
 void	dlt_herdoc_file(t_command **cmd);
 void	quote(char *str, t_v *v, char *line);
+int	quote1(char *str, t_v *v, char *line);
 
 #endif

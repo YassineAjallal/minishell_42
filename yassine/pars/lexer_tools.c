@@ -6,7 +6,7 @@
 /*   By: hkasbaou <hkasbaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 10:16:01 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/28 17:44:51 by hkasbaou         ###   ########.fr       */
+/*   Updated: 2023/05/28 23:18:35 by hkasbaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,40 +14,55 @@
 
 void	quots_initialize(char *str, t_v *v)
 {
-	if (str[v->i] == '"')
-		v->quote = 1;
-	else if (str[v->i] == '\'')
-		v->quote = 2;
-	else
-		v->quote = -1;
+	v->s = str[v->i];
+	// if (str[v->i] == '"')
+	// 	v->quote = 1;
+	// else if (str[v->i] == '\'')
+	// 	v->quote = 2;
+	// else
+	// 	v->quote = -1;
 }
 
-void	quote(char *str, t_v *v, char *line)
+// void	quote(char *str, t_v *v, char *line)
+// {
+// 	v->quote = 0;
+// 	while (1)
+// 	{
+// 		quots_initialize(str, v);
+// 		line[v->j++] = str[v->i++];
+// 		while ((v->quote == 1 || v->quote == 2) && str[v->i] != '\0')
+// 		{
+// 			if (str[v->i] == '"' && v->quote == 1)
+// 			{
+// 				v->quote = -1;
+// 				break ;
+// 			}
+// 			if (str[v->i] == '\'' && v->quote == 2)
+// 			{
+// 				v->quote = -1;
+// 				break ;
+// 			}
+// 			line[v->j++] = str[v->i++];
+// 		}
+// 		line[v->j++] = str[v->i++];
+// 		if (str[v->i] == ' ' || str[v->i] == '>' || str[v->i] == '\0'
+// 			|| str[v->i - 1] == '\0')
+// 			break ;
+// 	}
+// }
+int	quote1(char *str, t_v *v, char *line)
 {
 	v->quote = 0;
-	while (1)
-	{
 		quots_initialize(str, v);
 		line[v->j++] = str[v->i++];
-		while ((v->quote == 1 || v->quote == 2) && str[v->i] != '\0')
+		while (str[v->i] != v->s && str[v->i] != '\0')
 		{
-			if (str[v->i] == '"' && v->quote == 1)
-			{
-				v->quote = -1;
-				break ;
-			}
-			if (str[v->i] == '\'' && v->quote == 2)
-			{
-				v->quote = -1;
-				break ;
-			}
 			line[v->j++] = str[v->i++];
 		}
+		if(str[v->i] == '\0')
+			return 0;
 		line[v->j++] = str[v->i++];
-		if (str[v->i] == ' ' || str[v->i] == '>' || str[v->i] == '\0'
-			|| str[v->i - 1] == '\0')
-			break ;
-	}
+	return 1;
 }
 
 int	retu_if1(t_v *v, t_command **cmd)

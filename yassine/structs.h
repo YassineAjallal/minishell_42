@@ -6,7 +6,7 @@
 /*   By: hkasbaou <hkasbaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/30 14:28:30 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/28 16:58:32 by hkasbaou         ###   ########.fr       */
+/*   Updated: 2023/05/28 23:18:51 by hkasbaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ typedef struct s_v
 	int		quote;
 	int		whr;
 	char	*str;
+	char	s;
 }			t_v;
 
 typedef struct s_global_info

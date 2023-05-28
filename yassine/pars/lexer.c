@@ -6,7 +6,7 @@
 /*   By: hkasbaou <hkasbaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 10:16:01 by yajallal          #+#    #+#             */
-/*   Updated: 2023/05/28 17:45:06 by hkasbaou         ###   ########.fr       */
+/*   Updated: 2023/05/28 23:19:44 by hkasbaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,37 @@ void	rtr_err_quots(t_global_info *g_info, char *line)
 	g_info->exit_code = 2;
 }
 
+// int	els_if(char *s, t_v *v, char *line, t_global_info *g_info)
+// {
+// 	int l;
+	
+// 	if (s[v->i] == ' ')
+// 	{
+// 		line[v->j++] = '\n';
+// 		v->i++;
+// 	}
+// 	else if ((s[v->i] == '<' && s[v->i + 1] == '<') || (s[v->i] == '>' && s[v->i
+// 				+ 1] == '>'))
+// 		lxr_add_two(s, v, line);
+// 	else if (s[v->i] == '|' || s[v->i] == '>' || s[v->i] == '<')
+// 		lxr_add_one(s, v, line);
+// 	else if (s[v->i] == '"' || s[v->i] == '\'')
+// 	{
+// 		quote(s, v, line);
+// 		if (v->quote != -1)
+// 		{
+// 			rtr_err_quots(g_info, line);
+// 			return (0);
+// 		}
+// 		line[v->j++] = '\n';
+// 	}
+// 	else
+// 		line[v->j++] = s[v->i++];
+// 	return (1);
+// }
 int	els_if(char *s, t_v *v, char *line, t_global_info *g_info)
 {
+	int l;
 	if (s[v->i] == ' ')
 	{
 		line[v->j++] = '\n';
@@ -48,19 +77,17 @@ int	els_if(char *s, t_v *v, char *line, t_global_info *g_info)
 		lxr_add_one(s, v, line);
 	else if (s[v->i] == '"' || s[v->i] == '\'')
 	{
-		quote(s, v, line);
-		if (v->quote != -1)
+		l = quote1(s, v, line);
+		if (l == 0)
 		{
 			rtr_err_quots(g_info, line);
 			return (0);
 		}
-		line[v->j++] = '\n';
 	}
 	else
 		line[v->j++] = s[v->i++];
 	return (1);
 }
-
 char	**lexer(char *str, t_global_info *g_info)
 {
 	t_v		v;
